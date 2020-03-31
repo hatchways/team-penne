@@ -1,9 +1,7 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import { ThemeProvider } from "@material-ui/styles";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
-import { theme } from "../../themes/theme";
 import "./styles/nav.scss";
 
 const profilePicImage =
@@ -22,7 +20,7 @@ export default function Navbar() {
           <p>Friends</p>
           <p>Notifications</p>
           <div className="circular">
-            <img src={profilePicImage} />
+            <img src={profilePicImage} alt="profile-pic" />
           </div>
           <p>Profile</p>
         </div>
