@@ -6,6 +6,9 @@ import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import { theme } from "../../themes/theme";
 import "./styles.scss";
 
+const profilePicImage =
+  "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg";
+
 export default function Navbar() {
   return (
     <AppBar position="static">
@@ -18,6 +21,10 @@ export default function Navbar() {
           <p>Shopping Lists</p>
           <p>Friends</p>
           <p>Notifications</p>
+          <div className="circular">
+            <img src={profilePicImage} />
+          </div>
+          <p>Profile</p>
         </div>
       </Toolbar>
     </AppBar>
