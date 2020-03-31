@@ -8,8 +8,10 @@ import {
   Typography
 } from "@material-ui/core";
 
-export default function ListCard({ image, name, amount }) {
-  return (
+import AddIcon from "@material-ui/icons/Add";
+
+export default function ListCard({ image, name, amount, addCard }) {
+  return !addCard ? (
     <Card className="card">
       <CardActionArea>
         <CardMedia className="card-image" image={image} title={name} />
@@ -19,6 +21,15 @@ export default function ListCard({ image, name, amount }) {
             {amount} items
           </Typography>
         </CardContent>
+      </CardActionArea>
+    </Card>
+  ) : (
+    <Card className="add-card">
+      <CardActionArea className="add-card__action-area">
+        <AddIcon className="add-icon" color="primary" />
+        <Typography className="add-list-card-text" component="h1">
+          ADD NEW LIST
+        </Typography>
       </CardActionArea>
     </Card>
   );

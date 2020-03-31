@@ -82,6 +82,20 @@
         width: 200px;
       }
 
+      .add-card {
+        display: flex;
+        width: 200px;
+
+        .MuiSvgIcon-root {
+          margin-left: 78px;
+          font-size: 50px;
+        }
+
+        .add-list-card-text {
+          text-align: center;
+        }
+      }
+
       .card-image {
         height: 160px;
       }

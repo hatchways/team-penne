@@ -85,6 +85,7 @@ export default function ShoppingLists() {
                 />
               );
             })}
+            <ListCard addCard={true} />
           </div>
         </div>
       </div>
