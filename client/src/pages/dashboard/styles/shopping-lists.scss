@@ -97,7 +97,7 @@
       }
 
       .card-image {
-        height: 160px;
+        height: 170px;
       }
 
       .content {
@@ -107,7 +107,7 @@
       &__card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, 224px);
-        grid-template-rows: 248px auto 80px;
+        grid-template-rows: 258px auto 80px;
         grid-column-gap: 10px;
         grid-row-gap: 15px;
       }
