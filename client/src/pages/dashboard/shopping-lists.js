@@ -76,11 +76,15 @@ export default function ShoppingLists() {
           </div>
 
           <div className="dash-body__new-item__list-cards__card-grid">
-            <ListCard
-              image={lists[0].image}
-              name={lists[0].name}
-              amount={lists[0].amount}
-            />
+            {lists.map(list => {
+              return (
+                <ListCard
+                  image={list.image}
+                  name={list.name}
+                  amount={list.amount}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

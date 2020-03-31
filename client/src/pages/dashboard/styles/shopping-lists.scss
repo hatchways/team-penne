@@ -79,12 +79,15 @@
       }
 
       .card {
-        width: 100px;
+        width: 200px;
       }
 
       .card-image {
-        width: 100px;
-        height: 140px;
+        height: 160px;
+      }
+
+      .content {
+        text-align: center;
       }
 
       &__card-grid {
