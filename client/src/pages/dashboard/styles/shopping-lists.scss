@@ -44,6 +44,7 @@
       .vertical-line {
         border-left: solid thin rgb(212, 212, 212);
         margin-right: 14px;
+        margin-left: -20px;
       }
 
       .MuiSelect-select {
@@ -61,7 +62,7 @@
       button {
         margin-right: 30px;
         border-radius: 50px 50px 50px 50px;
-        width: 200px;
+        width: 170px;
         margin: 10px 20px 10px 10px;
       }
     }

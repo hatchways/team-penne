@@ -19,8 +19,8 @@ export default function ShoppingLists() {
         <p>Add new item:</p>
         <div className="dash-body__new-item__input">
           <input placeholder="Paste your link here" />
-          <div className="vertical-line" />
           <FormControl>
+            <div className="vertical-line" />
             <InputLabel>Select list</InputLabel>
             <Select
               autoWidth={true}
