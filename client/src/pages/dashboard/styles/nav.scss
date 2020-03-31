@@ -13,6 +13,10 @@
     font-size: 20px;
     cursor: pointer;
 
+    p:hover {
+      font-weight: bolder;
+    }
+
     .same-row {
       float: left;
       margin-top: 10%;
@@ -26,6 +30,7 @@
 
     p {
       margin-right: 20px;
+      font-size: 17px;
       cursor: pointer;
     }
 
@@ -38,6 +43,7 @@
       margin-right: 15px;
       margin-left: 30px;
       cursor: pointer;
+
       img {
         max-width: 100%;
         width: auto;
@@ -50,6 +56,10 @@
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
       }
+    }
+
+    p:hover {
+      font-weight: bolder;
     }
   }
 }

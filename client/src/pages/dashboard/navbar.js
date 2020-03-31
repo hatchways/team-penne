@@ -4,7 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/styles";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import { theme } from "../../themes/theme";
-import "./styles.scss";
+import "./styles/nav.scss";
 
 const profilePicImage =
   "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg";
