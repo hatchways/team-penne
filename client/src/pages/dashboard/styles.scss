@@ -1,6 +1,32 @@
 .nav {
   background-color: white;
-  p {
-    color: black;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+
+  #align-left {
+    display: block;
+    margin: auto;
+    font-weight: lighter;
+    letter-spacing: 4px;
+    margin-left: 20px;
+    font-size: 20px;
+    cursor: pointer;
+
+    .same-row {
+      float: left;
+      margin-top: 10%;
+      margin-left: 20px;
+    }
+  }
+
+  #align-right {
+    display: flex;
+    flex-direction: row;
+
+    p {
+      margin-right: 20px;
+      cursor: pointer;
+    }
   }
 }

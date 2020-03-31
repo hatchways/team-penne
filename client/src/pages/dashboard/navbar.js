@@ -10,8 +10,15 @@ export default function Navbar() {
   return (
     <AppBar position="static">
       <Toolbar className="nav">
-        <WorkOutlineIcon color="primary" />
-        <p>Deals Mate</p>
+        <div id="align-left">
+          <WorkOutlineIcon className="same-row" color="primary" />
+          <p className="same-row">Deals Mate</p>
+        </div>
+        <div id="align-right">
+          <p>Shopping Lists</p>
+          <p>Friends</p>
+          <p>Notifications</p>
+        </div>
       </Toolbar>
     </AppBar>
   );
