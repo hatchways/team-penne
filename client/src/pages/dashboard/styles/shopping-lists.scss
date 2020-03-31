@@ -91,6 +91,11 @@
       }
 
       &__card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 224px);
+        grid-template-rows: 258px auto 80px;
+        grid-column-gap: 10px;
+        grid-row-gap: 15px;
       }
     }
   }
