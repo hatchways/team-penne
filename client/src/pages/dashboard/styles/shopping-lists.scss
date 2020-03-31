@@ -16,8 +16,10 @@
 
     &__input {
       display: flex;
-      min-width: 302px;
-      width: 40vw;
+      flex-direction: row;
+      justify-content: space-between;
+      min-width: 462px;
+      width: 60vw;
       height: 70px;
       border-radius: 50px 50px 50px 50px;
       background-color: white;
@@ -45,8 +47,22 @@
       }
 
       .MuiSelect-select {
-        margin-left: 10px;
         min-width: 69px;
+      }
+
+      .MuiFormControl-root {
+        display: flex;
+        right: 0;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: space-between;
+      }
+
+      button {
+        margin-right: 30px;
+        border-radius: 50px 50px 50px 50px;
+        width: 200px;
+        margin: 10px 20px 10px 10px;
       }
     }
   }
