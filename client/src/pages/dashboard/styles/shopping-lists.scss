@@ -80,11 +80,14 @@
 
       .card {
         width: 200px;
+        margin-bottom: 10px;
+        margin-right: 20px;
       }
 
       .add-card {
         display: flex;
         width: 200px;
+        height: 258px;
 
         .MuiSvgIcon-root {
           margin-left: 78px;
@@ -104,13 +107,13 @@
         text-align: center;
       }
 
-      &__card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 224px);
-        grid-template-rows: 258px auto 80px;
-        grid-column-gap: 10px;
-        grid-row-gap: 15px;
-      }
+      // &__card-grid {
+      //   display: grid;
+      //   grid-template-columns: repeat(auto-fill, 224px);
+      //   grid-template-rows: 258px auto 80px;
+      //   grid-column-gap: 10px;
+      //   grid-row-gap: 15px;
+      // }
     }
   }
 }

@@ -5,7 +5,8 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-  Button
+  Button,
+  Grid
 } from "@material-ui/core";
 
 import ListCard from "./list-card.js";
@@ -75,7 +76,7 @@ export default function ShoppingLists() {
             <p>My Shopping Lists:</p>
           </div>
 
-          <div className="dash-body__new-item__list-cards__card-grid">
+          <Grid container spacing={3}>
             {lists.map(list => {
               return (
                 <ListCard
@@ -86,7 +87,7 @@ export default function ShoppingLists() {
               );
             })}
             <ListCard addCard={true} />
-          </div>
+          </Grid>
         </div>
       </div>
     </div>
