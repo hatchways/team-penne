@@ -6,10 +6,13 @@ import {
   InputLabel,
   FormControl,
   Button,
-  Grid
+  Grid,
+  Box,
+  Divider
 } from "@material-ui/core";
 
 import ListCard from "./list-card.js";
+import { makeStyles } from "@material-ui/styles";
 
 // import "./styles/shopping-lists.scss";
 
@@ -46,26 +49,86 @@ const lists = [
   }
 ];
 
+const useStyles = makeStyles({
+  dashBody: {
+    display: "flex",
+    justifyContent: "center"
+  },
+  newItem: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "7vh",
+    "& p": {
+      textAlign: "center"
+    }
+  },
+  input: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    minWidth: "530px",
+    width: "60vw",
+    height: "70px",
+    borderRadius: "50px 50px 50px 50px",
+    backgroundColor: "white",
+    paddingLeft: "30px",
+    "& input": {
+      background: "transparent",
+      width: "25vw",
+      border: "none",
+      fontSize: "20px",
+      color: "rgb(192, 192, 192)",
+      "&:focus": {
+        outline: "none"
+      },
+      "&::placeholder": {
+        color: "rgb(192, 192, 192)"
+      }
+    },
+    "& button": {
+      marginRight: "30px",
+      borderRadius: "50px 50px 50px 50px",
+      width: "170px",
+      margin: "10px 20px 10px 10px"
+    }
+  },
+  verticalLine: {
+    borderLeft: "solid thin rgb(212,212,212)",
+    marginRight: "14px",
+    marginLeft: "-20px"
+  },
+  InputLabel: {
+    width: "100px"
+  }
+});
+
 export default function ShoppingLists() {
+  const classes = useStyles();
   return (
-    <div className="dash-body">
-      <div className="dash-body__new-item">
+    <div className={classes.dashBody}>
+      <div className={classes.newItem}>
         <p>Add new item:</p>
-        <div className="dash-body__new-item__input">
+        <div className={classes.input}>
           <input placeholder="Paste your link here" />
+          <div className={classes.verticalLine} />
           <FormControl>
-            <div className="vertical-line" />
-            <InputLabel>Select list</InputLabel>
-            <Select
-              autoWidth={true}
-              disableUnderline={true}
-              placeholder="Select list"
-              fullWidth
-            >
-              {lists.map(list => (
-                <MenuItem>{list.name}</MenuItem>
-              ))}
-            </Select>
+            <Box display="flex" justifyContent="center" width={100}>
+              <InputLabel className={classes.InputLabel}>
+                Select list
+              </InputLabel>
+              <Select
+                autoWidth={true}
+                disableUnderline={true}
+                placeholder="Select list"
+                fullWidth
+              >
+                {lists.map(list => (
+                  <MenuItem>{list.name}</MenuItem>
+                ))}
+              </Select>
+            </Box>
           </FormControl>
           <Button variant="contained" color="primary">
             Add
