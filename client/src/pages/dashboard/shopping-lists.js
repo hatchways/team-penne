@@ -11,7 +11,7 @@ import {
 
 import ListCard from "./list-card.js";
 
-import "./styles/shopping-lists.scss";
+// import "./styles/shopping-lists.scss";
 
 // Dummy data for lists
 const lists = [
