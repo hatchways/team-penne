@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     borderRadius: "50px 50px 50px 50px",
     backgroundColor: "white",
     paddingLeft: "30px",
+    boxShadow: "0 0 10px #ccc",
     "& input": {
       background: "transparent",
       width: "25vw",
