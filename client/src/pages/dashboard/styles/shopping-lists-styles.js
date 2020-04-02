@@ -22,6 +22,7 @@ const useStyles = makeStyles({
     minWidth: "530px",
     width: "60vw",
     height: "70px",
+    marginTop: "20px",
     borderRadius: "50px 50px 50px 50px",
     backgroundColor: "white",
     paddingLeft: "30px",
@@ -46,15 +47,14 @@ const useStyles = makeStyles({
     }
   },
   verticalLine: {
-    borderLeft: "solid thin rgb(212,212,212)",
-    marginRight: "-120px",
-    marginLeft: "-20px"
+    borderLeft: "solid thin rgb(212,212,212)"
   },
   InputLabel: {
     width: "100px"
   },
   cardsTitleLeft: {
-    display: "flex"
+    display: "flex",
+    marginBottom: "20px"
   }
 });
 

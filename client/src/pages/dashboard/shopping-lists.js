@@ -7,7 +7,8 @@ import {
   FormControl,
   Button,
   Grid,
-  Box
+  Box,
+  Typography
 } from "@material-ui/core";
 
 import ListCard from "./list-card.js";
@@ -51,13 +52,13 @@ export default function ShoppingLists() {
   return (
     <div className={classes.dashBody}>
       <div className={classes.newItem}>
-        <p>Add new item:</p>
+        <Typography variant="h5">Add new item:</Typography>
         <div className={classes.input}>
           <input placeholder="Paste your link here" />
           <div className={classes.verticalLine} />
           <FormControl>
             <Box display="flex" justifyContent="center" width={100}>
-              <InputLabel className={classes.InputLabel}>
+              <InputLabel color="secondary" className={classes.InputLabel}>
                 Select list
               </InputLabel>
               <Select
@@ -79,7 +80,7 @@ export default function ShoppingLists() {
         <div className={classes.listCards}>
           <Box ml={5} mt={5}>
             <div className={classes.cardsTitleLeft}>
-              <p>My Shopping Lists:</p>
+              <Typography variant="h5">My Shopping Lists:</Typography>
             </div>
             <Grid container spacing={18}>
               {lists.map(list => {

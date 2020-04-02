@@ -34,7 +34,7 @@ export default function ListCard({ image, name, amount, addCard }) {
           justifyContent="center"
           alignItems="center"
         >
-          <AddIcon color="primary" />
+          <AddIcon fontSize="large" color="primary" />
           <Typography className={classes.addListCardText} component="h1">
             ADD NEW LIST
           </Typography>
