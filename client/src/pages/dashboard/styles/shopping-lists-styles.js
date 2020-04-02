@@ -41,7 +41,6 @@ const useStyles = makeStyles({
       }
     },
     "& button": {
-      marginRight: "30px",
       borderRadius: "50px 50px 50px 50px",
       width: "170px",
       margin: "10px 10px 10px 0px"

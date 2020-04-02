@@ -1,7 +1,6 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import useStyles from "./styles/navbar-styles";
 import logo from "../../assets/logo.png";
 
