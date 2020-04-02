@@ -17,7 +17,7 @@ import useStyles from "./styles/shopping-lists-styles";
 const lists = [
   {
     name: "Shoes",
-    amount: 12,
+    amount: 2,
     image: "https://m.media-amazon.com/images/I/81eA2SDaGcL._AC_255_.jpg"
   },
   {

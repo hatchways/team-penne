@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   addCard: {
     display: "flex",
     width: "200px",
-    height: "258px"
+    height: "246px"
   },
   addListCardText: {
     textAlign: "center"

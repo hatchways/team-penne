@@ -4,7 +4,8 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Typography
+  Typography,
+  Box
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -19,7 +20,7 @@ export default function ListCard({ image, name, amount, addCard }) {
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
-            {amount} items
+            {amount !== 1 ? `${amount} items` : "1 item"}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -27,10 +28,17 @@ export default function ListCard({ image, name, amount, addCard }) {
   ) : (
     <Card className={classes.addCard}>
       <CardActionArea>
-        <AddIcon color="primary" />
-        <Typography className={classes.addListCardText} component="h1">
-          ADD NEW LIST
-        </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <AddIcon color="primary" />
+          <Typography className={classes.addListCardText} component="h1">
+            ADD NEW LIST
+          </Typography>
+        </Box>
       </CardActionArea>
     </Card>
   );
