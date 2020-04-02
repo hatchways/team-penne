@@ -7,14 +7,11 @@ import {
   FormControl,
   Button,
   Grid,
-  Box,
-  Divider
+  Box
 } from "@material-ui/core";
 
 import ListCard from "./list-card.js";
-import { makeStyles } from "@material-ui/styles";
-
-// import "./styles/shopping-lists.scss";
+import useStyles from "./styles/shopping-lists-styles";
 
 // Dummy data for lists
 const lists = [
@@ -49,61 +46,6 @@ const lists = [
   }
 ];
 
-const useStyles = makeStyles({
-  dashBody: {
-    display: "flex",
-    justifyContent: "center"
-  },
-  newItem: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "7vh",
-    "& p": {
-      textAlign: "center"
-    }
-  },
-  input: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    minWidth: "530px",
-    width: "60vw",
-    height: "70px",
-    borderRadius: "50px 50px 50px 50px",
-    backgroundColor: "white",
-    paddingLeft: "30px",
-    "& input": {
-      background: "transparent",
-      width: "25vw",
-      border: "none",
-      fontSize: "20px",
-      color: "rgb(192, 192, 192)",
-      "&:focus": {
-        outline: "none"
-      },
-      "&::placeholder": {
-        color: "rgb(192, 192, 192)"
-      }
-    },
-    "& button": {
-      marginRight: "30px",
-      borderRadius: "50px 50px 50px 50px",
-      width: "170px",
-      margin: "10px 20px 10px 10px"
-    }
-  },
-  verticalLine: {
-    borderLeft: "solid thin rgb(212,212,212)",
-    marginRight: "14px",
-    marginLeft: "-20px"
-  },
-  InputLabel: {
-    width: "100px"
-  }
-});
-
 export default function ShoppingLists() {
   const classes = useStyles();
   return (
@@ -134,23 +76,24 @@ export default function ShoppingLists() {
             Add
           </Button>
         </div>
-        <div className="dash-body__new-item__list-cards">
-          <div className="cards-title-left">
-            <p>My Shopping Lists:</p>
-          </div>
-
-          <Grid container spacing={3}>
-            {lists.map(list => {
-              return (
-                <ListCard
-                  image={list.image}
-                  name={list.name}
-                  amount={list.amount}
-                />
-              );
-            })}
-            <ListCard addCard={true} />
-          </Grid>
+        <div className={classes.listCards}>
+          <Box ml={5} mt={5}>
+            <div className={classes.cardsTitleLeft}>
+              <p>My Shopping Lists:</p>
+            </div>
+            <Grid container spacing={18}>
+              {lists.map(list => {
+                return (
+                  <ListCard
+                    image={list.image}
+                    name={list.name}
+                    amount={list.amount}
+                  />
+                );
+              })}
+              <ListCard addCard={true} />
+            </Grid>
+          </Box>
         </div>
       </div>
     </div>

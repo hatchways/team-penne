@@ -2,20 +2,21 @@ import React from "react";
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
   Typography
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
+import useStyles from "./styles/list-card-styles";
 
 export default function ListCard({ image, name, amount, addCard }) {
+  const classes = useStyles();
   return !addCard ? (
-    <Card className="card">
+    <Card className={classes.card}>
       <CardActionArea>
-        <CardMedia className="card-image" image={image} title={name} />
-        <CardContent className="content">
+        <CardMedia className={classes.cardImage} image={image} title={name} />
+        <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
             {amount} items
@@ -24,10 +25,10 @@ export default function ListCard({ image, name, amount, addCard }) {
       </CardActionArea>
     </Card>
   ) : (
-    <Card className="add-card">
-      <CardActionArea className="add-card__action-area">
-        <AddIcon className="add-icon" color="primary" />
-        <Typography className="add-list-card-text" component="h1">
+    <Card className={classes.addCard}>
+      <CardActionArea>
+        <AddIcon color="primary" />
+        <Typography className={classes.addListCardText} component="h1">
           ADD NEW LIST
         </Typography>
       </CardActionArea>
