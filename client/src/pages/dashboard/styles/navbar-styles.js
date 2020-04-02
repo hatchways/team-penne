@@ -19,6 +19,9 @@ const useStyles = makeStyles({
       "&:hover": {
         fontWeight: "bolder"
       }
+    },
+    "& img": {
+      height: "2.5vh"
     }
   },
   sameRow: {

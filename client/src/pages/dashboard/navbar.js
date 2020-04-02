@@ -3,6 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import useStyles from "./styles/navbar-styles";
+import logo from "../../assets/logo.png";
 
 const profilePicImage =
   "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg";
@@ -13,8 +14,7 @@ export default function Navbar() {
     <AppBar position="sticky">
       <Toolbar className={classes.nav}>
         <div className={classes.alignLeft}>
-          <WorkOutlineIcon className={classes.sameRow} color="primary" />
-          <p className={classes.sameRow}>Deals Mate</p>
+          <img src={logo} alt="" srcset="" />
         </div>
         <div className={classes.alignRight}>
           <p>Shopping Lists</p>

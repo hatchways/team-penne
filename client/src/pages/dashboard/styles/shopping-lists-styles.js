@@ -47,7 +47,7 @@ const useStyles = makeStyles({
   },
   verticalLine: {
     borderLeft: "solid thin rgb(212,212,212)",
-    marginRight: "14px",
+    marginRight: "-120px",
     marginLeft: "-20px"
   },
   InputLabel: {
