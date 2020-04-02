@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Select,
@@ -49,27 +49,50 @@ const lists = [
 
 export default function ShoppingLists() {
   const classes = useStyles();
+  const [list, setList] = useState("");
+  const [url, setUrl] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleListChange = e => {
+    setList(e.target.value);
+  };
+
+  const handleUrlChange = e => {
+    setUrl(e.target.value);
+  };
+
   return (
     <div className={classes.dashBody}>
       <div className={classes.newItem}>
         <Typography variant="h5">Add new item:</Typography>
         <div className={classes.input}>
-          <input placeholder="Paste your link here" />
+          <input
+            onChange={handleUrlChange}
+            placeholder="Paste your link here"
+          />
           <Box display="flex">
             <div className={classes.verticalLine} />
             <FormControl>
-              <Box display="flex" justifyContent="center" width={100}>
-                <InputLabel color="secondary" className={classes.InputLabel}>
-                  Select list
+              <Box display="flex" justifyContent="center" width={110}>
+                <InputLabel className={classes.InputLabel}>
+                  <Typography color="secondary">Select list</Typography>
                 </InputLabel>
                 <Select
+                  style={{ color: "rgb(192,192,192)" }}
                   autoWidth={true}
                   disableUnderline={true}
                   placeholder="Select list"
+                  color="secondary"
+                  variant="outlined"
+                  value={list}
+                  onChange={handleListChange}
+                  open={open}
+                  onOpen={() => setOpen(true)}
+                  onClose={() => setOpen(false)}
                   fullWidth
                 >
                   {lists.map(list => (
-                    <MenuItem>{list.name}</MenuItem>
+                    <MenuItem value={list.name}>{list.name}</MenuItem>
                   ))}
                 </Select>
               </Box>

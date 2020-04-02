@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/styles";
 const useStyles = makeStyles({
   dashBody: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    minWidth: "580px"
   },
   newItem: {
     display: "flex",

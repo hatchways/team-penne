@@ -5,7 +5,8 @@ const useStyles = makeStyles({
     backgroundColor: "white",
     color: "black",
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    minWidth: "720px"
   },
   alignLeft: {
     display: "block",
