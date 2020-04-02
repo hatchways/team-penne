@@ -55,24 +55,26 @@ export default function ShoppingLists() {
         <Typography variant="h5">Add new item:</Typography>
         <div className={classes.input}>
           <input placeholder="Paste your link here" />
-          <div className={classes.verticalLine} />
-          <FormControl>
-            <Box display="flex" justifyContent="center" width={100}>
-              <InputLabel color="secondary" className={classes.InputLabel}>
-                Select list
-              </InputLabel>
-              <Select
-                autoWidth={true}
-                disableUnderline={true}
-                placeholder="Select list"
-                fullWidth
-              >
-                {lists.map(list => (
-                  <MenuItem>{list.name}</MenuItem>
-                ))}
-              </Select>
-            </Box>
-          </FormControl>
+          <Box display="flex">
+            <div className={classes.verticalLine} />
+            <FormControl>
+              <Box display="flex" justifyContent="center" width={100}>
+                <InputLabel color="secondary" className={classes.InputLabel}>
+                  Select list
+                </InputLabel>
+                <Select
+                  autoWidth={true}
+                  disableUnderline={true}
+                  placeholder="Select list"
+                  fullWidth
+                >
+                  {lists.map(list => (
+                    <MenuItem>{list.name}</MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            </FormControl>
+          </Box>
           <Button variant="contained" color="primary">
             Add
           </Button>

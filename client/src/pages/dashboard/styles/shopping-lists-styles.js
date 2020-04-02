@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     flexDirection: "row",
     justifyContent: "space-between",
     minWidth: "530px",
-    width: "60vw",
+    width: "58vw",
     height: "70px",
     marginTop: "20px",
     borderRadius: "50px 50px 50px 50px",
@@ -43,11 +43,12 @@ const useStyles = makeStyles({
       marginRight: "30px",
       borderRadius: "50px 50px 50px 50px",
       width: "170px",
-      margin: "10px 20px 10px 10px"
+      margin: "10px 10px 10px 0px"
     }
   },
   verticalLine: {
-    borderLeft: "solid thin rgb(212,212,212)"
+    borderLeft: "solid thin rgb(212,212,212)",
+    marginRight: "10px"
   },
   InputLabel: {
     width: "100px"
