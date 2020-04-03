@@ -5,6 +5,7 @@ export const landingTheme = createMuiTheme({
     fontFamily: '"Open Sans"',
     fontSize: 16
   },
+  
   overrides: {
     MuiButton: {
       contained: {
@@ -31,7 +32,8 @@ export const dialogTheme = createMuiTheme({
       fontWeight: 900
     },
     body1: {
-      marginBottom: "15px"
+      marginBottom: "15px",
+      textAlign: "center"
     }
   },
   overrides: {
@@ -39,23 +41,19 @@ export const dialogTheme = createMuiTheme({
       root: {
         color: "black",
         fontWeight: 900,
-        marginTop: "30px"
-      }
-    },
-    MuiDialog: {
-      root: {
-        textAlign: "center",
+        marginTop: "30px",
+        textAlign: "center"
       }
     },
     MuiDialogTitle: {
       root: {
-        paddingBottom: 0
+        paddingBottom: 0,
+        textAlign: "center"
       }
     },
     MuiOutlinedInput: {
       root: {
-        width: "75%",
-        marginBottom: 0
+        width: "75%"
       },
       input: {
         textAlign: "center"
@@ -67,7 +65,8 @@ export const dialogTheme = createMuiTheme({
         color: "white",
 		    fontWeight: "bold",
         borderRadius: "500px",
-        marginBottom: "25px"
+        marginBottom: "25px",
+        marginTop: "25px"
       }
     },
     MuiLink: {
@@ -82,14 +81,16 @@ export const dialogTheme = createMuiTheme({
         marginBottom: "20px"
       }
     },
-    MuiDialogActions: {
+    MuiDialogContent: {
       root: {
-        justifyContent: "center"
+        paddingBottom: 0
       }
     },
-    MuiAlert: {
+    MuiDialogActions: {
       root: {
-        marginTop: "10px"
+        justifyContent: "center",
+        height: "90px",
+        paddingTop: 0
       }
     }
   }

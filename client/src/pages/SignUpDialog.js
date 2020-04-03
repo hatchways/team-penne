@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, 
+import { Button, Collapse, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, 
   InputLabel, Link, OutlinedInput, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
@@ -67,37 +67,53 @@ function SignUpDialog() {
     }
   };
 
+  const enterSubmit = event => {
+    let keyCode = (event.keyCode ? event.keyCode : event.which);
+    if (keyCode == 13) {
+      validateSignUp();
+    }
+  };
+
   return (
-  <Dialog fullWidth onClose={handleClose} aria-labelledby="form-dialog-title" open={true}>
+  <Dialog scroll="body" fullWidth onClose={handleClose} aria-labelledby="form-dialog-title" open={true}>
     <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
     <DialogContent>
       <InputLabel>Your name:</InputLabel>
-      <OutlinedInput
-        onChange={changeName}
-			  placeholder="Name"
-		    id="name-sign-up-input"
-				type="name"
-      />
+      <Container>
+        <OutlinedInput
+          onKeyPress={enterSubmit}
+          onChange={changeName}
+          placeholder="Name"
+          id="name-sign-up-input"
+          type="name"
+        />
+      </Container>
       <Collapse in={nameErrorOpen}>
         <Alert severity="error">Error: Name must not be empty or contain a number.</Alert>
       </Collapse>
       <InputLabel>Your e-mail address:</InputLabel>
-      <OutlinedInput
-        onChange={changeEmail}
-        placeholder="E-mail"
-        id="email-sign-up-input"
-        type="email"
-      />
+      <Container>
+        <OutlinedInput
+          onKeyPress={enterSubmit}
+          onChange={changeEmail}
+          placeholder="E-mail"
+          id="email-sign-up-input"
+          type="email"
+        />
+      </Container>
       <Collapse in={emailErrorOpen}>
         <Alert severity="error">Error: Email format is invalid.</Alert>
       </Collapse>
       <InputLabel>Password:</InputLabel>
-      <OutlinedInput
-        onChange={changePassword}
-        id="password-sign-up-input"
-        placeholder="Password"
-        type="password"
-      />
+      <Container>
+        <OutlinedInput
+          onKeyPress={enterSubmit}
+          onChange={changePassword}
+          id="password-sign-up-input"
+          placeholder="Password"
+          type="password"
+        />
+      </Container>
       <Collapse in={passwordErrorOpen}>
         <Alert severity="error">Error: Password must be six characters or longer.</Alert>
       </Collapse>

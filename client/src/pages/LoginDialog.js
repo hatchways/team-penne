@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, 
+import { Button, Collapse, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, 
   InputLabel, Link, OutlinedInput, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
@@ -50,28 +50,41 @@ function LoginDialog() {
       localStorage.setItem('password', password);
     }
   };
+
+  const enterSubmit = event => {
+    let keyCode = (event.keyCode ? event.keyCode : event.which);
+    if (keyCode == 13) {
+      validateLogin();
+    }
+  };
   
   return (
-  <Dialog fullWidth onClose={handleClose} aria-labelledby="form-dialog-title" open={true}>
+  <Dialog scroll="body" fullWidth onClose={handleClose} aria-labelledby="form-dialog-title" open={true}>
     <DialogTitle id="form-dialog-title">Sign In</DialogTitle>
     <DialogContent>
       <InputLabel>Your e-mail address:</InputLabel>
-      <OutlinedInput
-        onChange={changeEmail}
-        placeholder="E-mail"
-        id="email-sign-in-input"
-        type="email"
-      />
+      <Container>
+        <OutlinedInput
+          onKeyPress={enterSubmit}
+          onChange={changeEmail}
+          placeholder="E-mail"
+          id="email-sign-in-input"
+          type="email"
+        />
+      </Container>
       <Collapse in={emailErrorOpen}>
         <Alert severity="error">Error: Email format is invalid.</Alert>
       </Collapse>
       <InputLabel>Password:</InputLabel>
-      <OutlinedInput
-        onChange={changePassword}
-        id="password-sign-in-input"
-        placeholder="Password"
-        type="password"
-      />
+      <Container>
+        <OutlinedInput
+          onKeyPress={enterSubmit}
+          onChange={changePassword}
+          id="password-sign-in-input"
+          placeholder="Password"
+          type="password"
+        />
+      </Container>
       <Collapse in={passwordErrorOpen}>
         <Alert severity="error">Error: Password must be six characters or longer.</Alert>
       </Collapse>
