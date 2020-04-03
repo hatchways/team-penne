@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
@@ -5,6 +6,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
+const { authCheck } = require("./authCheck")
 
 const saltRounds=10;
 router.use(cookieParser());
@@ -13,9 +15,8 @@ router.post('/login', async (req, res) => {
     const secret = process.env.JWT_SECRET;
     const userName = req.body.userName;
     const password = req.body.userPassword;
-    console.log("Log in being attempted.")
+    console.log("\nLog in being attempted.")
 
-    //add email (text) check and password (length) check
     //no username or password provided
     if (!userName || !password) {
         return res.send({
@@ -28,14 +29,15 @@ router.post('/login', async (req, res) => {
     var userJon = {
         userID:1,
         userName:"Jon Snow", 
-        userPassword:"$2y$10$M7v.6lgTeEqISeah0fOsFub.K14sN/0eGwPn0gbrC9WF6c.onJ.4a",
+        userPassword:"$2b$10$ssOjjajRNgM8/Vvi/owYOeLSGbO6w14kpCCE1ttaSrMWkkb.AY4bq",
         userEmail:"JonSnow@example.com"
     };
     var userArray = new Array();
     userArray.push(userJon);
+    // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
 
     const user = userArray[0];
-    if (!user) {
+    if (!user || (user.userName != userName)) {
         res.status(401);
         return res.send({
             error: 'Invalid username or password'
@@ -43,31 +45,33 @@ router.post('/login', async (req, res) => {
     }
 
     try{
-        await bcrypt.compare(password, user.userPassword, function(err, res){
-            if (err) {
+        await bcrypt.compare(password, user.userPassword, function(err, result){
+            if (err || !result) {
+                console.log("Incorrect Log In.")
                 res.status(401);
                 return res.send({
                     error: 'Invalid username or password'
                 });
             }
             else {
-                const token = jwt.sign(
-                    {data: {
+                console.log("Correct Log In. Creating Cookie.")
+                const token = jwt.sign({
+                        data: {
                         username: userName,
                         userId: user.userID
-                        }},
+                        }
+                    },
                     secret,
                     { 
-                        expiresIn: 60 * 60 
+                        expiresIn: 60 * 60 // would expire after 1 hour 
                     }
                 );
-                console.log("hello world!")
                 let options = {
-                    maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-                    //httpOnly: true, // The cookie only accessible by the web server
-                    //signed: true // Indicates if the cookie should be signed
+                    maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+                    httpOnly: true, // The cookie only accessible by the web server
                 };
-                res.cookie("cookieName", token, options)
+                res.clearCookie("jwt-auth-cookie")
+                res.cookie("jwt-auth-cookie", token, options);
                 return res.send("response from server");
             }
         });
@@ -80,20 +84,42 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
 router.post('/signup', async (req, res) => {
     const userName = req.body.userName;
     const userEmail = req.body.userEmail;
     const userPassword = req.body.userPassword;
-    console.log("username:"+req.body.userName+" email:"+req.body.email+" password"+req.body.password);
+    console.log("Creating User:")
 
+    // username and password validation.
+    if ((userName.length<6)
+            ||(userPassword.length<6)){
+        res.status(401);
+        return res.send({
+            error: 'Username and Password have to be at least 6 characters long.'
+        });
+    }
+
+    // email validation
+    var userEmail_split = userEmail.split("@")
+    if ((userEmail_split[0]=="")                            // empty string before @ sign
+            || (userEmail_split[1]==null)                   // no @ sign
+            || (userEmail_split[1].split(".")[0]=="")       // no email domain
+            || (userEmail_split[1].split(".")[1]==null)     // no . at the end for (e.g.)".com"
+            || (userEmail_split[1].split(".")[1]=="")){     // nothing after the . (e.g. no "com" or "ca")
+        res.status(401);
+        return res.send({
+            error: 'Invalid Email.'
+        });
+    }
+    
     //For the no db test cases, 
     //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
-
     try {
         const hashedPassword = await bcrypt.hash(userPassword, saltRounds)
-        console.log("hPassword:" + hashedPassword)
         //create model here for database
         //  use: userName, userEmail and userPassword
+        console.log(hashedPassword)
         return res.send({ message: 'User created' });
     }
     catch (ex) {
@@ -103,5 +129,11 @@ router.post('/signup', async (req, res) => {
         return res.send({ error: ex });
     }
 });
+
+// POST edit template to edit Username/Password/Email once authorized.
+router.post('/edit', authCheck, function(req, res){
+    console.log("\nValid jwt-auth-cookie. Beginning /edit.")
+    return res.send("Editing File")
+})
 
 module.exports = router;
