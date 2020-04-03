@@ -4,9 +4,9 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
-const indexRouter = require("./routes/index");
-const pingRouter = require("./routes/ping");
-
+//const indexRouter = require("./routes/index");
+//const pingRouter = require("./routes/ping");
+const userController = require("./routes/userController")
 const { json, urlencoded } = express;
 
 var app = express();
@@ -16,9 +16,12 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
+app.set('trust proxy', 1) // trust first proxy
 
-app.use("/", indexRouter);
-app.use("/ping", pingRouter);
+
+//app.use("/", indexRouter);
+//app.use("/ping", pingRouter);
+app.use('/user', userController);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
