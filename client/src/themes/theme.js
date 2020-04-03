@@ -72,7 +72,7 @@ export const dialogTheme = createMuiTheme({
     },
     MuiLink: {
       root: {
-        color: "red",
+        color: "#DF1B1B",
         fontWeight: "bold",
         cursor: "pointer",
       }

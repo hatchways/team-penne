@@ -4,6 +4,9 @@ import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Di
 import { Alert } from '@material-ui/lab';
 
 function SignUpDialog() {
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [nameErrorOpen, setNameErrorOpen] = React.useState(false);
   const [emailErrorOpen, setEmailErrorOpen] = React.useState(false);
   const [passwordErrorOpen, setPasswordErrorOpen] = React.useState(false);
@@ -14,11 +17,23 @@ function SignUpDialog() {
 
   const openSignIn = () => {
     window.location.href = "/login";
+  };
+
+  const changeName = event => {
+    setName(event.target.value);
   }
+
+  const changeEmail = event => {
+    setEmail(event.target.value);
+  };
+
+  const changePassword = event => {
+    setPassword(event.target.value);
+  };
 
   const validateName = name => {
     return name.length > 0 && !name.match(/\d/);
-  }
+  };
 
   const validateEmail = email => {
     let regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -30,9 +45,6 @@ function SignUpDialog() {
   };
 
   const validateSignUp = () => {
-    let name = document.getElementById('name-sign-up-input').value;
-    let email = document.getElementById('email-sign-up-input').value;
-    let password = document.getElementById('password-sign-up-input').value;
     let nameValidated = validateName(name);
     let emailValidated = validateEmail(email);
     let passwordValidated = validatePassword(password);
@@ -61,6 +73,7 @@ function SignUpDialog() {
     <DialogContent>
       <InputLabel>Your name:</InputLabel>
       <OutlinedInput
+        onChange={changeName}
 			  placeholder="Name"
 		    id="name-sign-up-input"
 				type="name"
@@ -70,6 +83,7 @@ function SignUpDialog() {
       </Collapse>
       <InputLabel>Your e-mail address:</InputLabel>
       <OutlinedInput
+        onChange={changeEmail}
         placeholder="E-mail"
         id="email-sign-up-input"
         type="email"
@@ -79,6 +93,7 @@ function SignUpDialog() {
       </Collapse>
       <InputLabel>Password:</InputLabel>
       <OutlinedInput
+        onChange={changePassword}
         id="password-sign-up-input"
         placeholder="Password"
         type="password"

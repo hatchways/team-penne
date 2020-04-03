@@ -4,15 +4,26 @@ import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Di
 import { Alert } from '@material-ui/lab';
 
 function LoginDialog() {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [emailErrorOpen, setEmailErrorOpen] = React.useState(false);
   const [passwordErrorOpen, setPasswordErrorOpen] = React.useState(false);
   
   const handleClose = () => {
     window.location.href = "/";
   };
+  
   const openSignUp = () => {
     window.location.href = "/sign-up";
-  }
+  };
+
+  const changeEmail = event => {
+    setEmail(event.target.value);
+  };
+
+  const changePassword = event => {
+    setPassword(event.target.value);
+  };
   
   const validateEmail = email => {
     let regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -24,8 +35,6 @@ function LoginDialog() {
   };
   
   const validateLogin = () => {
-    let email = document.getElementById('email-sign-in-input').value;
-    let password = document.getElementById('password-sign-in-input').value;
     let emailValidated = validateEmail(email);
     let passwordValidated = validatePassword(password);
     if (!emailValidated) {
@@ -48,6 +57,7 @@ function LoginDialog() {
     <DialogContent>
       <InputLabel>Your e-mail address:</InputLabel>
       <OutlinedInput
+        onChange={changeEmail}
         placeholder="E-mail"
         id="email-sign-in-input"
         type="email"
@@ -57,6 +67,7 @@ function LoginDialog() {
       </Collapse>
       <InputLabel>Password:</InputLabel>
       <OutlinedInput
+        onChange={changePassword}
         id="password-sign-in-input"
         placeholder="Password"
         type="password"
