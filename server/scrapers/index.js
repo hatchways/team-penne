@@ -42,12 +42,44 @@ const scrapeAmazon = async (url) => {
 const scrapeEbay = async (url) => {
   const page = await __launchPuppeteer(url);
 
-  const item = await page.evaluate(() => {
-    let title = document.getElementsByClassName("product-title")[0].innerHTML;
-    let price = document.getElementsByClassName("display-price")[0].innerHTML;
+  let item;
+  try {
+    item = await page.evaluate(() => {
+      let title;
+      if (document.getElementById("itemTitle")) {
+        title = document
+          .getElementById("itemTitle")
+          .innerHTML.split("</span>")[1];
+      } else if (document.getElementsByClassName("product-title")) {
+        title = document.getElementsByClassName("product-title")[0].innerHTML;
+      }
+      let price;
+      if (document.getElementById("prcIsu")) {
+        price = document.getElementById("prcIsu").innerHTML.split(" ")[1];
+      } else if (document.getElementById("prcIsum")) {
+        price = document.getElementById("prcIsum").innerHTML;
+      } else if (document.getElementsByClassName("display-price")) {
+        price = document.getElementsByClassName("display-price")[0].innerHTML;
+      }
+      let listPrice;
 
-    return { title, price };
-  });
+      if (document.getElementsByClassName("additional-price")[1]) {
+        listPrice = document
+          .getElementsByClassName("additional-price")[1]
+          .innerHTML.split(">")[1]
+          .split("</span")[0];
+      } else if (document.getElementById("mm-SaleOrgPrc")) {
+        listPrice = document
+          .getElementById("mm-saleOrgPrc")
+          .innerHTML.split(" ")[1];
+      }
+      return listPrice
+        ? { title, price, listPrice, sale: true }
+        : { title, price, sale: false };
+    });
+  } catch (err) {
+    return { error: "Scraping website failed" };
+  }
   return item;
 };
 
