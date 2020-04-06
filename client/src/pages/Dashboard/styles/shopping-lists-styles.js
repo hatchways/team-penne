@@ -4,7 +4,7 @@ const useStyles = makeStyles({
   dashBody: {
     display: "flex",
     justifyContent: "center",
-    minWidth: "580px"
+    minWidth: "580px",
   },
   newItem: {
     display: "flex",
@@ -13,8 +13,8 @@ const useStyles = makeStyles({
     alignItems: "center",
     marginTop: "7vh",
     "& p": {
-      textAlign: "center"
-    }
+      textAlign: "center",
+    },
   },
   input: {
     display: "flex",
@@ -35,29 +35,29 @@ const useStyles = makeStyles({
       fontSize: "20px",
       color: "rgb(192, 192, 192)",
       "&:focus": {
-        outline: "none"
+        outline: "none",
       },
       "&::placeholder": {
-        color: "rgb(192, 192, 192)"
-      }
+        color: "rgb(192, 192, 192)",
+      },
     },
     "& button": {
       borderRadius: "50px 50px 50px 50px",
       width: "170px",
-      margin: "10px 10px 10px 0px"
-    }
+      margin: "10px 10px 10px 0px",
+    },
   },
   verticalLine: {
     borderLeft: "solid thin rgb(212,212,212)",
-    marginRight: "10px"
+    marginRight: "10px",
   },
   InputLabel: {
-    width: "100px"
+    width: "100px",
   },
   cardsTitleLeft: {
     display: "flex",
-    marginBottom: "20px"
-  }
+    marginBottom: "20px",
+  },
 });
 
 export default useStyles;
