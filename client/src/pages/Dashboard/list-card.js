@@ -5,11 +5,16 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Box
+  Box,
+  ButtonBase
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/list-card-styles";
+
+const openNewList = () => {
+  window.location.href += ("/create-new-list");
+};
 
 export default function ListCard({ image, name, amount, addCard }) {
   const classes = useStyles();
@@ -27,7 +32,7 @@ export default function ListCard({ image, name, amount, addCard }) {
     </Card>
   ) : (
     <Card className={classes.addCard}>
-      <CardActionArea>
+      <CardActionArea onClick={openNewList}>
         <Box
           display="flex"
           flexDirection="column"
