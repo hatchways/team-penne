@@ -66,7 +66,13 @@ function LoginDialog() {
     }
     if (emailValidated && passwordValidated) {
       localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
+      fetch("/user/login", {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userName: email, userPassword: password }),
+      });
       window.location.href = "/dashboard";
     }
   };
@@ -88,6 +94,7 @@ function LoginDialog() {
     >
       <DialogTitle
         classes={{ root: classes.dialogTitle }}
+        disableTypography
         id="form-dialog-title"
       >
         Sign In

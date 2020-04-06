@@ -4,7 +4,7 @@ const dialogStyles = makeStyles({
   dialogTitle: {
     paddingBottom: "0",
     textAlign: "center",
-    fontSize: "18px",
+    fontSize: "22px",
     fontWeight: "bolder",
   },
   dialogContent: {

@@ -82,9 +82,18 @@ function SignUpDialog() {
       setPasswordErrorOpen(false);
     }
     if (nameValidated && emailValidated && passwordValidated) {
-      localStorage.setItem("name", name);
       localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
+      fetch("/user/signup", {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: name,
+          userEmail: email,
+          userPassword: password,
+        }),
+      });
       window.location.href = "/dashboard";
     }
   };
@@ -106,6 +115,7 @@ function SignUpDialog() {
     >
       <DialogTitle
         classes={{ root: classes.dialogTitle }}
+        disableTypography
         id="form-dialog-title"
       >
         Sign Up
