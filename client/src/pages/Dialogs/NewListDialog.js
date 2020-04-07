@@ -1,6 +1,7 @@
-import React from "react";
-import ImageUploader from 'react-images-upload';
+import React, { useCallback }  from "react";
+import { useDropzone } from 'react-dropzone'
 import {
+  Box,
   Button,
   Collapse,
   Container,
@@ -22,6 +23,21 @@ function NewListDialog() {
   const [listPicture, setListPicture] = React.useState([]);
 
   const classes = dialogStyles();
+
+  const maxSize = 1048576;
+
+  const onDrop = useCallback(acceptedFiles => {
+    console.log(acceptedFiles);
+  }, []);
+
+  const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
+    onDrop,
+    accept: 'image/*',
+    minSize: 0,
+    maxSize,
+  });
+
+  const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
 
   const handleClose = () => {
     window.location.href = window.location.href.replace("/create-new-list", "");
@@ -53,11 +69,6 @@ function NewListDialog() {
       validateList();
     }
   };
-
-  const onDrop = (picture) => {
-    console.log("onDrop successful.");
-    setListPicture([picture]);
-  }
 
   return (
     <Dialog
@@ -100,18 +111,19 @@ function NewListDialog() {
         <InputLabel classes={{ root: classes.inputLabel }}>
           Add a cover
         </InputLabel>
-          <ImageUploader
-                withIcon={true}
-                withPreview={true}
-                label='Drop an image here or'
-                labelClass= {{contained: classes.outlinedInputRoot,}}
-                buttonText='select a file'
-                onChange={onDrop}
-                singleImage={true}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880}
-                fileSizeError=" file size is too big"
-            />
+        <Box className={classes.dropzoneBox}>
+          <div {...getRootProps()} className= {classes.dropzone}>
+          <input {...getInputProps()} />
+            {!isDragActive && 'Click here or drop a file to upload.'}
+            {isDragActive && !isDragReject && "Release to drop image."}
+            {isDragReject && "File type not accepted, sorry!"}
+            {isFileTooLarge && (
+            <div className="text-danger mt-2">
+              File is too large.
+            </div>
+          )}
+          </div>
+        </Box>
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
         <Button

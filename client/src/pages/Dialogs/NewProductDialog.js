@@ -141,7 +141,6 @@ function NewProductDialog() {
         <form className={classes.container}>
           <FormControl variant="outlined" className={classes.formControl}>
             <Select
-              placeholder="Select"
               labelId="select-product-list-label"
               id="select-product-list"
               disableUnderline={true}
@@ -150,7 +149,9 @@ function NewProductDialog() {
               value={list}
               className={classes.selectDropdown}
             >
-              <option aria-label="None" value="" />
+              <option value="" disabled selected hidden>
+                Select
+              </option>
               {lists.map((list) => (
                 <option value={list.name}>{list.name}</option >
               ))}

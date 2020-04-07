@@ -63,9 +63,25 @@ const dialogStyles = makeStyles({
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9,
+    paddingTop: '56.25%',
     marginTop:'30',
     maxWidth: "200px",
+  },
+  dropzone: {
+    textAlign: "center",
+    height: "200px",
+    width: "100%",
+    backgroundColor: "#fff",
+    border: "2px dashed rgb(224, 224, 224)",
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    fontSize: "16px",
+    cursor: "pointer",
+  },
+  dropzoneBox: {
+    paddingLeft: "25%",
+    paddingRight: "25%",
   }
 });
 
