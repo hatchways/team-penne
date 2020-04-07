@@ -5,6 +5,13 @@ import landingStyles from "./Styles/landingStyles";
 import logo from "../../assets/logo.png";
 
 class LandingPage extends Component {
+  openLogin = () => {
+    this.props.history.push("/login");
+  };
+  openSignUp = () => {
+    this.props.history.push("/sign-up");
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -16,7 +23,7 @@ class LandingPage extends Component {
           <Button
             classes={{ contained: classes.button }}
             variant="contained"
-            href="/login"
+            onClick={this.openLogin}
           >
             Sign In
           </Button>
@@ -25,7 +32,7 @@ class LandingPage extends Component {
           <Button
             classes={{ contained: classes.button }}
             variant="contained"
-            href="/sign-up"
+            onClick={this.openSignUp}
           >
             Sign Up
           </Button>

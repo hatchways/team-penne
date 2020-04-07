@@ -3,11 +3,13 @@ import React from "react";
 import Navbar from "./navbar";
 import ShoppingLists from "./shopping-lists";
 
-export default function Dashboard() {
+function Dashboard(props) {
   return (
     <>
-      <Navbar />
+      <Navbar history={props.history} />
       <ShoppingLists />
     </>
   );
 }
+
+export default Dashboard;

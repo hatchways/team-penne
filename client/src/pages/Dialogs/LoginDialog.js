@@ -16,7 +16,7 @@ import {
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
 
-function LoginDialog() {
+function LoginDialog(props) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [emailErrorOpen, setEmailErrorOpen] = React.useState(false);
@@ -25,11 +25,11 @@ function LoginDialog() {
   const classes = dialogStyles();
 
   const handleClose = () => {
-    window.location.href = window.location.href.replace("/login", "");
+    props.history.push(window.location.pathname.replace("/login", ""));
   };
 
   const openSignUp = () => {
-    window.location.href = window.location.href.replace("/login", "/sign-up");
+    props.history.push(window.location.pathname.replace("/login", "/sign-up"));
   };
 
   const changeEmail = (event) => {
@@ -66,20 +66,25 @@ function LoginDialog() {
     }
     if (emailValidated && passwordValidated) {
       localStorage.setItem("email", email);
+      let status;
       fetch("/user/login", {
         method: "POST",
-        header: {
+        headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ userName: email, userPassword: password }),
+      }).then((res) => {
+        status = res.status;
+        if (status === 200) {
+          props.history.push("/dashboard");
+        }
       });
-      window.location.href = "/dashboard";
     }
   };
 
   const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode == 13) {
+    if (keyCode === 13) {
       validateLogin();
     }
   };

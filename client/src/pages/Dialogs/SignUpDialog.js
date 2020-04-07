@@ -16,7 +16,7 @@ import {
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
 
-function SignUpDialog() {
+function SignUpDialog(props) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -27,11 +27,11 @@ function SignUpDialog() {
   const classes = dialogStyles();
 
   const handleClose = () => {
-    window.location.href = window.location.href.replace("/sign-up", "");
+    props.history.push(window.location.pathname.replace("/sign-up", ""));
   };
 
   const openSignIn = () => {
-    window.location.href = window.location.href.replace("/sign-up", "/login");
+    props.history.push(window.location.pathname.replace("/sign-up", "/login"));
   };
 
   const changeName = (event) => {
@@ -83,9 +83,10 @@ function SignUpDialog() {
     }
     if (nameValidated && emailValidated && passwordValidated) {
       localStorage.setItem("email", email);
+      let status;
       fetch("/user/signup", {
         method: "POST",
-        header: {
+        headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -93,14 +94,18 @@ function SignUpDialog() {
           userEmail: email,
           userPassword: password,
         }),
+      }).then((res) => {
+        status = res.status;
+        if (status === 200) {
+          props.history.push("/dashboard");
+        }
       });
-      window.location.href = "/dashboard";
     }
   };
 
   const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode == 13) {
+    if (keyCode === 13) {
       validateSignUp();
     }
   };
