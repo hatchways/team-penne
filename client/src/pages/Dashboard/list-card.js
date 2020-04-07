@@ -6,7 +6,6 @@ import {
   CardMedia,
   Typography,
   Box,
-  ButtonBase
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";

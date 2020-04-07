@@ -8,6 +8,7 @@ import SignUpDialog from "./pages/Dialogs/SignUpDialog";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NewListDialog from "./pages/Dialogs/NewListDialog";
 import NewProductDialog from "./pages/Dialogs/NewProductDialog";
+import EditList from "./pages/Dialogs/EditList";
 
 function App() {
   return (
@@ -19,9 +20,11 @@ function App() {
         <Route path="/sign-up" component={SignUpDialog} />
         <Route path="/create-new-list" component={NewListDialog} />
         <Route path="/add-new-product" component={NewProductDialog} />
+        <Route path="/edit-list" component={EditList} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/dashboard/create-new-list" component={NewListDialog} />
         <Route path="/dashboard/add-new-product" component={NewProductDialog} />
+        <Route path="/dashboard/edit-list" component={EditList} />
       </BrowserRouter>
     </MuiThemeProvider>
   );

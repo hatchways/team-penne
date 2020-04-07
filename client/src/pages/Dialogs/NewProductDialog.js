@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
   InputLabel,  
   MenuItem,
   OutlinedInput,
@@ -71,8 +72,8 @@ function NewProductDialog() {
     setProductUrl(event.target.value);
   };
   
-  const checkProductUrl = (lName) => {
-    return lName.length > 0;
+  const checkProductUrl = (pUrl) => {
+    return pUrl.length > 0;
   }
 
   // add anymore product validation
@@ -137,26 +138,25 @@ function NewProductDialog() {
         <InputLabel classes={{ root: classes.inputLabel }}>
           Select list:
         </InputLabel>
-        <Container id="select-product-list" classes={{ root: classes.container }}>
-          <InputLabel htmlFor="select-product-list">
-            <Typography color="secondary">Select</Typography>          
-          </InputLabel>
-          <Select
-            native
-            labelId="select-product-list"
-            id="select-product-list"
-            style={{ color: "rgb(192,192,192)" }}
-            disableUnderline={true}
-            color="secondary"
-            value={list}
-            onChange={handleList}
-            autoWidth={true}
-          >
-            {lists.map((list) => (
-                    <MenuItem value={list.name}>{list.name}</MenuItem>
-                  ))}
-          </Select>
-        </Container>
+        <form className={classes.container}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <Select
+              placeholder="Select"
+              labelId="select-product-list-label"
+              id="select-product-list"
+              disableUnderline={true}
+              native
+              onChange={handleList}
+              value={list}
+              className={classes.selectDropdown}
+            >
+              <option aria-label="None" value="" />
+              {lists.map((list) => (
+                <option value={list.name}>{list.name}</option >
+              ))}
+            </Select>
+          </FormControl>
+        </form>
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
         <Button

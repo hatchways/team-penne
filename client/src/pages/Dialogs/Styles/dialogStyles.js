@@ -54,6 +54,19 @@ const dialogStyles = makeStyles({
     fontWeight: "bold",
     cursor: "pointer",
   },
+  formControl: {
+    textAlign: "center",
+    width: "68%",
+  },
+  selectDropdown: {
+    textAlignLast: "center",
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9,
+    marginTop:'30',
+    maxWidth: "200px",
+  }
 });
 
 export default dialogStyles;

@@ -10,7 +10,6 @@ import {
   DialogTitle,
   Divider,
   InputLabel,
-  Link,
   OutlinedInput,
   Typography,
 } from "@material-ui/core";
@@ -101,7 +100,6 @@ function NewListDialog() {
         <InputLabel classes={{ root: classes.inputLabel }}>
           Add a cover
         </InputLabel>
-        
           <ImageUploader
                 withIcon={true}
                 withPreview={true}
@@ -114,7 +112,6 @@ function NewListDialog() {
                 maxFileSize={5242880}
                 fileSizeError=" file size is too big"
             />
-        
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
         <Button
