@@ -1,0 +1,56 @@
+import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import useStyles from "./styles/navbar-styles";
+import logo from "../../assets/logo.png";
+import { Link } from "@material-ui/core";
+import { Route } from "react-router-dom";
+import LoginDialog from "../Dialogs/LoginDialog";
+import SignUpDialog from "../Dialogs/SignUpDialog";
+
+const profilePicImage =
+  "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg";
+
+function Navbar(props) {
+  const changeToLanding = () => {
+    props.history.push("");
+  };
+
+  const openLogin = () => {
+    props.history.push("/dashboard/login");
+  };
+
+  const openSignUp = () => {
+    props.history.push("/dashboard/sign-up");
+  };
+
+  const classes = useStyles();
+  return (
+    <AppBar position="sticky">
+      <Toolbar className={classes.nav}>
+        <div className={classes.alignLeft} onClick={changeToLanding}>
+          <img src={logo} alt="" />
+        </div>
+        <div className={classes.alignRight}>
+          <Link className={classes.link} onClick={openLogin}>
+            Login
+          </Link>
+          <Route path="/dashboard/login" component={LoginDialog} />
+          <Link className={classes.link} onClick={openSignUp}>
+            Sign Up
+          </Link>
+          <Route path="/dashboard/sign-up" component={SignUpDialog} />
+          <p>Shopping Lists</p>
+          <p>Friends</p>
+          <p>Notifications</p>
+          <div className={classes.circular}>
+            <img src={profilePicImage} alt="profile-pic" />
+          </div>
+          <p>Profile</p>
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+export default Navbar;
