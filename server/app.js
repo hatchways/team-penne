@@ -6,7 +6,6 @@ const logger = require("morgan");
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
-const userController = require("./routes/userController");
 const scraperRouter = require("./routes/scraper");
 
 const { json, urlencoded } = express;
@@ -22,7 +21,6 @@ app.set("trust proxy", 1); // trust first proxy
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
-app.use("/user", userController);
 app.use("/api", scraperRouter);
 
 // catch 404 and forward to error handler
