@@ -1,4 +1,4 @@
-import React, { useCallback }  from "react";
+import React, { useCallback, useEffect, useState }  from "react";
 import { useDropzone } from 'react-dropzone'
 import {
   Box,
@@ -20,37 +20,59 @@ import dialogStyles from "./Styles/dialogStyles";
 function NewListDialog() {
   const [listName, setListName] = React.useState("");
   const [listNameError, setListNameError] = React.useState(false);
-  const [listPicture, setListPicture] = React.useState([]);
+  const [activeImageBool, setActiveImageBool] = React.useState(false);
 
   const classes = dialogStyles();
 
+  // DROPZONE Functions
   const maxSize = 1048576;
-
+  const [files, setFiles] = useState([]);
   const onDrop = useCallback(acceptedFiles => {
     console.log(acceptedFiles);
+    setActiveImageBool("true")
+    setFiles(acceptedFiles.map(file => Object.assign(file, 
+      {preview: URL.createObjectURL(file)}
+    )));
   }, []);
-
   const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
     onDrop,
     accept: 'image/*',
     minSize: 0,
     maxSize,
   });
-
   const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
+  const filesoutput = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+  const dropzoneFilePreview = files.map(file => (
+    <div className={classes.dropzoneOuter} key={file.name}>
+      <div className={classes.dropzoneInner}>
+        <img
+          src={file.preview}
+          className={classes.img}
+        />
+      </div>
+    </div>
+  ));
+  useEffect(() => () => {
+    // Make sure to revoke the data uris to avoid memory leaks
+    files.forEach(file => URL.revokeObjectURL(file.preview));
+  }, [files]);
 
+  // Variable Handlers
   const handleClose = () => {
     window.location.href = window.location.href.replace("/create-new-list", "");
   };
-
   const changeListName = (event) => {
     setListName(event.target.value);
   };
-  
   const checkListName = (lName) => {
     return lName.length > 0;
   }
 
+  // Authentication
   // add anymore list validation
   const validateList = () => {
     let validListName = checkListName(listName)
@@ -72,7 +94,7 @@ function NewListDialog() {
 
   return (
     <Dialog
-      scroll="body"
+      scroll="paper"
       fullWidth
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
@@ -113,15 +135,18 @@ function NewListDialog() {
         </InputLabel>
         <Box className={classes.dropzoneBox}>
           <div {...getRootProps()} className= {classes.dropzone}>
-          <input {...getInputProps()} />
-            {!isDragActive && 'Click here or drop a file to upload.'}
-            {isDragActive && !isDragReject && "Release to drop image."}
-            {isDragReject && "File type not accepted, sorry!"}
-            {isFileTooLarge && (
-            <div className="text-danger mt-2">
-              File is too large.
-            </div>
-          )}
+            <input {...getInputProps()} />
+              {!isDragActive && !activeImageBool && 'Click here or drop a file to upload.'}
+              {isDragActive && !activeImageBool && !isDragReject && "Release to drop image."}
+              {isDragReject && !activeImageBool && "File type not accepted, sorry!"}
+              {isFileTooLarge && (
+                <div className="text-danger mt-2">
+                  File is too large.
+                </div>
+              )}
+              <aside className={classes.dropzoneContainer}>
+                {activeImageBool && dropzoneFilePreview}
+              </aside>
           </div>
         </Box>
       </DialogContent>

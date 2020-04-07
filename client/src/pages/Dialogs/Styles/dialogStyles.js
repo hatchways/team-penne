@@ -9,6 +9,7 @@ const dialogStyles = makeStyles({
   },
   dialogContent: {
     paddingBottom: "0",
+    textAlign: "center"
   },
   inputLabel: {
     color: "black",
@@ -80,9 +81,38 @@ const dialogStyles = makeStyles({
     cursor: "pointer",
   },
   dropzoneBox: {
-    paddingLeft: "25%",
-    paddingRight: "25%",
-  }
+    paddingLeft: "10%",
+    paddingRight: "10%",
+  },
+  dropzoneContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dropzoneOuter: {
+    display: 'inline-flex',
+    borderRadius: 2,
+    border: '1px solid #eaeaea',
+    marginBottom: 2,
+    marginRight: 8,
+    maxWidth: "90%",
+    height: 175,
+    padding: 4,
+    boxSizing: 'border-box',
+    textAlign: "center",
+  },
+  dropzoneInner: {
+    display: 'flex',
+    minWidth: 0,
+    overflow: 'hidden',
+  },
+  img:{
+    display: 'block',
+    width: 'auto',
+    height: '100%',
+  },  
 });
 
 export default dialogStyles;

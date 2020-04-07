@@ -97,7 +97,7 @@ function NewProductDialog() {
 
   return (
     <Dialog
-      scroll="body"
+      scroll="paper"
       fullWidth
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
