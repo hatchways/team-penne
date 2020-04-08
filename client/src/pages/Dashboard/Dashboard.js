@@ -6,7 +6,7 @@ import ShoppingLists from "./shopping-lists";
 function Dashboard(props) {
   return (
     <>
-      <Navbar history={props.history} />
+      <Navbar handleLogout={props.handleLogout} history={props.history} />
       <ShoppingLists />
     </>
   );

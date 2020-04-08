@@ -67,7 +67,7 @@ function LoginDialog(props) {
     if (emailValidated && passwordValidated) {
       localStorage.setItem("email", email);
       let status;
-      fetch("/user/login", {
+      fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,6 +76,7 @@ function LoginDialog(props) {
       }).then((res) => {
         status = res.status;
         if (status === 200) {
+          props.handleLogin();
           props.history.push("/dashboard");
         }
       });
