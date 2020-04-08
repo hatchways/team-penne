@@ -1,72 +1,74 @@
 import { makeStyles } from "@material-ui/styles";
 
 const dialogStyles = makeStyles({
-  dialogTitle: {
-    paddingBottom: "0",
-    textAlign: "center",
-    fontSize: "18px",
-    fontWeight: "bolder",
+  alert: {
+    marginTop: "10px",
   },
-  dialogContent: {
-    paddingBottom: "0",
-    textAlign: "center"
+  button: {
+    backgroundColor: "#DF1B1B",
+    color: "white",
+    borderRadius: "500px",
+    marginBottom: "25px",
+    marginTop: "25px",
   },
-  inputLabel: {
-    color: "black",
-    fontWeight: "bolder",
-    marginTop: "30px",
-    textAlign: "center",
-    marginBottom: "10px",
+  cardManager: {
+    marginTop: 20,
+    height: "100%",
+  },
+  cardDivider: {
+    display: 'flex',
+    alignItems: "flex-start",
+    padding: 5,
+    textAlign: "left",
+  },
+  cardImageBox: {
+    overflow: 'hidden',
+    borderRadius: 2,
+    border: '1px solid #eaeaea',
+    maxWidth: "25%",
+    height: "100%",
+  },
+  cardImg: {
+    display: 'block',
+    width: '100%',
+    height: 'auto',
+  },
+  cardTextBox: {
+    marginLeft: "10px",
+  },
+  cardTitle:{
+    fontSize: "10pt",
+    marginLeft: "0",
+    marginRight: "0",
+    fontWeight: "bold",
+  },
+  cardURL:{
+    fontSize: "8pt",
+    marginLeft: "0",
+    marginRight: "0",
+    fontWeight: "bold",
+    color: "rgb(181, 181, 181)",
   },
   container: {
     textAlign: "center",
-  },
-  outlinedInputRoot: {
-    width: "75%",
-  },
-  outlinedInputInput: {
-    textAlign: "center",
-  },
-  alert: {
-    marginTop: "10px",
   },
   dialogActions: {
     justifyContent: "center",
     height: "90px",
     paddingTop: "0",
   },
-  button: {
-    backgroundColor: "#DF1B1B",
-    color: "white",
-    fontWeight: "bold",
-    borderRadius: "500px",
-    marginBottom: "25px",
-    marginTop: "25px",
+  dialogContent: {
+    paddingBottom: "0",
+    textAlign: "center"
+  },
+  dialogTitle: {
+    paddingBottom: "0",
+    textAlign: "center",
+    fontSize: "18px",
+    fontWeight: "bolder",
   },
   divider: {
     marginBottom: "20px",
-  },
-  footer: {
-    marginBottom: "15px",
-    textAlign: "center",
-  },
-  link: {
-    color: "#DF1B1B",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
-  formControl: {
-    textAlign: "center",
-    width: "68%",
-  },
-  selectDropdown: {
-    textAlignLast: "center",
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%',
-    marginTop:'30',
-    maxWidth: "200px",
   },
   dropzone: {
     textAlign: "center",
@@ -91,6 +93,11 @@ const dialogStyles = makeStyles({
     alignItems: "center",
     justifyContent: "center",
   },
+  dropzoneInner: {
+    display: 'flex',
+    minWidth: 0,
+    overflow: 'hidden',
+  },
   dropzoneOuter: {
     display: 'inline-flex',
     borderRadius: 2,
@@ -103,16 +110,49 @@ const dialogStyles = makeStyles({
     boxSizing: 'border-box',
     textAlign: "center",
   },
-  dropzoneInner: {
-    display: 'flex',
-    minWidth: 0,
-    overflow: 'hidden',
+  footer: {
+    marginBottom: "15px",
+    textAlign: "center",
+  },
+  formControl: {
+    textAlign: "center",
+    width: "68%",
   },
   img:{
     display: 'block',
     width: 'auto',
     height: '100%',
-  },  
+  },
+  inputLabel: {
+    color: "black",
+    fontWeight: "bolder",
+    marginTop: "30px",
+    textAlign: "center",
+    marginBottom: "10px",
+  },
+  link: {
+    color: "#DF1B1B",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+  outlinedInputInput: {
+    textAlign: "center",
+  },
+  outlinedInputRoot: {
+    width: "75%",
+  },
+  selectDropdown: {
+    textAlignLast: "center",
+  },
+  removeButton: {
+    backgroundColor: "#FFFFFF",
+    color: "black",
+    fontWeight: "bold",
+    borderRadius: 20,
+    marginBottom: "25px",
+    marginTop: "25px",
+    fontSize: "0.7em",
+  },
 });
 
 export default dialogStyles;

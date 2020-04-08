@@ -68,12 +68,13 @@ function NewListDialog() {
   const changeListName = (event) => {
     setListName(event.target.value);
   };
-  const checkListName = (lName) => {
-    return lName.length > 0;
-  }
 
   // Authentication
   // add anymore list validation
+  const checkListName = (lName) => {
+    return lName.length > 0;
+  }
+  
   const validateList = () => {
     let validListName = checkListName(listName)
     console.log("validListName is: ", validListName);

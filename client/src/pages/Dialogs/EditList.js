@@ -1,4 +1,5 @@
 import React from "react";
+import Truncate from 'react-truncate';
 import {
   Button,
   Card,
@@ -12,6 +13,7 @@ import {
   DialogTitle,
   Divider,
   Typography,
+  ListItem,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
@@ -40,13 +42,6 @@ const clothes = [
     url: "https://www.amazon.ca/FLY-HAWK-Button-Bamboo-Casual/dp/B07CT36T9F/ref=lp_10287298011_1_1_sspa?s=apparel&ie=UTF8&qid=1586275913&sr=1-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFZQlFFMzFSQjFRUUUmZW5jcnlwdGVkSWQ9QTA5MzM1MzU2Ukk4R0pPUEEwMTgmZW5jcnlwdGVkQWRJZD1BMDA2MzM4OTFTNThZRThDVDRVWDUmd2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3NlJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==",
   },
   {
-    name: "COOFANDY Men's Casual Long Sleeve Dress Shirt Denim Button Down Shirts",
-    price: "CDN$ 23.99 - CDN$ 36.99",
-    priceChange: ["no", ""],
-    image: "https://images-na.ssl-images-amazon.com/images/I/51+ws33sqEL._SL260_SX200_CR0,0,200,260_.jpg",
-    url: "https://www.amazon.ca/Coofandy-Casual-Sleeve-Button-Shirts/dp/B01FM46HI2/ref=lp_10287298011_1_22?s=apparel&ie=UTF8&qid=1586275913&sr=1-22",
-  },
-  {
     name: "FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men",
     price: "CDN$ 31.99",
     priceChange: ["no", ""],
@@ -69,6 +64,20 @@ const clothes = [
   },
   {
     name: "COOFANDY Men's Casual Long Sleeve Dress Shirt Denim Button Down Shirts",
+    price: "CDN$ 23.99 - CDN$ 36.99",
+    priceChange: ["no", ""],
+    image: "https://images-na.ssl-images-amazon.com/images/I/51+ws33sqEL._SL260_SX200_CR0,0,200,260_.jpg",
+    url: "https://www.amazon.ca/Coofandy-Casual-Sleeve-Button-Shirts/dp/B01FM46HI2/ref=lp_10287298011_1_22?s=apparel&ie=UTF8&qid=1586275913&sr=1-22",
+  },
+  {
+    name: "FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men",
+    price: "CDN$ 31.99",
+    priceChange: ["no", ""],
+    image: "https://images-na.ssl-images-amazon.com/images/I/41Q4rw8qRsL._SL260_SX200_CR0,0,200,260_.jpg",
+    url: "https://www.amazon.ca/FLY-HAWK-Button-Bamboo-Casual/dp/B07CT36T9F/ref=lp_10287298011_1_1_sspa?s=apparel&ie=UTF8&qid=1586275913&sr=1-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFZQlFFMzFSQjFRUUUmZW5jcnlwdGVkSWQ9QTA5MzM1MzU2Ukk4R0pPUEEwMTgmZW5jcnlwdGVkQWRJZD1BMDA2MzM4OTFTNThZRThDVDRVWDUmd2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3NlJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==",
+  },
+  {
+    name: "COOFANDY Men's Casual Long Sleeve Dress Shirt Denim Button Down Shirts COOFANDY Men's Casual Long Sleeve Dress Shirt Denim Button Down Shirts",
     price: "CDN$ 23.99 - CDN$ 36.99",
     priceChange: ["no", ""],
     image: "https://images-na.ssl-images-amazon.com/images/I/51+ws33sqEL._SL260_SX200_CR0,0,200,260_.jpg",
@@ -112,8 +121,6 @@ const lists = [
 
 function EditListDialog() {
   const [productUrl, setProductUrl] = React.useState("");
-  const [productUrlError, setProductUrlError] = React.useState(false);
-  const [list, setList] = React.useState("");
 
   const classes = dialogStyles();
 
@@ -133,6 +140,10 @@ function EditListDialog() {
   const redirectToNewProduct = () => {
     window.location.href = window.location.href.replace("/edit-list", "/add-new-product")
   };
+
+  const redirectToNewUrl = (url) => {
+    window.location.href = url;
+  }
 
   const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
@@ -157,27 +168,45 @@ function EditListDialog() {
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>
           {clothes.map((listItem) => (
-            <Card className={classes.root} variant="outlined" value={listItem.name}>
-              <CardMedia className={classes.media} image={listItem.image} title={listItem.name} />
+            <Card className={classes.cardManager} raised={true} value={listItem.name}>
               <CardActions>
-                <CardContent>
-                  <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    {listItem.name}
-                  </Typography>
-                  {listItem.price}
-                </CardContent>
-                <Button size="small">Remove</Button>
+                  <div className={classes.cardDivider}>
+                    <div className={classes.cardImageBox}>
+                      <img
+                        src={listItem.image}
+                        className={classes.cardImg}
+                      />
+                    </div>
+                    <div className={classes.cardTextBox}>
+                      <Typography 
+                        className={classes.cardTitle}
+                        color="textSecondary" 
+                        gutterBottom>
+                          <Truncate width={100*6}>
+                            {listItem.name}
+                          </Truncate>
+                      </Typography>
+                        <Typography
+                          className={classes.cardURL}
+                          gutterBottom
+                         >
+                          <Truncate width={100*3}>
+                            {listItem.url}
+                          </Truncate>
+                        </Typography>
+                      <h5>{listItem.price}</h5>
+                    </div>
+                  </div>
+                <Button
+                  classes={{outlined: classes.removeButton}}
+                  size="large"
+                  variant="outlined"
+                  >
+                  Remove
+                </Button>
               </CardActions>
             </Card>
           ))}
-        
-        <Collapse in={productUrlError}>
-          <Alert 
-            classes={{ root: classes.alert }} 
-            severity="error">
-            Error: List title format is invalid.
-          </Alert>
-        </Collapse>
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
         <Button
