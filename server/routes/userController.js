@@ -19,9 +19,8 @@ router.post("/login", async (req, res) => {
 
   //no username or password provided
   if (!userName || !password) {
-    return res.send({
-      error: "User name and password required.",
-    });
+    console.log("User name and password required.");
+    return res.status(401).send();
   }
 
   // NO DATABASE TEST CASE
@@ -29,8 +28,7 @@ router.post("/login", async (req, res) => {
   var userJon = {
     userID: 1,
     userName: "Jon Snow",
-    userPassword:
-      "$2b$10$ssOjjajRNgM8/Vvi/owYOeLSGbO6w14kpCCE1ttaSrMWkkb.AY4bq",
+    userPassword: "nothing",
     userEmail: "JonSnow@example.com",
   };
   var userArray = new Array();
@@ -38,14 +36,47 @@ router.post("/login", async (req, res) => {
   // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
 
   const user = userArray[0];
-  if (!user || user.userName != userName) {
-    res.status(401);
-    return res.send({
-      error: "Invalid username or password",
-    });
+  if (!user || user.userEmail != userName) {
+    console.log("Invalid email address.");
+    return res.status(401).send();
   }
 
-  try {
+  bcrypt.hash(user.userPassword, 10, function (err, hash) {
+    if (err) {
+      throw err;
+    }
+    bcrypt.compare(password, hash, function (err, result) {
+      if (err) {
+        throw err;
+      } else if (!result) {
+        console.log("Incorrect password.");
+        return res.status(401).send();
+      } else {
+        console.log("Correct log in, creating Cookie.");
+        const token = jwt.sign(
+          {
+            data: {
+              username: userName,
+              userId: user.userID,
+            },
+          },
+          secret,
+          {
+            expiresIn: 60 * 60, // would expire after 1 hour
+          }
+        );
+        let options = {
+          maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+          httpOnly: true, // The cookie only accessible by the web server
+        };
+        res.clearCookie("jwt-auth-cookie");
+        res.cookie("jwt-auth-cookie", token, options);
+        return res.status(200).send("response from server");
+      }
+    });
+  });
+
+  /*try {
     await bcrypt.compare(password, user.userPassword, function (err, result) {
       if (err || !result) {
         console.log("Incorrect Log In.");
@@ -81,7 +112,7 @@ router.post("/login", async (req, res) => {
     console.error(ex);
     res.status(400);
     return res.send({ error: ex });
-  }
+  }*/
 });
 
 router.post("/signup", async (req, res) => {
@@ -121,8 +152,8 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
-    console.log(hashedPassword);
-    return res.send({ message: "User created" });
+    //console.log(hashedPassword);
+    return res.status(200).send({ message: "User created" });
   } catch (ex) {
     //logger.error(ex);
     console.error(ex);

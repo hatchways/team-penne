@@ -30,7 +30,7 @@ function SignUpDialog(props) {
     props.history.push(window.location.pathname.replace("/sign-up", ""));
   };
 
-  const openSignIn = () => {
+  const openLogin = () => {
     props.history.push(window.location.pathname.replace("/sign-up", "/login"));
   };
 
@@ -84,7 +84,7 @@ function SignUpDialog(props) {
     if (nameValidated && emailValidated && passwordValidated) {
       localStorage.setItem("email", email);
       let status;
-      fetch("/user/signup", {
+      fetch("/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,6 +97,7 @@ function SignUpDialog(props) {
       }).then((res) => {
         status = res.status;
         if (status === 200) {
+          props.handleLogin();
           props.history.push("/dashboard");
         }
       });
@@ -203,7 +204,7 @@ function SignUpDialog(props) {
       <Divider classes={{ root: classes.divider }} />
       <Typography classes={{ root: classes.footer }}>
         Already a member?{" "}
-        <Link classes={{ root: classes.link }} onClick={openSignIn}>
+        <Link classes={{ root: classes.link }} onClick={openLogin}>
           Sign In
         </Link>
       </Typography>
