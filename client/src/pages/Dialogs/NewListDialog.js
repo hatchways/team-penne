@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState }  from "react";
-import { useDropzone } from 'react-dropzone'
+import { useHistory } from "react-router";
+import { useDropzone } from 'react-dropzone';
 import {
   Box,
   Button,
@@ -23,6 +24,7 @@ function NewListDialog() {
   const [activeImageBool, setActiveImageBool] = React.useState(false);
 
   const classes = dialogStyles();
+  const history = useHistory();
 
   // DROPZONE Functions
   const maxSize = 1048576;
@@ -63,7 +65,7 @@ function NewListDialog() {
 
   // Variable Handlers
   const handleClose = () => {
-    window.location.href = window.location.href.replace("/create-new-list", "");
+    history.push(window.location.pathname.replace("/create-new-list", ""));
   };
   const changeListName = (event) => {
     setListName(event.target.value);
@@ -81,7 +83,8 @@ function NewListDialog() {
     if(validListName){
       setListNameError(false);
       localStorage.setItem("listName", listName);
-      window.location.href = "/dashboard";
+      history.push(window.location.pathname.replace("/create-new-list", ""));
+      
     }
     else setListNameError(true);
   };

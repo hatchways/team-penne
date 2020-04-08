@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router';
 import {
   Button,
   Collapse,
@@ -10,10 +11,8 @@ import {
   Divider,
   FormControl,
   InputLabel,  
-  MenuItem,
   OutlinedInput,
   Select,
-  Typography,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
@@ -59,9 +58,10 @@ function NewProductDialog() {
   const [list, setList] = React.useState("");
 
   const classes = dialogStyles();
+  const history = useHistory();
 
   const handleClose = () => {
-    window.location.href = window.location.href.replace("/add-new-product", "");
+    history.push(window.location.pathname.replace("/add-new-product", ""));
   };
 
   const handleList = (event) => {
@@ -83,7 +83,7 @@ function NewProductDialog() {
     if(validProductUrl){
       setProductUrlError(false);
       localStorage.setItem("productUrl", productUrl);
-      window.location.href = "/dashboard";
+      history.push(window.location.pathname.replace("/add-new-product", ""));
     }
     else setProductUrlError(true);
   };
