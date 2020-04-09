@@ -1,22 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import EditListDialog from "../Dialogs/EditList"
+import { useHistory } from 'react-router';
 import {
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
   Typography,
-  Box
+  Box,
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/list-card-styles";
 
-export default function ListCard({ image, name, amount, addCard }) {
+function ListCard({ image, name, amount, addCard }) {
+  const history = useHistory();
+  const [listName, setListName] = useState("");
+  const [changedListName, setChangedListName] = useState("false");
+  
+  const openNewList = () => {
+    history.push("/dashboard/create-new-list")
+  };
+  const openEditList = (name) => {
+    console.log("Jump to EditList with ", name);
+    setListName(name);
+    setChangedListName("true");
+  };
+  useEffect(() => {
+    if(changedListName == "true"){
+      console.log("ListName changed to: ", listName);
+      setChangedListName("false");
+      history.push("/dashboard/edit-list", {name:listName})
+    }
+  }); // Only re-run the effect if listName changes
+
   const classes = useStyles();
   return !addCard ? (
     <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia className={classes.cardImage} image={image} title={name} />
+      <CardActionArea onClick={() => openEditList(name)}>
+        <CardMedia className={classes.cardImage} image={image} title={name}/>
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
@@ -27,7 +49,7 @@ export default function ListCard({ image, name, amount, addCard }) {
     </Card>
   ) : (
     <Card className={classes.addCard}>
-      <CardActionArea>
+      <CardActionArea onClick={openNewList}>
         <Box
           display="flex"
           flexDirection="column"
@@ -43,3 +65,5 @@ export default function ListCard({ image, name, amount, addCard }) {
     </Card>
   );
 }
+
+export default ListCard;
