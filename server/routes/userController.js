@@ -7,19 +7,20 @@ const jwt = require("jsonwebtoken");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
+const { addUserDB, getUserDBEmail } = require("../db/modelDB")
 
 const saltRounds = 10;
 router.use(cookieParser());
 
 router.post("/login", async (req, res) => {
   const secret = process.env.JWT_SECRET;
-  const userName = req.body.userName;
+  const userEmail = req.body.userEmail;
   const password = req.body.userPassword;
   console.log("\nLog in being attempted.");
 
   //no username or password provided
-  if (!userName || !password) {
-    console.log("User name and password required.");
+  if (!userEmail || !password) {
+    console.log("User email and password required.");
     return res.status(401).send();
   }
 
@@ -35,13 +36,14 @@ router.post("/login", async (req, res) => {
   userArray.push(userJon);
   // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
 
-  const user = userArray[0];
-  if (!user || user.userEmail != userName) {
+  const user = getUserDBEmail(userEmail);
+
+  if (!user || user.userEmail != userEmail) {
     console.log("Invalid email address.");
     return res.status(401).send();
   }
 
-  bcrypt.hash(user.userPassword, 10, function (err, hash) {
+  bcrypt.hash(user.userPassword, saltRounds, function (err, hash) {
     if (err) {
       throw err;
     }
@@ -56,7 +58,7 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
           {
             data: {
-              username: userName,
+              username: userEmail,
               userId: user.userID,
             },
           },
@@ -89,7 +91,7 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
           {
             data: {
-              username: userName,
+              username: userEmail,
               userId: user.userID,
             },
           },
@@ -146,13 +148,24 @@ router.post("/signup", async (req, res) => {
     });
   }
 
+  // addUserDB adds the user with userName, userPassword, userEmail to the fakeDB.
+  // return 0 or 1 for results.
+  if (!addUserDB(userName, userPassword, userEmail)){
+    console.log("User already exists.")
+    return res.status(400).send({ error: "User already exists."});
+  }
+  else{
+    return res.status(200).send({message: "User created."});
+  }
+
   //For the no db test cases,
   //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
+  // DELETE NEXT LINES if not saving password as encrypted.
   try {
     const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
-    //console.log(hashedPassword);
+
     return res.status(200).send({ message: "User created" });
   } catch (ex) {
     //logger.error(ex);
@@ -160,6 +173,7 @@ router.post("/signup", async (req, res) => {
     res.status(400);
     return res.send({ error: ex });
   }
+  // DELETE UNTIL HERE.
 });
 
 // POST edit template to edit Username/Password/Email once authorized.
