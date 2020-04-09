@@ -72,7 +72,7 @@ function LoginDialog(props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userName: email, userPassword: password }),
+        body: JSON.stringify({ userEmail: email, userPassword: password }),
       }).then((res) => {
         status = res.status;
         if (status === 200) {
