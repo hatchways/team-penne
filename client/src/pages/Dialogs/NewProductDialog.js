@@ -75,10 +75,6 @@ function NewProductDialog() {
   });
   const handleButtonClick = () => {
     getProductFromUrl();
-    if (!loading) {
-      setSuccess(false);
-      setLoading(true);
-    }
   };
 
   const handleList = (event) => {
@@ -91,6 +87,7 @@ function NewProductDialog() {
   // PRODUCT/LIST VERIFICATION
   const listVerification = () => {
     if (list != ""){
+      setListError(false);
       return true
     }
     setListError(true);
@@ -99,13 +96,16 @@ function NewProductDialog() {
   }
   const productUrlVerification = () => {
     if (productUrl.length > 0){
+      setProductUrlError(false);
       return true
     }
     setProductUrlError(true);
     return false
   }
   const verificationCheck = () => {
-    if(productUrlVerification() && listVerification()){
+    const prodValid = productUrlVerification();
+    const listValid = listVerification();
+    if(prodValid && listValid){
       return true
     }
     return false
@@ -113,7 +113,8 @@ function NewProductDialog() {
 
   const getProductFromUrl = () => {
     if(verificationCheck()){
-      setProductUrlError(false);
+      setSuccess(false);
+      setLoading(true);
       localStorage.setItem("productUrl", productUrl);
       fetch("/api/scrape/?url="+productUrl, {
         method: "GET",
@@ -129,7 +130,8 @@ function NewProductDialog() {
         setLoading(false);
         setSuccess(true);
         setLoadingButtonLabel("Product Retrieved");
-        console.log("Product Added!\nTitle: " +  res.title +
+        console.log("Product Added!\nId: " + res.productId +
+          "\nTitle: " +  res.title +
           "\nProduct Price: " + res.price +
           "\nProduct URL: " + res.imageURL + 
           "\nProduct on sale: " + res.sale
@@ -141,7 +143,7 @@ function NewProductDialog() {
                 imageURL: res.imageURL, 
                 sale: res.sale,
                 productURL: productUrl});
-        }, 2000);
+        }, 1000);
       })
       .catch((err) => {
         console.log(err);
@@ -156,7 +158,6 @@ function NewProductDialog() {
       console.log("Invalid username/password.");
       setLoading(false);
       setSuccess(false);
-      setLoadErr(true);
     }
   };
 

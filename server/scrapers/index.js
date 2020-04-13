@@ -13,7 +13,15 @@ const __launchPuppeteer = async (url) => {
 
 const scrapeAmazon = async (url) => {
   const page = await __launchPuppeteer(url);
-  console.log("SCRAPING AMAZON");
+  const splitUrl = url.split("/");
+  var productId = "";
+  for (i=0; i<splitUrl.length; i++){
+    if (splitUrl[i] == "product"){
+      productId = splitUrl[i+1];
+      break;
+    }
+  }
+  productId = productId.split("?")[0];
 
   const item = await page.evaluate(() => {
     let title = document
@@ -39,6 +47,8 @@ const scrapeAmazon = async (url) => {
       : { title, price, imageURL, sale: false };
   });
 
+  item["productId"] = productId;
+  console.log("Generated item: ");
   console.log(item);
   return item;
 };

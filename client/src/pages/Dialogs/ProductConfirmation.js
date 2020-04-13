@@ -39,7 +39,7 @@ function ProductConfirmationDialog() {
       // INSERT POST REQUEST TO UPDATE DATABASE HERE
       timer.current = setTimeout(() => {
           history.push(window.location.pathname.replace("/confirm-product", ""));
-      }, 2000);
+      }, 1000);
     };
     const handleDenyButtonClick = () => {
       if (!loadingDeny) {
@@ -48,7 +48,7 @@ function ProductConfirmationDialog() {
       }
       timer.current = setTimeout(() => {
           history.push(window.location.pathname.replace("/confirm-product", "/add-new-product"));
-      }, 2000);
+      }, 1000);
     }
 
     return (
