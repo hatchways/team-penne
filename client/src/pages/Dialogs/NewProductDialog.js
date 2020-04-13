@@ -1,7 +1,9 @@
 import React from "react";
-import { useHistory } from 'react-router';
+import { useHistory } from "react-router";
+import clsx from "clsx";
 import {
   Button,
+  CircularProgress,
   Collapse,
   Container,
   Dialog,
@@ -16,7 +18,6 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
-
 
 // Dummy data for lists
 const lists = [
@@ -51,47 +52,118 @@ const lists = [
   },
 ];
 
-
 function NewProductDialog() {
-  const [productUrl, setProductUrl] = React.useState("");
-  const [productUrlError, setProductUrlError] = React.useState(false);
-  const [list, setList] = React.useState("");
-
   const classes = dialogStyles();
   const history = useHistory();
 
+  const [productUrl, setProductUrl] = React.useState("");
+  const [productUrlError, setProductUrlError] = React.useState(false);
+  const [list, setList] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [loadingButtonLabel, setLoadingButtonLabel] = React.useState("ADD ITEM");
+  const [loadErr, setLoadErr] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [listError, setListError] = React.useState(false);
+  const timer = React.useRef();
+
   const handleClose = () => {
     history.push(window.location.pathname.replace("/add-new-product", ""));
+  };
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+  const handleButtonClick = () => {
+    getProductFromUrl();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
   };
 
   const handleList = (event) => {
     setList(event.target.value)
   }
-
   const handleProductUrl = (event) => {
     setProductUrl(event.target.value);
   };
-  
-  const checkProductUrl = (pUrl) => {
-    return pUrl.length > 0;
+    
+  // PRODUCT/LIST VERIFICATION
+  const listVerification = () => {
+    if (list != ""){
+      return true
+    }
+    setListError(true);
+    setErrorMessage("Error: A list needs to be selected.");
+    return false
+  }
+  const productUrlVerification = () => {
+    if (productUrl.length > 0){
+      return true
+    }
+    setProductUrlError(true);
+    return false
+  }
+  const verificationCheck = () => {
+    if(productUrlVerification() && listVerification()){
+      return true
+    }
+    return false
   }
 
-  // add anymore product validation
-  const validateProduct = () => {
-    let validProductUrl = checkProductUrl(productUrl)
-    console.log("validProductUrl is: ", validProductUrl);
-    if(validProductUrl){
+  const getProductFromUrl = () => {
+    if(verificationCheck()){
       setProductUrlError(false);
       localStorage.setItem("productUrl", productUrl);
-      history.push(window.location.pathname.replace("/add-new-product", ""));
+      fetch("/api/scrape/?url="+productUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((res) => {
+        setLoading(false);
+        setSuccess(true);
+        setLoadingButtonLabel("Product Retrieved");
+        console.log("Product Added!\nTitle: " +  res.title +
+          "\nProduct Price: " + res.price +
+          "\nProduct URL: " + res.imageURL + 
+          "\nProduct on sale: " + res.sale
+        );
+        timer.current = setTimeout(() => {
+            history.push(window.location.pathname.replace("/add-new-product", "/confirm-product"), 
+              {title: res.title, 
+                price: res.price, 
+                imageURL: res.imageURL, 
+                sale: res.sale,
+                productURL: productUrl});
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        setSuccess(false);
+        setLoadErr(true);
+        setErrorMessage("Error: There was an error loading your product. Please check the link and try again.");
+        setLoadingButtonLabel("ADD ITEM");
+      });
     }
-    else setProductUrlError(true);
+    else {
+      console.log("Invalid username/password.");
+      setLoading(false);
+      setSuccess(false);
+      setLoadErr(true);
+    }
   };
 
   const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
     if (keyCode == 13) {
-      validateProduct();
+      getProductFromUrl();
     }
   };
 
@@ -119,7 +191,7 @@ function NewProductDialog() {
               root: classes.outlinedInputRoot,
               input: classes.outlinedInputInput,
             }}
-            onKeyPress={enterSubmit}
+            //onKeyPress={enterSubmit}
             onChange={handleProductUrl}
             placeholder="Paste your link here"
             id="product-url-user-input"
@@ -157,17 +229,29 @@ function NewProductDialog() {
               ))}
             </Select>
           </FormControl>
+          <Collapse in={loadErr || listError}>
+            <Alert 
+              classes={{ root: classes.alert }} 
+              severity="error">
+              {errorMessage}
+            </Alert>
+          </Collapse>
         </form>
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
-        <Button
-          classes={{ contained: classes.button }}
-          onClick={validateProduct}
-          variant="contained"
-          size="large"
-        >
-          ADD ITEM
-        </Button>
+        <div>
+          <Button
+            classes={{ contained: classes.button }}
+            variant="contained"
+            size="large"
+            className={buttonClassname}
+            disabled={loading}
+            onClick={handleButtonClick}
+          >
+            {loadingButtonLabel}
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </Button>
+        </div>
       </DialogActions>
       <Divider classes={{ root: classes.divider }} />
     </Dialog>

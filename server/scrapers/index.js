@@ -13,6 +13,7 @@ const __launchPuppeteer = async (url) => {
 
 const scrapeAmazon = async (url) => {
   const page = await __launchPuppeteer(url);
+  console.log("SCRAPING AMAZON");
 
   const item = await page.evaluate(() => {
     let title = document
@@ -31,11 +32,14 @@ const scrapeAmazon = async (url) => {
       "priceBlockStrikePriceString"
     )[0];
 
+    const imageURL = document.getElementById("landingImage").src;
+
     return listPrice
-      ? { title, price, listPrice: listPrice.innerHTML, sale: true }
-      : { title, price, sale: false };
+      ? { title, price, imageURL, listPrice: listPrice.innerHTML, sale: true }
+      : { title, price, imageURL, sale: false };
   });
 
+  console.log(item);
   return item;
 };
 
@@ -62,7 +66,6 @@ const scrapeEbay = async (url) => {
         price = document.getElementsByClassName("display-price")[0].innerHTML;
       }
       let listPrice;
-
       if (document.getElementsByClassName("additional-price")[1]) {
         listPrice = document
           .getElementsByClassName("additional-price")[1]
@@ -73,9 +76,15 @@ const scrapeEbay = async (url) => {
           .getElementById("mm-saleOrgPrc")
           .innerHTML.split(" ")[1];
       }
+      let imageURL;
+      if (document.getElementsByClassName("a-dynamic-image-a-stretch-horizontal")[1]){
+        imageURL = document
+          .getElementsByClassName("a-dynamic-image-a-stretch-horizontal")[1]
+          .getElementsByTagName("SRC")[1];
+      }
       return listPrice
-        ? { title, price, listPrice, sale: true }
-        : { title, price, sale: false };
+        ? { title, price, imageURL, listPrice, sale: true }
+        : { title, price, imageURL, sale: false };
     });
   } catch (err) {
     return { error: "Scraping website failed" };

@@ -6,6 +6,7 @@ import ShoppingLists from "./shopping-lists";
 import NewListDialog from "../Dialogs/NewListDialog";
 import NewProductDialog from "../Dialogs/NewProductDialog";
 import EditList from "../Dialogs/EditList";
+import ProductConfirmation from "../Dialogs/ProductConfirmation";
 
 function Dashboard(props) {
   return (
@@ -15,6 +16,7 @@ function Dashboard(props) {
       <Route path="/dashboard/create-new-list" component={NewListDialog} />
       <Route path="/dashboard/add-new-product" component={NewProductDialog} />
       <Route path="/dashboard/edit-list" component={EditList} />
+      <Route path="/dashboard/confirm-product" component={ProductConfirmation} />
     </>
   );
 }

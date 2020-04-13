@@ -1,12 +1,7 @@
 import { makeStyles } from "@material-ui/styles";
+import { green } from '@material-ui/core/colors';
 
 const dialogStyles = makeStyles({
-  dialogTitle: {
-    paddingBottom: "0",
-    textAlign: "center",
-    fontSize: "22px",
-    fontWeight: "bolder",
-  },
   alert: {
     marginTop: "10px",
   },
@@ -16,6 +11,28 @@ const dialogStyles = makeStyles({
     borderRadius: "500px",
     marginBottom: "25px",
     marginTop: "25px",
+  },
+  buttonProgress: {
+    //color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  singleCardManager: {
+    display: 'flex',
+    alignItems: "flex-start",
+    padding: 5,
+    textAlign: "left",
+    marginTop: 20,
+    height: "100%",
   },
   cardManager: {
     marginTop: 20,
@@ -70,7 +87,7 @@ const dialogStyles = makeStyles({
   dialogTitle: {
     paddingBottom: "0",
     textAlign: "center",
-    fontSize: "18px",
+    fontSize: "22px",
     fontWeight: "bolder",
   },
   divider: {
@@ -115,6 +132,12 @@ const dialogStyles = makeStyles({
     padding: 4,
     boxSizing: 'border-box',
     textAlign: "center",
+  },
+  errorMessage: {
+    textAlign: 'center',
+    fontSize: 12,
+    marginTop: 0,
+    color: "rgb(255, 0, 0)",
   },
   footer: {
     marginBottom: "15px",
