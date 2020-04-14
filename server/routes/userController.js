@@ -6,11 +6,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const listRouter = require("./list");
 const { authCheck } = require("./authCheck");
-const { addUserDB, getUserDBEmail } = require("../db/modelDB");
-const models = require('../database/models');
-const User = models.User;
-const Product = models.Product;
-const List = models.List;
+const { createUser, getUser, updateUser } = require("../database/handlers/user");
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -26,120 +22,51 @@ router.post("/login", async (req, res) => {
     console.log("User email and password required.");
     return res.status(401).send();
   }
-
-  // NO DATABASE TEST CASE
-  // userPassword is "nothing" after it's been bcrypted.
-  var userJon = {
-    userID: 1,
-    userName: "Jon Snow",
-    userPassword: "nothing",
-    userEmail: "JonSnow@example.com",
-  };
-  var userArray = new Array();
-  userArray.push(userJon);
-
-  const jontest_obj = {
-    userName: "Jon Snow",
-    userEmail: "JonSnow@example.com",
-    userPassword: "nothing",
-    userImageURL: ""
-  };
-
-  User.findOne({where: {userEmail: "JonSnow@example.com"}}).
-    then(function(jontest){
-      if(jontest){
-        console.log("Jontest Exists.");
-        //jontest.userName = "Jon Snow";
-        //jontest.save();
-        console.log(jontest.userName);
-      }
-      else{
-        const jontest = User.create(jontest_obj);
-        console.log("Jontest Added.");
-      }
-    })
-
-  // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
-
-  const user = getUserDBEmail(userEmail);
-
-  if (!user || user.userEmail != userEmail) {
-    console.log("Invalid email address.");
-    return res.status(401).send();
-  }
-
-  bcrypt.hash(user.userPassword, saltRounds, function (err, hash) {
-    if (err) {
-      throw err;
+  
+  let userPromise = getUser("userEmail", userEmail);
+  userPromise.then(function(user){
+    if (!user || user.userEmail != userEmail) {
+      console.log("Invalid email address.");
+      return res.status(401).send({ message: "User created." });
     }
-    bcrypt.compare(password, hash, function (err, result) {
-      if (err) {
-        throw err;
-      } else if (!result) {
-        console.log("Incorrect password.");
-        return res.status(401).send();
-      } else {
-        console.log("Correct log in, creating Cookie.");
-        const token = jwt.sign(
-          {
-            data: {
-              username: userEmail,
-              userId: user.userID,
+    try {
+      bcrypt.compare(password, user.userPassword, function (err, result) {
+        if (err || !result) {
+          console.log("Incorrect Log In.");
+          res.status(401);
+          return res.send({
+            error: "Invalid username or password",
+          });
+        } else {
+          console.log("Correct Log In. Creating Cookie.");
+          const token = jwt.sign(
+            {
+              data: {
+                username: userEmail,
+                userId: user.userID,
+              },
             },
-          },
-          secret,
-          {
-            expiresIn: 60 * 60, // would expire after 1 hour
-          }
-        );
-        let options = {
-          maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
-        };
-        res.clearCookie("jwt-auth-cookie");
-        res.cookie("jwt-auth-cookie", token, options);
-        return res.status(200).send("response from server");
-      }
-    });
+            secret,
+            {
+              expiresIn: 60 * 60, // would expire after 1 hour
+            }
+          );
+          let options = {
+            maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+            httpOnly: true, // The cookie only accessible by the web server
+          };
+          res.clearCookie("jwt-auth-cookie");
+          res.cookie("jwt-auth-cookie", token, options);
+          return res.send("response from server");
+        }
+      });
+    } catch (ex) {
+      //logger.error(ex);
+      console.error(ex);
+      res.status(400);
+      return res.send({ error: ex });
+    }
   });
-
-  /*try {
-    await bcrypt.compare(password, user.userPassword, function (err, result) {
-      if (err || !result) {
-        console.log("Incorrect Log In.");
-        res.status(401);
-        return res.send({
-          error: "Invalid username or password",
-        });
-      } else {
-        console.log("Correct Log In. Creating Cookie.");
-        const token = jwt.sign(
-          {
-            data: {
-              username: userEmail,
-              userId: user.userID,
-            },
-          },
-          secret,
-          {
-            expiresIn: 60 * 60, // would expire after 1 hour
-          }
-        );
-        let options = {
-          maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
-        };
-        res.clearCookie("jwt-auth-cookie");
-        res.cookie("jwt-auth-cookie", token, options);
-        return res.send("response from server");
-      }
-    });
-  } catch (ex) {
-    //logger.error(ex);
-    console.error(ex);
-    res.status(400);
-    return res.send({ error: ex });
-  }*/
 });
 
 router.post("/signup", async (req, res) => {
@@ -173,16 +100,6 @@ router.post("/signup", async (req, res) => {
     });
   }
 
-  // addUserDB adds the user with userName, userPassword, userEmail to the fakeDB.
-  // return 0 or 1 for results.
-  if (!addUserDB(userName, userPassword, userEmail)){
-    console.log("User already exists.")
-    return res.status(400).send({ error: "User already exists."});
-  }
-  else{
-    return res.status(200).send({message: "User created."});
-  }
-
   //For the no db test cases,
   //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
   // DELETE NEXT LINES if not saving password as encrypted.
@@ -190,15 +107,22 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
-
-    return res.status(200).send({ message: "User created" });
+    const addUser = {userName: userName, userEmail: userEmail, userPassword: hashedPassword};
+    createUser(addUser)
+      .then(function(addedUserBool){
+        if(addedUserBool){
+          return res.status(200).send({ message: "User created." });
+        }
+        else{
+          return res.status(400).send({ message: "User creation error." });
+        }
+      })
+    
   } catch (ex) {
-    //logger.error(ex);
     console.error(ex);
     res.status(400);
     return res.send({ error: ex });
   }
-  // DELETE UNTIL HERE.
 });
 
 // POST edit template to edit Username/Password/Email once authorized.
