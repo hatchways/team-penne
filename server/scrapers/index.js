@@ -16,7 +16,7 @@ const scrapeAmazon = async (url) => {
   const splitUrl = url.split("/");
   var productId = "";
   for (i=0; i<splitUrl.length; i++){
-    if (splitUrl[i] == "product"){
+    if (splitUrl[i] == "dp"){
       productId = splitUrl[i+1];
       break;
     }
