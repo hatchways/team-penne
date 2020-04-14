@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const listRouter = require("./list");
 const { authCheck } = require("./authCheck");
-const { createUser, getUser, updateUser } = require("../database/handlers/user");
+const { createUser, getUser, updateUser } = require("../database/handlers/userDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());

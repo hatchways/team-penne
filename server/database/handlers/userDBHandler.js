@@ -25,7 +25,7 @@ function createUser(newUser){
 
 /*
   getUser
-  arguments: "userName/userEmail", userName/userEmail (respectively)
+  arguments: identifierType:("userName/userEmail/userId"), userIdentifier:(userName/userEmail/userId (respectively))
   returns: PROMISE for user
 
   POSSIBLE BUG: if userName structured like e-mail (e.g. userName = jonsnow@example.com, userEmail = js@example.com)
@@ -46,6 +46,12 @@ function getUser(identifierType, userIdentifier){
             return foundUser;
         });
     }
+    else if(identifierType=="userId"){
+      return User.findOne({where: {userId: userIdentifier}})
+      .then(function(foundUser){
+          return foundUser;
+      });
+  }
     else{
         return {};
     }
@@ -65,4 +71,8 @@ async function updateUser(updateUserEmail, updateVariableType, updateVariable){
     });
 };
 
-module.exports = { createUser, getUser, updateUser };
+module.exports = { 
+  createUser, 
+  getUser, 
+  updateUser 
+};
