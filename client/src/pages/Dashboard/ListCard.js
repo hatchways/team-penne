@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import EditListDialog from "../Dialogs/EditList"
-import { useHistory } from 'react-router';
+import { useHistory } from "react-router";
+import { Route } from "react-router-dom";
 import {
   Card,
   CardActionArea,
@@ -9,28 +9,32 @@ import {
   Typography,
   Box,
 } from "@material-ui/core";
-
 import AddIcon from "@material-ui/icons/Add";
-import useStyles from "./styles/list-card-styles";
+import useStyles from "./styles/listCardStyles";
+import NewListDialog from "../Dialogs/NewListDialog";
+import EditListDialog from "../Dialogs/EditListDialog";
+import NewProductDialog from "../Dialogs/NewProductDialog";
 
-function ListCard({ image, name, amount, addCard }) {
+function ListCard({ image, name, amount, addCard, addItemList }) {
   const history = useHistory();
   const [listName, setListName] = useState("");
   const [changedListName, setChangedListName] = useState("false");
-  
+
   const openNewList = () => {
-    history.push("/dashboard/create-new-list")
+    history.push("/dashboard/create-new-list");
   };
+
   const openEditList = (name) => {
     console.log("Jump to EditList with ", name);
     setListName(name);
     setChangedListName("true");
   };
+
   useEffect(() => {
-    if(changedListName == "true"){
+    if (changedListName === "true") {
       console.log("ListName changed to: ", listName);
       setChangedListName("false");
-      history.push("/dashboard/edit-list", {name:listName})
+      history.push("/dashboard/edit-list", { name: listName });
     }
   }); // Only re-run the effect if listName changes
 
@@ -38,7 +42,7 @@ function ListCard({ image, name, amount, addCard }) {
   return !addCard ? (
     <Card className={classes.card}>
       <CardActionArea onClick={() => openEditList(name)}>
-        <CardMedia className={classes.cardImage} image={image} title={name}/>
+        <CardMedia className={classes.cardImage} image={image} title={name} />
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
@@ -46,6 +50,8 @@ function ListCard({ image, name, amount, addCard }) {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <Route path="/dashboard/edit-list" component={EditListDialog} />
+      <Route path="/dashboard/add-new-product" component={NewProductDialog} />
     </Card>
   ) : (
     <Card className={classes.addCard}>
@@ -62,6 +68,12 @@ function ListCard({ image, name, amount, addCard }) {
           </Typography>
         </Box>
       </CardActionArea>
+      <Route
+        path="/dashboard/create-new-list"
+        render={() => {
+          return <NewListDialog addItemList={addItemList} />;
+        }}
+      />
     </Card>
   );
 }
