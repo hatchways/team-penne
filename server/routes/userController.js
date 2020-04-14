@@ -1,13 +1,16 @@
 require("dotenv").config();
 const express = require("express");
-const bcrypt = require("bcrypt");
 const router = express.Router();
-//const models = require('../database/models');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const logger = require("morgan");
 const cookieParser = require("cookie-parser");
+const listRouter = require("./list");
 const { authCheck } = require("./authCheck");
-const { addUserDB, getUserDBEmail } = require("../db/modelDB")
+const { addUserDB, getUserDBEmail } = require("../db/modelDB");
+const models = require('../database/models');
+const User = models.User;
+const Product = models.Product;
+const List = models.List;
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -34,6 +37,28 @@ router.post("/login", async (req, res) => {
   };
   var userArray = new Array();
   userArray.push(userJon);
+
+  const jontest_obj = {
+    userName: "Jon Snow",
+    userEmail: "JonSnow@example.com",
+    userPassword: "nothing",
+    userImageURL: ""
+  };
+
+  User.findOne({where: {userEmail: "JonSnow@example.com"}}).
+    then(function(jontest){
+      if(jontest){
+        console.log("Jontest Exists.");
+        //jontest.userName = "Jon Snow";
+        //jontest.save();
+        console.log(jontest.userName);
+      }
+      else{
+        const jontest = User.create(jontest_obj);
+        console.log("Jontest Added.");
+      }
+    })
+
   // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
 
   const user = getUserDBEmail(userEmail);
@@ -181,5 +206,7 @@ router.post("/edit", authCheck, function (req, res) {
   console.log("\nValid jwt-auth-cookie. Beginning /edit.");
   return res.send("Editing File");
 });
+
+router.post("/list", listRouter)
 
 module.exports = router;
