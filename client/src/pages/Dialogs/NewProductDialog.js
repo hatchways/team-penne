@@ -17,13 +17,11 @@ import {
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
 
-// Dummy data for lists
-const lists = [];
-
-function NewProductDialog() {
+function NewProductDialog(props) {
   const [productUrl, setProductUrl] = React.useState("");
   const [productUrlError, setProductUrlError] = React.useState(false);
   const [list, setList] = React.useState("");
+  const listNames = props.itemLists.map((list) => list.name);
 
   const classes = dialogStyles();
   const history = useHistory();
@@ -50,7 +48,6 @@ function NewProductDialog() {
     console.log("validProductUrl is: ", validProductUrl);
     if (validProductUrl) {
       setProductUrlError(false);
-      localStorage.setItem("productUrl", productUrl);
       history.push(window.location.pathname.replace("/add-new-product", ""));
     } else setProductUrlError(true);
   };
@@ -117,8 +114,8 @@ function NewProductDialog() {
               <option value="" disabled selected hidden>
                 Select
               </option>
-              {lists.map((list) => (
-                <option value={list.name}>{list.name}</option>
+              {listNames.map((name) => (
+                <option value={name}>{name}</option>
               ))}
             </Select>
           </FormControl>

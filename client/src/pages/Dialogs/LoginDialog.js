@@ -65,7 +65,6 @@ function LoginDialog(props) {
       setPasswordErrorOpen(false);
     }
     if (emailValidated && passwordValidated) {
-      localStorage.setItem("email", email);
       let status;
       fetch("/login", {
         method: "POST",
@@ -78,6 +77,7 @@ function LoginDialog(props) {
         if (status === 200) {
           props.handleLogin();
           props.history.push("/dashboard");
+          localStorage.setItem("email", email);
         }
       });
     }

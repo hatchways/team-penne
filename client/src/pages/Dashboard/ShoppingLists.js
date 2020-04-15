@@ -39,6 +39,7 @@ export default function ShoppingLists() {
       })
       .then((res) => {
         setItemLists(res.itemLists);
+        localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
       });
   };
 
@@ -114,6 +115,7 @@ export default function ShoppingLists() {
                     image={list.image}
                     name={list.name}
                     amount={list.amount}
+                    itemLists={itemLists}
                   />
                 );
               })}

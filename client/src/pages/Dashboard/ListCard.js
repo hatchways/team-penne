@@ -15,7 +15,7 @@ import NewListDialog from "../Dialogs/NewListDialog";
 import EditListDialog from "../Dialogs/EditListDialog";
 import NewProductDialog from "../Dialogs/NewProductDialog";
 
-function ListCard({ image, name, amount, addCard, addItemList }) {
+function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const history = useHistory();
   const [listName, setListName] = useState("");
   const [changedListName, setChangedListName] = useState("false");
@@ -50,8 +50,18 @@ function ListCard({ image, name, amount, addCard, addItemList }) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <Route path="/dashboard/edit-list" component={EditListDialog} />
-      <Route path="/dashboard/add-new-product" component={NewProductDialog} />
+      <Route
+        path="/dashboard/edit-list"
+        render={() => {
+          return <EditListDialog listName={listName} />;
+        }}
+      />
+      <Route
+        path="/dashboard/add-new-product"
+        render={() => {
+          return <NewProductDialog itemLists={itemLists} />;
+        }}
+      />
     </Card>
   ) : (
     <Card className={classes.addCard}>
