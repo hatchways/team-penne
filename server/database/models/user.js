@@ -4,12 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      defaultValue: 0,
     },
     userName: DataTypes.STRING,
     userEmail: DataTypes.STRING,
     userPassword: DataTypes.STRING,
     userImageURL: DataTypes.STRING
-  }, {});
+  }, {
+    timestamps: false
+  });
   Users.associate = function(models) {
     // associations can be defined here
     Users.hasMany(models.Lists, {as: 'list'})

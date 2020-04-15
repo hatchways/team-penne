@@ -4,13 +4,16 @@ module.exports = (sequelize, DataTypes) => {
     productId: {
       type: DataTypes.STRING,
       primaryKey: true,
+      defaultValue: "",
     },
     productName: DataTypes.STRING,
     productURL: DataTypes.STRING,
     productImageURL: DataTypes.STRING,
     productPrice: DataTypes.INTEGER,
     productSalePrice: DataTypes.INTEGER
-  }, {});
+  }, {
+    timestamps: false
+  });
   Products.associate = function(models) {
     // associations can be defined here
     Products.belongsToMany(models.Lists, {
