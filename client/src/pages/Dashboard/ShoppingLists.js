@@ -31,19 +31,28 @@ export default function ShoppingLists() {
   };
 
   const getItemLists = () => {
-    fetch("/itemLists/lists")
-      .then((res) => {
+    fetch("/itemLists/getLists", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+      }).then((res) => {
         if (res.status === 200) {
           return res.json();
         }
       })
       .then((res) => {
+        console.log("itemLists: " + res.itemLists);
         setItemLists(res.itemLists);
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
       });
   };
 
   const addItemList = (name, image) => {
-    fetch("/itemLists", {
+    fetch("/itemLists/addLists", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

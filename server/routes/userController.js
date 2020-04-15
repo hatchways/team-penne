@@ -4,7 +4,6 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const listRouter = require("./list");
 const { authCheck } = require("./authCheck");
 const { createUser, getUser, updateUser } = require("../database/handlers/userDBHandler");
 
@@ -39,11 +38,12 @@ router.post("/login", async (req, res) => {
           });
         } else {
           console.log("Correct Log In. Creating Cookie.");
+          console.log(user);
           const token = jwt.sign(
             {
               data: {
-                username: userEmail,
-                userId: user.userID,
+                userEmail: userEmail,
+                userId: user.userId,
               },
             },
             secret,
@@ -137,5 +137,13 @@ router.post("/edit", authCheck, function (req, res) {
   return res.send("Editing File");
 });
 
-router.post("/list", listRouter)
+router.post("/itemLists/addLists", authCheck, async (req, res) => {
+  console.log("In AddLists");
+  return res.status(200).send({ message: "Added List." });
+});
+
+router.get("/itemLists/getLists", authCheck, async (req, res) => {
+  console.log("In GetLists");
+
+});
 module.exports = router;

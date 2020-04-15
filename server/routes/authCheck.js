@@ -11,6 +11,8 @@ const authCheck = (req, res, next) => {
                 res.send(401);
             }
             else {
+                console.log("Correct Token! UserId: ");
+                console.log(decoded);
                 next();
             }
         });
