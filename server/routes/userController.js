@@ -104,6 +104,7 @@ router.post("/signup", async (req, res) => {
   //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
   // DELETE NEXT LINES if not saving password as encrypted.
   try {
+    const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
     const addUser = {userName: userName, userEmail: userEmail, userPassword: hashedPassword};
@@ -137,5 +138,4 @@ router.post("/edit", authCheck, function (req, res) {
 });
 
 router.post("/list", listRouter)
-
 module.exports = router;

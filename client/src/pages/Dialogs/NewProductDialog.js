@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import { useHistory } from "react-router";
 import {
   Button,
@@ -47,22 +48,24 @@ function NewProductDialog() {
   };
 
   const handleList = (event) => {
-    setList(event.target.value);
-  };
-
+    setList(event.target.value)
+  }
   const handleProductUrl = (event) => {
     setProductUrl(event.target.value);
   };
-
-  const checkProductUrl = (pUrl) => {
-    return pUrl.length > 0;
-  };
-
-  // add anymore product validation
-  const validateProduct = () => {
-    let validProductUrl = checkProductUrl(productUrl);
-    console.log("validProductUrl is: ", validProductUrl);
-    if (validProductUrl) {
+    
+  // PRODUCT/LIST VERIFICATION
+  const listVerification = () => {
+    if (list != ""){
+      setListError(false);
+      return true
+    }
+    setListError(true);
+    setErrorMessage("Error: A list needs to be selected.");
+    return false
+  }
+  const productUrlVerification = () => {
+    if (productUrl.length > 0){
       setProductUrlError(false);
       return true
     }
@@ -83,14 +86,55 @@ function NewProductDialog() {
       setSuccess(false);
       setLoading(true);
       localStorage.setItem("productUrl", productUrl);
-      history.push(window.location.pathname.replace("/add-new-product", ""));
-    } else setProductUrlError(true);
+      fetch("/api/scrape/?url="+productUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((res) => {
+        setLoading(false);
+        setSuccess(true);
+        setLoadingButtonLabel("Product Retrieved");
+        console.log("Product Added!\nId: " + res.productId +
+          "\nTitle: " +  res.title +
+          "\nProduct Price: " + res.price +
+          "\nProduct URL: " + res.imageURL + 
+          "\nProduct on sale: " + res.sale
+        );
+        timer.current = setTimeout(() => {
+            history.push(window.location.pathname.replace("/add-new-product", "/confirm-product"), 
+              {title: res.title, 
+                price: res.price, 
+                imageURL: res.imageURL, 
+                sale: res.sale,
+                productURL: productUrl});
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        setSuccess(false);
+        setLoadErr(true);
+        setErrorMessage("Error: There was an error loading your product. Please check the link and try again.");
+        setLoadingButtonLabel("ADD ITEM");
+      });
+    }
+    else {
+      console.log("Invalid username/password.");
+      setLoading(false);
+      setSuccess(false);
+    }
   };
 
   const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode === 13) {
-      validateProduct();
+    if (keyCode == 13) {
+      getProductFromUrl();
     }
   };
 
@@ -128,7 +172,9 @@ function NewProductDialog() {
           />
         </Container>
         <Collapse in={productUrlError}>
-          <Alert classes={{ root: classes.alert }} severity="error">
+          <Alert 
+            classes={{ root: classes.alert }} 
+            severity="error">
             Error: List title format is invalid.
           </Alert>
         </Collapse>
@@ -150,7 +196,7 @@ function NewProductDialog() {
                 Select
               </option>
               {lists.map((list) => (
-                <option value={list.name}>{list.name}</option>
+                <option value={list.name}>{list.name}</option >
               ))}
             </Select>
           </FormControl>
