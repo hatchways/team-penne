@@ -48,8 +48,8 @@ const scrapeAmazon = async (url) => {
   });
 
   item["productId"] = productId;
-  console.log("Generated item: ");
-  console.log(item);
+  //console.log("Generated item: ");
+  //console.log(item);
   return item;
 };
 

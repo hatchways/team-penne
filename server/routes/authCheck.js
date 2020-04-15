@@ -11,8 +11,8 @@ const authCheck = (req, res, next) => {
                 res.send(401);
             }
             else {
-                console.log("Correct Token! UserId: ");
-                console.log(decoded);
+                // on correct authCheck, send user identification data to pages
+                req.userData = decoded.data;
                 next();
             }
         });

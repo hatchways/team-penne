@@ -3,6 +3,19 @@ const { getUser } = require('./userDBHandler');
 const { getAllProductsbyListId } = require('./productDBHandler');
 const List = models.Lists;
 
+function reformatListStyle(list){
+    var formattedList = []
+    for(i=0; i<list.length; i++){
+        var tempListItem = {
+            name: list[i].listName, 
+            image: list[i].listImageURL,
+            amount: 0,
+        }
+        formattedList.push(tempListItem);
+    }
+    return formattedList
+}
+
 /*
     checkListExists: check if list(with listName) exists for user(with userId)
     arguments: userId of current user, listName of list to be checked (if exists)
@@ -11,11 +24,22 @@ const List = models.Lists;
 async function checkListExists(userId, listName){
     const userBool = await getUser("userId", userId)
         .then(function(user){
-            return List.findOne({ where: { listName: listName }, include: [user]})
+            return List.findOne({ 
+                    attributes: [ "listId", "listName", "listImageURL", "userId" ],
+                    where: { listName: listName , userId: user.userId} })
+                .then((foundList) => {
+                    if (foundList == null) return false;
+                    else return true;
+                })
+                .catch((err) => {
+                    console.log(err);
+                    console.log("User has no lists.");
+                    return false;
+                });
         })
-        .then(function(list){
-            if(list!=null) return true;
-            else return false;
+        .catch((err) => {
+            console.log(err)
+            console.log("User Doesn't exist.");
         });
     return userBool;
 }
@@ -25,9 +49,20 @@ async function checkListExists(userId, listName){
     arguments: userId of current user
     return: return names of all lists
 */
-async function getAllLists(userId){
-    const userAllLists = await List.findAll({ where: {userId: userId}})
-    return userAllLists;
+async function getAllLists(getUserId){
+    const userAllLists = await List.findAll({ 
+            attributes: [ "listName", "listImageURL" ],
+            where: { userId: getUserId }})
+        .then(function(res){
+            //console.log(res);
+            return res;
+        })
+        .catch(function(err){
+            console.log(err);
+            return [];
+        });
+    const formattedList = reformatListStyle(userAllLists);
+    return formattedList;
 }
 
 /*
@@ -61,20 +96,41 @@ async function getList(userId, listName){
     return: true if successful, false if unsuccessful
 */
 async function addList(userId, listName, listImage){
-    const addListBool = await getUser("userId", userId)
-        .then(function(user){
-            if(checkListExists(user.userId, listName)) return false;
+    let addListBool = await getUser("userId", userId)
+        .then(async function(user){
+            var listExistsBool = await checkListExists(user.userId, listName);
+            console.log("listExistsAlready: " + listExistsBool);
+            if(listExistsBool) return false;
             else{
                 if(listImage != null){
-                    return await List.create({listName: listName, listImageURL: listImage, userId: user.userId})
+                    return List.create({listName: listName, listImageURL: listImage, userId: user.userId})
+                        .then(function(res){
+                            console.log("Creating New List for User " + userId + " named " + listName);
+                            //console.log(res);
+                            return res;
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                            return null;
+                        })
                 }
                 else{
                     // Add implementation for default image here
                     return await List.create({listName: listName, userId: user.userId})
+                        .then(function(res){
+                            return res;
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                            return null;
+                        })
                 }
             }
+        })
+        .catch(function(err){
+            console.log(err);
         });
-    return addListBool;
+    return (addListBool!=null);
 }
 
 module.exports = {

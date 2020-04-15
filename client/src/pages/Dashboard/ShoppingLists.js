@@ -64,6 +64,8 @@ export default function ShoppingLists() {
       }),
     }).then(() => {
       getItemLists();
+    }).catch((err) => {
+      console.log(err);
     });
   };
 

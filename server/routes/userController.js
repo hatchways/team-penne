@@ -5,7 +5,16 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
-const { createUser, getUser, updateUser } = require("../database/handlers/userDBHandler");
+const { 
+  createUser, 
+  getUser, 
+  updateUser } = require("../database/handlers/userDBHandler");
+const { 
+  checkListExists, 
+  getAllLists, 
+  getList, 
+  addList, 
+  getAllListsWithValues  } = require("../database/handlers/listDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -37,7 +46,10 @@ router.post("/login", async (req, res) => {
         });
       } else {
         console.log("Correct Log In. Creating Cookie.");
-        console.log(user);
+        console.log("\nUserId: " + user.userId + 
+          " \nUsername: " + user.userName + 
+          " \nPassword: " + user.userPassword + 
+          " \nEmail: " + user.userEmail + "\n");
         const token = jwt.sign(
           {
             data: {
@@ -107,7 +119,7 @@ router.post("/signup", async (req, res) => {
     //  use: userName, userEmail and userPassword
     const addUser = {userName: userName, userEmail: userEmail, userPassword: hashedPassword};
     const addedUser = await createUser(addUser);
-    console.log(addedUser);
+    //console.log(addedUser);
     if(addedUser != null){
       console.log("Correct Sign Up. Creating Cookie.");
       const token = jwt.sign(
@@ -153,11 +165,30 @@ router.post("/edit", authCheck, function (req, res) {
 
 router.post("/itemLists/addLists", authCheck, async (req, res) => {
   console.log("In AddLists");
-  return res.status(200).send({ message: "Added List." });
+  const currentUserId = req.userData.userId;
+  addList(currentUserId, req.body.listName, req.body.listPicture)
+    .then(function(ret){
+      //console.log(ret);
+      res.status(200).send({ message: "Added List." });
+    })
+    .catch(function(err){
+      console.log(err);
+      res.status(400).send({ err });
+    })
 });
 
+// GET - retrieve all Lists for current user
 router.get("/itemLists/getLists", authCheck, async (req, res) => {
-  console.log("In GetLists");
+  const currentUserId = req.userData.userId;
+  console.log("\nIn GetLists");
+  let allLists = await getAllLists(currentUserId)
+    .then(function(allLists){
+      return allLists;
+    })
+    .catch(function(err){
+      console.log(err);
+    })
 
+  return res.status(200).send({itemLists: allLists});
 });
 module.exports = router;

@@ -45,6 +45,9 @@ function getUser(identifierType, userIdentifier){
         return User.findOne({where: {userEmail: userIdentifier}})
         .then(function(foundUser){
             return foundUser;
+        })
+        .catch(function(err){
+          console.log(err);
         });
     }
     // if userIdentifier is userName
@@ -52,17 +55,22 @@ function getUser(identifierType, userIdentifier){
         return User.findOne({where: {userName: userIdentifier}})
         .then(function(foundUser){
             return foundUser;
+        })
+        .catch(function(err){
+          console.log(err);
         });
     }
     else if(identifierType=="userId"){
-      return User.findOne({where: {userId: userIdentifier}})
+      return User.findByPk(userIdentifier)
       .then(function(foundUser){
           return foundUser;
+      })
+      .catch(function(err){
+        console.log(err);
       });
   }
-    else{
-        return {};
-    }
+  console.log("Invalid identifierType.");
+  return {};
   };
 
 /*
