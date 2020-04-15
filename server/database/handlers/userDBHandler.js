@@ -9,18 +9,26 @@ const User = models.Users;
 function createUser(newUser){
     console.log("Adding user to Database.");
     console.log(newUser);
-    return User.findOne({where: {userEmail: newUser.userEmail}})
-    .then(function(foundUser){
-      if(!foundUser){
-        User.create(newUser);
-        console.log("New User Added.");
-        return true;
-      }
-      else{
-        console.log("User Already Exists.");
-        return false;
-      }
-    })
+    return userCreatedBool = User.findOne({where: {userEmail: newUser.userEmail}})
+      .then(function(foundUser){
+        if(foundUser == null){
+          let addedUser = User.create(newUser)
+            .catch(function(err){
+              console.log(err, newUser);
+            })
+          console.log("New User Added.");
+          return addedUser;
+        }
+        else{
+          console.log("User Already Exists.");
+          return null;
+        }
+      })
+      .catch(function(err){
+        console.log(err);
+        return err;
+      });
+    
   };
 
 /*

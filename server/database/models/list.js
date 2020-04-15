@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       defaultValue: 0,
+      autoIncrement: true,
     },
     listName: DataTypes.STRING,
     listImageURL: DataTypes.STRING,

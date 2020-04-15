@@ -22,55 +22,49 @@ router.post("/login", async (req, res) => {
     return res.status(401).send();
   }
   
-  let userPromise = getUser("userEmail", userEmail);
-  userPromise.then(function(user){
-    if (!user || user.userEmail != userEmail) {
-      console.log("Invalid email address.");
-      return res.status(401).send({ message: "User created." });
-    }
-    try {
-      bcrypt.compare(password, user.userPassword, function (err, result) {
-        if (err || !result) {
-          console.log("Incorrect Log In.");
-          res.status(401);
-          return res.send({
-            error: "Invalid username or password",
-          });
-        } else {
-          console.log("Correct Log In. Creating Cookie.");
-          console.log(user);
-          const token = jwt.sign(
-            {
-              data: {
-                userEmail: userEmail,
-                userId: user.userId,
-              },
+  let user = await getUser("userEmail", userEmail);
+  if (!user || user.userEmail != userEmail) {
+    console.log("Invalid email address.");
+    return res.status(401).send({ message: "User created." });
+  }
+  try {
+    bcrypt.compare(password, user.userPassword, function (err, result) {
+      if (err || !result) {
+        console.log("Incorrect Log In.");
+        res.status(401);
+        return res.send({
+          error: "Invalid username or password",
+        });
+      } else {
+        console.log("Correct Log In. Creating Cookie.");
+        console.log(user);
+        const token = jwt.sign(
+          {
+            data: {
+              userEmail: userEmail,
+              userId: user.userId,
             },
-            secret,
-            {
-              expiresIn: 60 * 60, // would expire after 1 hour
-            }
-          );
-          let options = {
-            maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-            httpOnly: true, // The cookie only accessible by the web server
-          };
-          res.clearCookie("jwt-auth-cookie");
-          res.cookie("jwt-auth-cookie", token, options);
-          return res.send("response from server");
-        }
-      });
-    } catch (ex) {
-      //logger.error(ex);
-      console.error(ex);
-      res.status(400);
-      return res.send({ error: ex });
-    }
-  })
-    .catch(function(ex){
-      console.error(ex);
-      res.status(400);
+          },
+          secret,
+          {
+            expiresIn: 60 * 60, // would expire after 1 hour
+          }
+        );
+        let options = {
+          maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+          httpOnly: true, // The cookie only accessible by the web server
+        };
+        res.clearCookie("jwt-auth-cookie");
+        res.cookie("jwt-auth-cookie", token, options);
+        return res.send("response from server");
+      }
     });
+  } catch (ex) {
+    //logger.error(ex);
+    console.error(ex);
+    res.status(400);
+    return res.send({ error: ex });
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -112,15 +106,31 @@ router.post("/signup", async (req, res) => {
     //create model here for database
     //  use: userName, userEmail and userPassword
     const addUser = {userName: userName, userEmail: userEmail, userPassword: hashedPassword};
-    createUser(addUser)
-      .then(function(addedUserBool){
-        if(addedUserBool){
-          return res.status(200).send({ message: "User created." });
-        }
-        else{
-          return res.status(400).send({ message: "User creation error." });
-        }
-      })
+    const addedUser = await createUser(addUser);
+    console.log(addedUser);
+    if(addedUser != null){
+      console.log("Correct Sign Up. Creating Cookie.");
+      const token = jwt.sign(
+        {
+          data: {
+            userEmail: userEmail,
+            userId: addedUser.userId,
+          },
+        },
+        secret,
+        {expiresIn: 60 * 60,}   // would expire after 1 hour
+      );
+      let options = {
+        maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+        httpOnly: true, // The cookie only accessible by the web server
+      };
+      res.clearCookie("jwt-auth-cookie");
+      res.cookie("jwt-auth-cookie", token, options);
+      return res.status(200).send({ message: "User created." });
+    }
+    else{
+      return res.status(400).send({ message: "User creation error. User already exists." });
+    }
     
   } catch (ex) {
     console.error(ex);
