@@ -1,5 +1,5 @@
 const models = require('../models');
-const User = models.User;
+const User = models.Users;
 
 /*
     createUser

@@ -66,7 +66,11 @@ router.post("/login", async (req, res) => {
       res.status(400);
       return res.send({ error: ex });
     }
-  });
+  })
+    .catch(function(ex){
+      console.error(ex);
+      res.status(400);
+    });
 });
 
 router.post("/signup", async (req, res) => {

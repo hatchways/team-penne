@@ -1,22 +1,25 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const List = sequelize.define('List', {
-    listId: DataTypes.INTEGER,
+  const Lists = sequelize.define('Lists', {
+    listId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
     listName: DataTypes.STRING,
     listImageURL: DataTypes.STRING,
     userId: DataTypes.INTEGER,
   }, {});
-  List.associate = function(models) {
+  Lists.associate = function(models) {
     // associations can be defined here
-    List.belongsTo(models.User, {
+    Lists.belongsTo(models.Users, {
       foreignKey: 'userId', 
       as: 'user'
     });
-    List.belongsToMany(models.Product, {
+    Lists.belongsToMany(models.Products, {
       through: 'ListProducts', 
       foreignKey: 'listId', 
       as: 'list'
     })
   };
-  return List;
+  return Lists;
 };

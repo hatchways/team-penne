@@ -1,7 +1,7 @@
 const models = require('../models');
 const { getUser } = require('./userDBHandler');
 const { getAllProductsbyListId } = require('./productDBHandler');
-const List = models.List;
+const List = models.Lists;
 
 /*
     checkListExists: check if list(with listName) exists for user(with userId)

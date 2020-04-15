@@ -1,5 +1,5 @@
 const models = require('../models');
-const Product = models.Product;
+const Product = models.Products;
 const ListProducts = models.ListProducts;
 
 /*

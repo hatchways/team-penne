@@ -10,11 +10,19 @@ module.exports = {
       },
       listId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Lists',
+          key: 'listId',
+        },
       },
       productId: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'Products',
+          key: 'productId',
+        },
       }
     });
   },

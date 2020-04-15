@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   ListProducts.associate = function(models) {
     // associations can be defined here
-    ListProducts.belongsTo(models.List, {foreignKey: 'listId'})
-    ListProducts.belongsTo(models.Product, {foreignKey: 'productId'})
+    ListProducts.belongsTo(models.Lists, {foreignKey: 'listId'})
+    ListProducts.belongsTo(models.Products, {foreignKey: 'productId'})
   };
   return ListProducts;
 };
