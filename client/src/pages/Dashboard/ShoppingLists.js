@@ -8,7 +8,7 @@ import {
   Button,
   Grid,
   Box,
-  Typography,
+  Typography
 } from "@material-ui/core";
 
 import ListCard from "./ListCard.js";
@@ -22,11 +22,11 @@ export default function ShoppingLists() {
   const [open, setOpen] = useState(false);
   const [firstLoad, setFirstLoad] = useState(false);
 
-  const handleListChange = (e) => {
+  const handleListChange = e => {
     setList(e.target.value);
   };
 
-  const handleUrlChange = (e) => {
+  const handleUrlChange = e => {
     setUrl(e.target.value);
   };
 
@@ -34,19 +34,20 @@ export default function ShoppingLists() {
     fetch("/itemLists/getLists", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       }
-      }).then((res) => {
+    })
+      .then(res => {
         if (res.status === 200) {
           return res.json();
         }
       })
-      .then((res) => {
+      .then(res => {
         console.log("itemLists: " + res.itemLists);
         setItemLists(res.itemLists);
         localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         return;
       });
@@ -56,17 +57,19 @@ export default function ShoppingLists() {
     fetch("/itemLists/addLists", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         listName: name,
-        listPicture: image,
-      }),
-    }).then(() => {
-      getItemLists();
-    }).catch((err) => {
-      console.log(err);
-    });
+        listPicture: image
+      })
+    })
+      .then(() => {
+        getItemLists();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   if (!firstLoad) {
@@ -103,7 +106,7 @@ export default function ShoppingLists() {
                   onClose={() => setOpen(false)}
                   fullWidth
                 >
-                  {itemLists.map((list) => (
+                  {itemLists.map(list => (
                     <MenuItem value={list.name}>{list.name}</MenuItem>
                   ))}
                 </Select>
@@ -120,7 +123,7 @@ export default function ShoppingLists() {
               <Typography variant="h5">My Shopping Lists:</Typography>
             </div>
             <Grid container spacing={18}>
-              {itemLists.map((list) => {
+              {itemLists.map(list => {
                 return (
                   <ListCard
                     image={list.image}
