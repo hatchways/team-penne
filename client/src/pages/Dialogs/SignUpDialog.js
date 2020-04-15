@@ -82,7 +82,6 @@ function SignUpDialog(props) {
       setPasswordErrorOpen(false);
     }
     if (nameValidated && emailValidated && passwordValidated) {
-      localStorage.setItem("email", email);
       let status;
       fetch("/signup", {
         method: "POST",
@@ -99,6 +98,7 @@ function SignUpDialog(props) {
         if (status === 200) {
           props.handleLogin();
           props.history.push("/dashboard");
+          localStorage.setItem("email", email);
         }
       });
     }

@@ -2,7 +2,7 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { Button } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
-import useStyles from "./styles/navbar-styles";
+import useStyles from "./styles/navbarStyles";
 import logo from "../../assets/logo.png";
 
 const profilePicImage =
@@ -12,8 +12,13 @@ function Navbar(props) {
   const classes = useStyles();
 
   const handleLogout = () => {
-    props.history.push("/");
-    props.handleLogout();
+    fetch("/logout").then((res) => {
+      if (res.status === 200) {
+        localStorage.clear();
+        props.history.push("/");
+        props.handleLogout();
+      }
+    });
   };
 
   return (

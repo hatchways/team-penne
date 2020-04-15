@@ -11,47 +11,16 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import ListCard from "./list-card.js";
-import useStyles from "./styles/shopping-lists-styles";
-
-// Dummy data for lists
-const lists = [
-  {
-    name: "Shoes",
-    amount: 2,
-    image: "https://m.media-amazon.com/images/I/81eA2SDaGcL._AC_255_.jpg",
-  },
-  {
-    name: "Video Games",
-    amount: 51,
-    image:
-      "https://cnet4.cbsistatic.com/img/0EX8LMQJ2T0L65MB_V6vyI2D1RA=/1200x675/2019/11/04/2f494437-c7dd-4a4c-ac0b-aab7a93d996e/p1005326-2.jpg",
-  },
-  {
-    name: "Food",
-    amount: 61,
-    image:
-      "https://4.bp.blogspot.com/-1PPIpuTPnPY/UCudijf1DPI/AAAAAAAABgY/Ohzq0co9uyk/s1600/generic.jpg",
-  },
-  {
-    name: "Clothes",
-    amount: 32,
-    image:
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-  },
-  {
-    name: "Toiletries",
-    amount: 43,
-    image:
-      "https://www.travelfashiongirl.com/wp-content/uploads/2017/09/ultimate-guide-to-travel-toiletries-010.jpg",
-  },
-];
+import ListCard from "./ListCard.js";
+import useStyles from "./styles/shoppingListsStyles";
 
 export default function ShoppingLists() {
   const classes = useStyles();
+  const [itemLists, setItemLists] = useState([]);
   const [list, setList] = useState("");
   const [url, setUrl] = useState("");
   const [open, setOpen] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(false);
 
   const handleListChange = (e) => {
     setList(e.target.value);
@@ -60,6 +29,39 @@ export default function ShoppingLists() {
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
+
+  const getItemLists = () => {
+    fetch("/itemLists/lists")
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((res) => {
+        setItemLists(res.itemLists);
+        localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
+      });
+  };
+
+  const addItemList = (name, image) => {
+    fetch("/itemLists", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listName: name,
+        listPicture: image,
+      }),
+    }).then(() => {
+      getItemLists();
+    });
+  };
+
+  if (!firstLoad) {
+    getItemLists();
+    setFirstLoad(true);
+  }
 
   return (
     <div className={classes.dashBody}>
@@ -90,7 +92,7 @@ export default function ShoppingLists() {
                   onClose={() => setOpen(false)}
                   fullWidth
                 >
-                  {lists.map((list) => (
+                  {itemLists.map((list) => (
                     <MenuItem value={list.name}>{list.name}</MenuItem>
                   ))}
                 </Select>
@@ -107,16 +109,17 @@ export default function ShoppingLists() {
               <Typography variant="h5">My Shopping Lists:</Typography>
             </div>
             <Grid container spacing={18}>
-              {lists.map((list) => {
+              {itemLists.map((list) => {
                 return (
                   <ListCard
                     image={list.image}
                     name={list.name}
                     amount={list.amount}
+                    itemLists={itemLists}
                   />
                 );
               })}
-              <ListCard addCard={true} />
+              <ListCard addCard={true} addItemList={addItemList} />
             </Grid>
           </Box>
         </div>

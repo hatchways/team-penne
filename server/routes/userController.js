@@ -4,10 +4,9 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 //const models = require('../database/models');
 const jwt = require("jsonwebtoken");
-const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
-const { addUserDB, getUserDBEmail } = require("../db/modelDB")
+const { addUserDB, getUserDBEmail } = require("../db/modelDB");
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -58,7 +57,7 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
           {
             data: {
-              username: userEmail,
+              userEmail: userEmail,
               userId: user.userID,
             },
           },
@@ -77,48 +76,10 @@ router.post("/login", async (req, res) => {
       }
     });
   });
-
-  /*try {
-    await bcrypt.compare(password, user.userPassword, function (err, result) {
-      if (err || !result) {
-        console.log("Incorrect Log In.");
-        res.status(401);
-        return res.send({
-          error: "Invalid username or password",
-        });
-      } else {
-        console.log("Correct Log In. Creating Cookie.");
-        const token = jwt.sign(
-          {
-            data: {
-              username: userEmail,
-              userId: user.userID,
-            },
-          },
-          secret,
-          {
-            expiresIn: 60 * 60, // would expire after 1 hour
-          }
-        );
-        let options = {
-          maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
-        };
-        res.clearCookie("jwt-auth-cookie");
-        res.cookie("jwt-auth-cookie", token, options);
-        return res.send("response from server");
-      }
-    });
-  } catch (ex) {
-    //logger.error(ex);
-    console.error(ex);
-    res.status(400);
-    return res.send({ error: ex });
-  }*/
 });
 
 router.post("/signup", async (req, res) => {
-  console.log(req.body);
+  const secret = process.env.JWT_SECRET;
   const userName = req.body.userName;
   const userEmail = req.body.userEmail;
   const userPassword = req.body.userPassword;
@@ -150,19 +111,37 @@ router.post("/signup", async (req, res) => {
 
   // addUserDB adds the user with userName, userPassword, userEmail to the fakeDB.
   // return 0 or 1 for results.
-  if (!addUserDB(userName, userPassword, userEmail)){
-    console.log("User already exists.")
-    return res.status(400).send({ error: "User already exists."});
-  }
-  else{
-    return res.status(200).send({message: "User created."});
+  if (!addUserDB(userName, userPassword, userEmail)) {
+    console.log("User already exists.");
+    return res.status(400).send({ error: "User already exists." });
+  } else {
+    const user = getUserDBEmail(userEmail);
+    const token = jwt.sign(
+      {
+        data: {
+          userEmail: user.userEmail,
+          userId: user.userID,
+        },
+      },
+      secret,
+      {
+        expiresIn: 60 * 60, // would expire after 1 hour
+      }
+    );
+    let options = {
+      maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+      httpOnly: true, // The cookie only accessible by the web server
+    };
+    res.clearCookie("jwt-auth-cookie");
+    res.cookie("jwt-auth-cookie", token, options);
+    console.log("User created");
+    return res.status(200).send({ message: "User created." });
   }
 
   //For the no db test cases,
   //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
   // DELETE NEXT LINES if not saving password as encrypted.
   try {
-    const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
 
@@ -174,6 +153,12 @@ router.post("/signup", async (req, res) => {
     return res.send({ error: ex });
   }
   // DELETE UNTIL HERE.
+});
+
+router.get("/logout", async (req, res) => {
+  console.log("Logout successful");
+  res.clearCookie("jwt-auth-cookie");
+  res.status(200).send({ message: "Logout successful" });
 });
 
 // POST edit template to edit Username/Password/Email once authorized.

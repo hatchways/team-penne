@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
-import { green } from '@material-ui/core/colors';
+import { green } from "@material-ui/core/colors";
 
 const dialogStyles = makeStyles({
   alert: {
@@ -14,20 +14,20 @@ const dialogStyles = makeStyles({
   },
   buttonProgress: {
     //color: green[500],
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
   buttonSuccess: {
     backgroundColor: green[500],
-    '&:hover': {
+    "&:hover": {
       backgroundColor: green[700],
     },
   },
   singleCardManager: {
-    display: 'flex',
+    display: "flex",
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
@@ -39,33 +39,33 @@ const dialogStyles = makeStyles({
     height: "100%",
   },
   cardDivider: {
-    display: 'flex',
+    display: "flex",
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
   },
   cardImageBox: {
-    overflow: 'hidden',
+    overflow: "hidden",
     borderRadius: 2,
-    border: '1px solid #eaeaea',
+    border: "1px solid #eaeaea",
     maxWidth: "25%",
     height: "100%",
   },
   cardImg: {
-    display: 'block',
-    width: '100%',
-    height: 'auto',
+    display: "block",
+    width: "100%",
+    height: "auto",
   },
   cardTextBox: {
     marginLeft: "10px",
   },
-  cardTitle:{
+  cardTitle: {
     fontSize: "10pt",
     marginLeft: "0",
     marginRight: "0",
     fontWeight: "bold",
   },
-  cardURL:{
+  cardURL: {
     fontSize: "8pt",
     marginLeft: "0",
     marginRight: "0",
@@ -82,13 +82,7 @@ const dialogStyles = makeStyles({
   },
   dialogContent: {
     paddingBottom: "0",
-    textAlign: "center"
-  },
-  dialogTitle: {
-    paddingBottom: "0",
     textAlign: "center",
-    fontSize: "22px",
-    fontWeight: "bolder",
   },
   divider: {
     marginBottom: "20px",
@@ -110,31 +104,31 @@ const dialogStyles = makeStyles({
     paddingRight: "10%",
   },
   dropzoneContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
   },
   dropzoneInner: {
-    display: 'flex',
+    display: "flex",
     minWidth: 0,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   dropzoneOuter: {
-    display: 'inline-flex',
+    display: "inline-flex",
     borderRadius: 2,
-    border: '1px solid #eaeaea',
+    border: "1px solid #eaeaea",
     marginBottom: 2,
     marginRight: 8,
     maxWidth: "90%",
     height: 175,
     padding: 4,
-    boxSizing: 'border-box',
+    boxSizing: "border-box",
     textAlign: "center",
   },
   errorMessage: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 12,
     marginTop: 0,
     color: "rgb(255, 0, 0)",
@@ -147,10 +141,10 @@ const dialogStyles = makeStyles({
     textAlign: "center",
     width: "68%",
   },
-  img:{
-    display: 'block',
-    width: 'auto',
-    height: '100%',
+  img: {
+    display: "block",
+    width: "auto",
+    height: "100%",
   },
   inputLabel: {
     color: "black",
