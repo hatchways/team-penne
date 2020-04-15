@@ -17,23 +17,24 @@ import dialogStyles from "./Styles/dialogStyles";
 // Dummy data for items in shoes
 const clothes = [];
 
-function EditListDialog() {
-  const [productUrl, setProductUrl] = React.useState("");
-  const [listName, setListName] = React.useState("");
+function EditListDialog(props) {
+  const [, setProductUrl] = React.useState("");
+  const [listName, setListName] = React.useState(props.listName);
 
   const classes = dialogStyles();
   const history = useHistory();
 
+  const itemList = JSON.parse(localStorage.getItem("itemLists")).filter(
+    (itemList) => itemList.name.toUpperCase() === listName.toUpperCase()
+  )[0];
+
+  let itemListAmount;
+  if (itemList) {
+    itemListAmount = itemList.amount;
+  }
+
   const handleClose = () => {
     history.push(window.location.pathname.replace("/edit-list", ""));
-  };
-
-  const handleProductUrl = (event) => {
-    setProductUrl(event.target.value);
-  };
-
-  const checkProductUrl = (pUrl) => {
-    return pUrl.length > 0;
   };
 
   // add anymore product validation
@@ -43,22 +44,8 @@ function EditListDialog() {
     );
   };
 
-  const redirectToNewUrl = (url) => {
-    window.location.href = url;
-  };
-
-  const enterSubmit = (event) => {
-    let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode == 13) {
-      redirectToNewProduct();
-    }
-  };
-
   useEffect(() => {
-    console.log(history.location.state);
-    console.log("Old ListName ", listName);
     setListName(history.location.state.name);
-    console.log("Updated ListName ", listName);
   });
 
   return (
@@ -75,7 +62,7 @@ function EditListDialog() {
       >
         {listName}
         <Typography variant="body2" component="h1" color="textSecondary">
-          6 items
+          {itemListAmount} items
         </Typography>
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>

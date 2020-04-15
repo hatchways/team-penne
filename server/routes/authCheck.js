@@ -1,5 +1,5 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET;
 
 const authCheck = (req, res, next) => {
@@ -19,7 +19,13 @@ const authCheck = (req, res, next) => {
     }
     else {
         res.send(401);
-    }
-}
+      } else {
+        next();
+      }
+    });
+  } else {
+    res.send(401);
+  }
+};
 
-module.exports = {authCheck};
+module.exports = { authCheck };

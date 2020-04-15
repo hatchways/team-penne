@@ -19,10 +19,7 @@ import {
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
 
-// Dummy data for lists
-const lists = [];
-
-function NewProductDialog() {
+function NewProductDialog(props) {
   const classes = dialogStyles();
   const history = useHistory();
 
@@ -31,10 +28,13 @@ function NewProductDialog() {
   const [list, setList] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const [loadingButtonLabel, setLoadingButtonLabel] = React.useState("ADD ITEM");
+  const [loadingButtonLabel, setLoadingButtonLabel] = React.useState(
+    "ADD ITEM"
+  );
   const [loadErr, setLoadErr] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [listError, setListError] = React.useState(false);
+  const listNames = props.itemLists.map((list) => list.name);
   const timer = React.useRef();
 
   const handleClose = () => {
@@ -48,83 +48,98 @@ function NewProductDialog() {
   };
 
   const handleList = (event) => {
-    setList(event.target.value)
-  }
+    setList(event.target.value);
+  };
   const handleProductUrl = (event) => {
     setProductUrl(event.target.value);
   };
-    
+
   // PRODUCT/LIST VERIFICATION
   const listVerification = () => {
-    if (list != ""){
+    if (list != "") {
       setListError(false);
-      return true
+      return true;
     }
     setListError(true);
     setErrorMessage("Error: A list needs to be selected.");
-    return false
-  }
+    return false;
+  };
   const productUrlVerification = () => {
-    if (productUrl.length > 0){
+    if (productUrl.length > 0) {
       setProductUrlError(false);
-      return true
+      return true;
     }
     setProductUrlError(true);
-    return false
-  }
+    return false;
+  };
   const verificationCheck = () => {
     const prodValid = productUrlVerification();
     const listValid = listVerification();
-    if(prodValid && listValid){
-      return true
+    if (prodValid && listValid) {
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 
   const getProductFromUrl = () => {
-    if(verificationCheck()){
+    if (verificationCheck()) {
       setSuccess(false);
       setLoading(true);
       localStorage.setItem("productUrl", productUrl);
-      fetch("/api/scrape/?url="+productUrl, {
+      fetch("/api/scrape/?url=" + productUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-      }).then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
       })
-      .then((res) => {
-        setLoading(false);
-        setSuccess(true);
-        setLoadingButtonLabel("Product Retrieved");
-        console.log("Product Added!\nId: " + res.productId +
-          "\nTitle: " +  res.title +
-          "\nProduct Price: " + res.price +
-          "\nProduct URL: " + res.imageURL + 
-          "\nProduct on sale: " + res.sale
-        );
-        timer.current = setTimeout(() => {
-            history.push(window.location.pathname.replace("/add-new-product", "/confirm-product"), 
-              {title: res.title, 
-                price: res.price, 
-                imageURL: res.imageURL, 
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then((res) => {
+          setLoading(false);
+          setSuccess(true);
+          setLoadingButtonLabel("Product Retrieved");
+          console.log(
+            "Product Added!\nId: " +
+              res.productId +
+              "\nTitle: " +
+              res.title +
+              "\nProduct Price: " +
+              res.price +
+              "\nProduct URL: " +
+              res.imageURL +
+              "\nProduct on sale: " +
+              res.sale
+          );
+          timer.current = setTimeout(() => {
+            history.push(
+              window.location.pathname.replace(
+                "/add-new-product",
+                "/confirm-product"
+              ),
+              {
+                title: res.title,
+                price: res.price,
+                imageURL: res.imageURL,
                 sale: res.sale,
-                productURL: productUrl});
-        }, 1000);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-        setSuccess(false);
-        setLoadErr(true);
-        setErrorMessage("Error: There was an error loading your product. Please check the link and try again.");
-        setLoadingButtonLabel("ADD ITEM");
-      });
-    }
-    else {
+                productURL: productUrl,
+              }
+            );
+          }, 1000);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          setSuccess(false);
+          setLoadErr(true);
+          setErrorMessage(
+            "Error: There was an error loading your product. Please check the link and try again."
+          );
+          setLoadingButtonLabel("ADD ITEM");
+        });
+    } else {
       console.log("Invalid username/password.");
       setLoading(false);
       setSuccess(false);
@@ -195,15 +210,13 @@ function NewProductDialog() {
               <option value="" disabled selected hidden>
                 Select
               </option>
-              {lists.map((list) => (
-                <option value={list.name}>{list.name}</option >
+              {listNames.map((name) => (
+                <option value={name}>{name}</option>
               ))}
             </Select>
           </FormControl>
           <Collapse in={loadErr || listError}>
-            <Alert 
-              classes={{ root: classes.alert }} 
-              severity="error">
+            <Alert classes={{ root: classes.alert }} severity="error">
               {errorMessage}
             </Alert>
           </Collapse>
@@ -220,7 +233,9 @@ function NewProductDialog() {
             onClick={handleButtonClick}
           >
             {loadingButtonLabel}
-            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
           </Button>
         </div>
       </DialogActions>

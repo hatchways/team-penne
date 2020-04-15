@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
-import { green } from '@material-ui/core/colors';
+import { green } from "@material-ui/core/colors";
 
 const dialogStyles = makeStyles({
   alert: {
@@ -14,20 +14,20 @@ const dialogStyles = makeStyles({
   },
   buttonProgress: {
     //color: green[500],
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
   buttonSuccess: {
     backgroundColor: green[500],
-    '&:hover': {
+    "&:hover": {
       backgroundColor: green[700],
     },
   },
   singleCardManager: {
-    display: 'flex',
+    display: "flex",
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
@@ -134,7 +134,7 @@ const dialogStyles = makeStyles({
     textAlign: "center",
   },
   errorMessage: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 12,
     marginTop: 0,
     color: "rgb(255, 0, 0)",

@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cloudinary = require("cloudinary");
 const formData = require("express-form-data");
-const router = express();
-const { addItemList, getItemLists } = require("../db/modelDB");
+const router = express.Router();
+const { addItemList, getItemLists, getItemList } = require("../db/modelDB");
 
 cloudinary.config({
   cloud_name: "dtfapvikl",
@@ -26,6 +26,11 @@ router.post("/image-upload", async (req, res) => {
 
 router.get("/lists", async (req, res) => {
   res.status(200).send({ itemLists: getItemLists() });
+});
+
+router.get("/lists/:name", async (req, res) => {
+  let itemList = getItemList(req.params.name);
+  res.status(200).send({ itemList: itemList });
 });
 
 router.post("/", async (req, res) => {

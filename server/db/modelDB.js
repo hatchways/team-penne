@@ -7,6 +7,12 @@ function getItemLists() {
   return itemLists;
 }
 
+function getItemList(listName) {
+  return itemLists.filter(
+    (itemList) => itemList.name.toUpperCase() === listName.toUpperCase()
+  )[0];
+}
+
 function addItemList(itemList) {
   itemLists.push(itemList);
 }
@@ -63,4 +69,5 @@ module.exports = {
   getUserDBUsername,
   getItemLists,
   addItemList,
+  getItemList,
 };

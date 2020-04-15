@@ -44,6 +44,7 @@ export default function ShoppingLists() {
       .then((res) => {
         console.log("itemLists: " + res.itemLists);
         setItemLists(res.itemLists);
+        localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
       })
       .catch((err) => {
         console.log(err);
@@ -123,6 +124,7 @@ export default function ShoppingLists() {
                     image={list.image}
                     name={list.name}
                     amount={list.amount}
+                    itemLists={itemLists}
                   />
                 );
               })}
