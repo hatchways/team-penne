@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router";
 import {
   Button,
+  CircularProgress,
   Collapse,
   Container,
   Dialog,
@@ -21,15 +22,28 @@ import dialogStyles from "./Styles/dialogStyles";
 const lists = [];
 
 function NewProductDialog() {
-  const [productUrl, setProductUrl] = React.useState("");
-  const [productUrlError, setProductUrlError] = React.useState(false);
-  const [list, setList] = React.useState("");
-
   const classes = dialogStyles();
   const history = useHistory();
 
+  const [productUrl, setProductUrl] = React.useState("");
+  const [productUrlError, setProductUrlError] = React.useState(false);
+  const [list, setList] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [loadingButtonLabel, setLoadingButtonLabel] = React.useState("ADD ITEM");
+  const [loadErr, setLoadErr] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [listError, setListError] = React.useState(false);
+  const timer = React.useRef();
+
   const handleClose = () => {
     history.push(window.location.pathname.replace("/add-new-product", ""));
+  };
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+  const handleButtonClick = () => {
+    getProductFromUrl();
   };
 
   const handleList = (event) => {
@@ -50,6 +64,24 @@ function NewProductDialog() {
     console.log("validProductUrl is: ", validProductUrl);
     if (validProductUrl) {
       setProductUrlError(false);
+      return true
+    }
+    setProductUrlError(true);
+    return false
+  }
+  const verificationCheck = () => {
+    const prodValid = productUrlVerification();
+    const listValid = listVerification();
+    if(prodValid && listValid){
+      return true
+    }
+    return false
+  }
+
+  const getProductFromUrl = () => {
+    if(verificationCheck()){
+      setSuccess(false);
+      setLoading(true);
       localStorage.setItem("productUrl", productUrl);
       history.push(window.location.pathname.replace("/add-new-product", ""));
     } else setProductUrlError(true);
@@ -86,7 +118,7 @@ function NewProductDialog() {
               root: classes.outlinedInputRoot,
               input: classes.outlinedInputInput,
             }}
-            onKeyPress={enterSubmit}
+            //onKeyPress={enterSubmit}
             onChange={handleProductUrl}
             placeholder="Paste your link here"
             id="product-url-user-input"
@@ -122,17 +154,29 @@ function NewProductDialog() {
               ))}
             </Select>
           </FormControl>
+          <Collapse in={loadErr || listError}>
+            <Alert 
+              classes={{ root: classes.alert }} 
+              severity="error">
+              {errorMessage}
+            </Alert>
+          </Collapse>
         </form>
       </DialogContent>
       <DialogActions classes={{ root: classes.dialogActions }}>
-        <Button
-          classes={{ contained: classes.button }}
-          onClick={validateProduct}
-          variant="contained"
-          size="large"
-        >
-          ADD ITEM
-        </Button>
+        <div>
+          <Button
+            classes={{ contained: classes.button }}
+            variant="contained"
+            size="large"
+            className={buttonClassname}
+            disabled={loading}
+            onClick={handleButtonClick}
+          >
+            {loadingButtonLabel}
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </Button>
+        </div>
       </DialogActions>
       <Divider classes={{ root: classes.divider }} />
     </Dialog>
