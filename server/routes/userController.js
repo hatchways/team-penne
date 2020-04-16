@@ -182,7 +182,8 @@ router.get("/itemLists/getLists", authCheck, async (req, res) => {
     .catch(function(err) {
       console.log(err);
     });
-  console.log(allLists[0].products);
+  // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
+  //console.log(allLists);
   return res.status(200).send({ itemLists: allLists });
 });
 

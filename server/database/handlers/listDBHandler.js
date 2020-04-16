@@ -88,6 +88,7 @@ async function getAllListsWithValues(userId) {
       allUserLists[i].id
     );
     allUserLists[i]["products"] = tempListProductsArray;
+    allUserLists[i]["amount"] = tempListProductsArray.length;
   }
   return allUserLists;
 }
