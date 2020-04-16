@@ -7,8 +7,10 @@ function reformatListStyle(list) {
   var formattedList = [];
   for (i = 0; i < list.length; i++) {
     var tempListItem = {
+      id: list[i].listId,
       name: list[i].listName,
       image: list[i].listImageURL,
+      products: [],
       amount: 0
     };
     formattedList.push(tempListItem);
@@ -52,11 +54,10 @@ async function checkListExists(userId, listName) {
 */
 async function getAllLists(getUserId) {
   const userAllLists = await List.findAll({
-    attributes: ["listName", "listImageURL"],
+    attributes: ["listId", "listName", "listImageURL"],
     where: { userId: getUserId }
   })
     .then(function(res) {
-      //console.log(res);
       return res;
     })
     .catch(function(err) {
@@ -73,24 +74,22 @@ async function getAllLists(getUserId) {
     return: return names and values of all lists
 */
 async function getAllListsWithValues(userId) {
-  return userId;
-}
-
-/*
-    getList: get specific list(with listName) for user(with userId)
-    arguments: userId of current user, listName of list to get
-    return: return list with products
-*/
-async function getList(userId, listName) {
-  const userList = await getUser("userId", userId).then(function(user) {
-    return List.findOne({
-      where: { listName: listName },
-      include: [user]
-    }).then(function(list) {
-      if (list) return getAllProductsbyListId(list.listId);
+  let allUserLists = await getAllLists(userId)
+    .then(async userList => {
+      return userList;
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
-  return userList;
+
+  var i;
+  for (i = 0; i < allUserLists.length; i++) {
+    var tempListProductsArray = await getAllProductsbyListId(
+      allUserLists[i].id
+    );
+    allUserLists[i]["products"] = tempListProductsArray;
+  }
+  return allUserLists;
 }
 
 /*
@@ -102,7 +101,6 @@ async function addList(userId, listName, listImage) {
   let addListBool = await getUser("userId", userId)
     .then(async function(user) {
       var listExistsBool = await checkListExists(user.userId, listName);
-      console.log("listExistsAlready: " + listExistsBool);
       if (listExistsBool) return false;
       else {
         if (listImage != null) {
@@ -144,7 +142,6 @@ async function addList(userId, listName, listImage) {
 module.exports = {
   checkListExists,
   getAllLists,
-  getList,
   addList,
   getAllListsWithValues
 };

@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
@@ -25,7 +25,7 @@ function EditListDialog(props) {
   const history = useHistory();
 
   const itemList = JSON.parse(localStorage.getItem("itemLists")).filter(
-    (itemList) => itemList.name.toUpperCase() === listName.toUpperCase()
+    itemList => itemList.name.toUpperCase() === listName.toUpperCase()
   )[0];
 
   let itemListAmount;
@@ -66,7 +66,7 @@ function EditListDialog(props) {
         </Typography>
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>
-        {clothes.map((listItem) => (
+        {clothes.map(listItem => (
           <Card
             className={classes.cardManager}
             raised={true}

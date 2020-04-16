@@ -13,10 +13,13 @@ const {
 const {
   checkListExists,
   getAllLists,
-  getList,
   addList,
   getAllListsWithValues
 } = require("../database/handlers/listDBHandler");
+const {
+  getAllProductsbyListId,
+  addProductToList
+} = require("../database/handlers/productDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -154,12 +157,10 @@ router.get("/logout", async (req, res) => {
 
 // POST edit template to edit Username/Password/Email once authorized.
 router.post("/edit", authCheck, function(req, res) {
-  console.log("\nValid jwt-auth-cookie. Beginning /edit.");
   return res.send("Editing File");
 });
 
 router.post("/itemLists/addLists", authCheck, async (req, res) => {
-  console.log("In AddLists");
   const currentUserId = req.userData.userId;
   addList(currentUserId, req.body.listName, req.body.listPicture)
     .then(function(ret) {
@@ -174,15 +175,38 @@ router.post("/itemLists/addLists", authCheck, async (req, res) => {
 // GET - retrieve all Lists for current user
 router.get("/itemLists/getLists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
-  console.log("\nIn GetLists");
-  let allLists = await getAllLists(currentUserId)
+  let allLists = await getAllListsWithValues(currentUserId)
     .then(function(allLists) {
       return allLists;
     })
     .catch(function(err) {
       console.log(err);
     });
-
   return res.status(200).send({ itemLists: allLists });
 });
 module.exports = router;
+
+router.post("/itemLists/addItems", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  const newProduct = {
+    productId: req.body.productId,
+    productName: req.body.productName,
+    productURL: req.body.productURL,
+    productImageURL: req.body.productImageURL,
+    productPrice: req.body.productPrice,
+    productSalePrice: req.body.productSalePrice
+  };
+  console.log("id:" + currentUserId + ", Product details: " + newProduct);
+  /*
+  var itemAddedBool = await addProductToList(
+    req.body.productId,
+    req.body.productName,
+    req.body.productURL,
+    req.body.productImageURL,
+    req.body.productPrice,
+    req.body.productSalePrice,
+    currentUserId,
+    req.body.listName
+  );*/
+  return res.status(200).send({ message: "Item Added." });
+});
