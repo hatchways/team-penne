@@ -7,7 +7,6 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        defaultValue: 0,
       },
       listName: {
         type: Sequelize.STRING,

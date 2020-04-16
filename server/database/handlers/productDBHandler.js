@@ -9,7 +9,7 @@ const ListProducts = models.ListProducts;
 */
 async function getAllProductsbyListId(listId){
     let allProducts = await ListProducts.findAll({where: { listId: listId }})
-        .then(function(listProducts){
+        .then(async function(listProducts){
             return await Product.findAll({where: {productId: listProducts.productId}});
         });
     return allProducts

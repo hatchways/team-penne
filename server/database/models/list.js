@@ -16,8 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   Lists.associate = function(models) {
     // associations can be defined here
     Lists.belongsTo(models.Users, {
-      foreignKey: 'userId', 
-      as: 'user'
     });
     Lists.belongsToMany(models.Products, {
       through: 'ListProducts', 

@@ -7,7 +7,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Box,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/listCardStyles";
@@ -24,7 +24,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     history.push("/dashboard/create-new-list");
   };
 
-  const openEditList = (name) => {
+  const openEditList = name => {
     console.log("Jump to EditList with ", name);
     setListName(name);
     setChangedListName("true");

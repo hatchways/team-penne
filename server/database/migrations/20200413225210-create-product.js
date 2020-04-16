@@ -6,7 +6,6 @@ module.exports = {
         type: Sequelize.STRING,
         primaryKey:true,
         allowNull: false,
-        defaultValue: "",
       },
       productName: {
         type: Sequelize.STRING,
