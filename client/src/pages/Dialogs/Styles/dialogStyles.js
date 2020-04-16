@@ -39,33 +39,33 @@ const dialogStyles = makeStyles({
     height: "100%",
   },
   cardDivider: {
-    display: "flex",
+    display: 'flex',
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
   },
   cardImageBox: {
-    overflow: "hidden",
+    overflow: 'hidden',
     borderRadius: 2,
-    border: "1px solid #eaeaea",
+    border: '1px solid #eaeaea',
     maxWidth: "25%",
     height: "100%",
   },
   cardImg: {
-    display: "block",
-    width: "100%",
-    height: "auto",
+    display: 'block',
+    width: '100%',
+    height: 'auto',
   },
   cardTextBox: {
     marginLeft: "10px",
   },
-  cardTitle: {
+  cardTitle:{
     fontSize: "10pt",
     marginLeft: "0",
     marginRight: "0",
     fontWeight: "bold",
   },
-  cardURL: {
+  cardURL:{
     fontSize: "8pt",
     marginLeft: "0",
     marginRight: "0",
@@ -82,7 +82,13 @@ const dialogStyles = makeStyles({
   },
   dialogContent: {
     paddingBottom: "0",
+    textAlign: "center"
+  },
+  dialogTitle: {
+    paddingBottom: "0",
     textAlign: "center",
+    fontSize: "22px",
+    fontWeight: "bolder",
   },
   divider: {
     marginBottom: "20px",
@@ -104,27 +110,27 @@ const dialogStyles = makeStyles({
     paddingRight: "10%",
   },
   dropzoneContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: "center",
     justifyContent: "center",
   },
   dropzoneInner: {
-    display: "flex",
+    display: 'flex',
     minWidth: 0,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   dropzoneOuter: {
-    display: "inline-flex",
+    display: 'inline-flex',
     borderRadius: 2,
-    border: "1px solid #eaeaea",
+    border: '1px solid #eaeaea',
     marginBottom: 2,
     marginRight: 8,
     maxWidth: "90%",
     height: 175,
     padding: 4,
-    boxSizing: "border-box",
+    boxSizing: 'border-box',
     textAlign: "center",
   },
   errorMessage: {
@@ -141,10 +147,10 @@ const dialogStyles = makeStyles({
     textAlign: "center",
     width: "68%",
   },
-  img: {
-    display: "block",
-    width: "auto",
-    height: "100%",
+  img:{
+    display: 'block',
+    width: 'auto',
+    height: '100%',
   },
   inputLabel: {
     color: "black",

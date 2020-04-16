@@ -1,6 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router";
 import clsx from "clsx";
+import { useHistory } from "react-router";
 import {
   Button,
   CircularProgress,
@@ -187,7 +187,9 @@ function NewProductDialog(props) {
           />
         </Container>
         <Collapse in={productUrlError}>
-          <Alert classes={{ root: classes.alert }} severity="error">
+          <Alert 
+            classes={{ root: classes.alert }} 
+            severity="error">
             Error: List title format is invalid.
           </Alert>
         </Collapse>
