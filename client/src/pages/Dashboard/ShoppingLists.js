@@ -43,7 +43,7 @@ export default function ShoppingLists() {
         }
       })
       .then(res => {
-        console.log("itemLists: " + res.itemLists);
+        //console.log("itemLists: " + res.itemLists);
         setItemLists(res.itemLists);
         localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
       })

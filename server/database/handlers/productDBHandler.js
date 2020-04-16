@@ -10,6 +10,7 @@ function reformatProductStyle(Products) {
       productName: Products[i].productName,
       productURL: Products[i].productURL,
       productImageURL: Products[i].productImageURL,
+      productCurrency: Products[i].productCurrency,
       productPrice: Products[i].productPrice,
       productSalePrice: Products[i].productSalePrice
     };

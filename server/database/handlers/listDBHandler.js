@@ -47,6 +47,24 @@ async function checkListExists(userId, listName) {
   return userBool;
 }
 
+async function getListIdByListName(userId, listName) {
+  var foundList = await List.findOne({
+    attributes: ["listId", "listName", "listImageURL", "userId"],
+    where: { listName: listName, userId: userId }
+  })
+    .then(foundList => {
+      //no list with listName for userId exists.
+      if (foundList == null) return [];
+      else return foundList;
+    })
+    .catch(err => {
+      console.log(err);
+      console.log("User has no lists.");
+      return [];
+    });
+  return foundList;
+}
+
 /*
     getAllLists: get all lists for user(with userId)
     arguments: userId of current user
@@ -144,5 +162,6 @@ module.exports = {
   checkListExists,
   getAllLists,
   addList,
-  getAllListsWithValues
+  getAllListsWithValues,
+  getListIdByListName
 };

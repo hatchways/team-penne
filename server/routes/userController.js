@@ -5,16 +5,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
+const { createUser, getUser } = require("../database/handlers/userDBHandler");
 const {
-  createUser,
-  getUser,
-  updateUser
-} = require("../database/handlers/userDBHandler");
-const {
-  checkListExists,
-  getAllLists,
   addList,
-  getAllListsWithValues
+  getAllListsWithValues,
+  getListIdByListName
 } = require("../database/handlers/listDBHandler");
 const {
   getAllProductsbyListId,
@@ -160,6 +155,7 @@ router.post("/edit", authCheck, function(req, res) {
   return res.send("Editing File");
 });
 
+// create a new list, and assign it to user userId, with name and picture in req.body
 router.post("/itemLists/addLists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   addList(currentUserId, req.body.listName, req.body.listPicture)
@@ -183,10 +179,21 @@ router.get("/itemLists/getLists", authCheck, async (req, res) => {
       console.log(err);
     });
   // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
-  //console.log(allLists);
+  //console.log(allLists[0].products);
   return res.status(200).send({ itemLists: allLists });
 });
 
+// GET - retrieve all Lists for current user
+router.get("/itemLists/getProductList", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  const listName = req.query.listName;
+
+  const currentList = await getListIdByListName(currentUserId, listName);
+  const currentListProducts = await getAllProductsbyListId(currentList.listId);
+  return res.status(200).send({ productList: currentListProducts });
+});
+
+//add a product defined in req.body to list: listName (req.body.listName)
 router.post("/itemLists/addItems", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   var itemAddedBool = await addProductToList(
