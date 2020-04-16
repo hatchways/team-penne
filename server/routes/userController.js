@@ -182,9 +182,9 @@ router.get("/itemLists/getLists", authCheck, async (req, res) => {
     .catch(function(err) {
       console.log(err);
     });
+  console.log(allLists[0].products);
   return res.status(200).send({ itemLists: allLists });
 });
-module.exports = router;
 
 router.post("/itemLists/addItems", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
@@ -201,3 +201,5 @@ router.post("/itemLists/addItems", authCheck, async (req, res) => {
   );
   return res.status(200).send({ message: "Item Added." });
 });
+
+module.exports = router;

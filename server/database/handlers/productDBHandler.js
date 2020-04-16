@@ -69,27 +69,45 @@ async function checkIfProductInList(productId, listId) {
     return: list of products
 */
 async function getAllProductsbyListId(listId) {
-  let allProducts = await ListProducts.findAll({
+  var allProducts = await ListProducts.findAll({
     attributes: ["listId", "productId"],
     where: { listId: listId }
   })
-    .then(async function(listProducts) {
-      return await Product.findAll({
-        attributes: [
-          "productId",
-          "productName",
-          "productURL",
-          "productImageURL",
-          "productCurrency",
-          "productPrice",
-          "productSalePrice"
-        ],
-        where: { productId: listProducts.productId }
-      });
+    .then(async listProducts => {
+      var i;
+      var listOfProducts = [];
+      for (i = 0; i < listProducts.length; i++) {
+        var productForList = await Product.findOne({
+          attributes: [
+            "productId",
+            "productName",
+            "productURL",
+            "productImageURL",
+            "productCurrency",
+            "productPrice",
+            "productSalePrice"
+          ],
+          where: { productId: listProducts[i].productId }
+        })
+          .then(res => {
+            return res;
+          })
+          .catch(err => {
+            // Product exists in ListProducts Table, but not in Products Table (??)
+            console.log(err);
+            return [];
+          });
+        listOfProducts.push(productForList);
+      }
+      return listOfProducts;
     })
     .catch(function(err) {
       // Empty Products Table
+      console.log("Empty Products Table.");
       //console.log(err);
+      return [];
+    })
+    .catch(err => {
       return [];
     });
   return reformatProductStyle(allProducts);
