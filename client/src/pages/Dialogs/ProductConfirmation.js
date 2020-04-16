@@ -42,7 +42,7 @@ function ProductConfirmationDialog() {
       setLoadingConfirm(true);
     }
     // INSERT POST REQUEST TO UPDATE DATABASE HERE
-    /*
+
     fetch("/itemLists/addItems", {
       method: "POST",
       headers: {
@@ -53,8 +53,10 @@ function ProductConfirmationDialog() {
         productName: history.location.state.title,
         productURL: history.location.state.productURL,
         productImageURL: history.location.state.imageURL,
+        productCurrency: history.location.state.currency,
         productPrice: history.location.state.price,
-        productSalePrice: history.location.state.sale,
+        productSale: history.location.state.sale,
+        productSalePrice: history.location.state.salePrice,
         listName: history.location.state.listName
       })
     })
@@ -68,10 +70,10 @@ function ProductConfirmationDialog() {
       .catch(err => {
         console.log(err);
       });
-*/
+    /*
     timer.current = setTimeout(() => {
       history.push(window.location.pathname.replace("/confirm-product", ""));
-    }, 1000);
+    }, 1000);*/
   };
   const handleDenyButtonClick = () => {
     if (!loadingDeny) {
@@ -122,7 +124,12 @@ function ProductConfirmationDialog() {
                 {history.location.state.productURL}
               </Truncate>
             </Typography>
-            <h5>{history.location.state.price}</h5>
+            <h5>
+              {history.location.state.currency}
+              {history.location.state.price}
+              {history.location.state.sale && history.location.state.currency}
+              {history.location.state.sale && history.location.state.salePrice}
+            </h5>
           </div>
         </Card>
         <div>

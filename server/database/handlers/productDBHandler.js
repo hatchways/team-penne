@@ -1,6 +1,7 @@
 const models = require("../models");
 const Product = models.Products;
 const ListProducts = models.ListProducts;
+const List = models.Lists;
 
 function reformatProductStyle(Products) {
   var formattedList = [];
@@ -24,12 +25,13 @@ function reformatProductStyle(Products) {
     return: true if exists, false if doesn't exist
 */
 async function getProductIfExists(productId) {
-  var foundProduct = Product.findOne({
+  var foundProduct = await Product.findOne({
     attributes: [
       "productId",
       "productName",
       "productURL",
       "productImageURL",
+      "productCurrency",
       "productPrice",
       "productSalePrice"
     ],
@@ -39,10 +41,26 @@ async function getProductIfExists(productId) {
       return product;
     })
     .catch(err => {
-      console.log("No Products in list");
-      return {};
+      //console.log("No Products in list");
+      return null;
     });
   return foundProduct;
+}
+
+async function checkIfProductInList(productId, listId) {
+  const inListBool = await ListProducts.findOne({
+    attributes: ["listId", "productId"],
+    where: { listId: listId, productId: productId }
+  })
+    .then(res => {
+      if (res == null) return false;
+      else return true;
+    })
+    .catch(err => {
+      console.log(err);
+      return false;
+    });
+  return inListBool;
 }
 
 /*
@@ -62,6 +80,7 @@ async function getAllProductsbyListId(listId) {
           "productName",
           "productURL",
           "productImageURL",
+          "productCurrency",
           "productPrice",
           "productSalePrice"
         ],
@@ -76,19 +95,8 @@ async function getAllProductsbyListId(listId) {
   return reformatProductStyle(allProducts);
 }
 
-async function addProductToList(
-  productId,
-  productName,
-  productURL,
-  productImageURL,
-  productPrice,
-  productSalePrice,
-  userId,
-  listName
-) {
-  // Step 1
-  // Get the listId from userId and listName
-  var listId = List.findOne({
+async function getListIdFromUser(listName, userId) {
+  var returnedListId = await List.findOne({
     attributes: ["listId", "listName", "listImageURL"],
     where: { listName: listName, userId: userId }
   })
@@ -99,7 +107,23 @@ async function addProductToList(
       console.log(err);
       return null;
     });
+  return returnedListId.listId;
+}
 
+async function addProductToList(
+  productId,
+  productName,
+  productURL,
+  productImageURL,
+  productCurrency,
+  productPrice,
+  productSalePrice,
+  userId,
+  listName
+) {
+  // Step 1
+  // Get the listId from userId and listName
+  var listId = await getListIdFromUser(listName, userId);
   if (listId == null) return false; // specified list doesn't exist.
 
   // Step 2
@@ -107,11 +131,12 @@ async function addProductToList(
   // If product already exists, retrieve product for step 3
   var newProduct = await getProductIfExists(productId);
   if (newProduct == null) {
-    newProduct = Product.create({
+    newProduct = await Product.create({
       productId: productId,
       productName: productName,
       productURL: productURL,
       productImageURL: productImageURL,
+      productCurrency: productCurrency,
       productPrice: productPrice,
       productSalePrice: productSalePrice
     })
@@ -125,12 +150,19 @@ async function addProductToList(
         return null;
       });
   }
-
   if (newProduct == null) return false; // if the product wasn't found or created
 
   // Step 3
   // Add it and it's relationship with listId to the productLists table.
-
+  const productInListBool = await checkIfProductInList(
+    newProduct.productId,
+    listId
+  );
+  if (productInListBool) return false; // Product Already in specified List.
+  ListProducts.create({
+    productId: productId,
+    listId: listId
+  });
   return true;
 }
 module.exports = {
