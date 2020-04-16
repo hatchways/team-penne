@@ -187,9 +187,7 @@ function NewProductDialog(props) {
           />
         </Container>
         <Collapse in={productUrlError}>
-          <Alert 
-            classes={{ root: classes.alert }} 
-            severity="error">
+          <Alert classes={{ root: classes.alert }} severity="error">
             Error: List title format is invalid.
           </Alert>
         </Collapse>

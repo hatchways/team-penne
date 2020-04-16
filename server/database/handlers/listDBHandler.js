@@ -9,7 +9,7 @@ function reformatListStyle(list) {
     var tempListItem = {
       name: list[i].listName,
       image: list[i].listImageURL,
-      amount: 0
+      amount: 0,
     };
     formattedList.push(tempListItem);
   }
@@ -23,22 +23,22 @@ function reformatListStyle(list) {
 */
 async function checkListExists(userId, listName) {
   const userBool = await getUser("userId", userId)
-    .then(function(user) {
+    .then(function (user) {
       return List.findOne({
         attributes: ["listId", "listName", "listImageURL", "userId"],
-        where: { listName: listName, userId: user.userId }
+        where: { listName: listName, userId: user.userId },
       })
-        .then(foundList => {
+        .then((foundList) => {
           if (foundList == null) return false;
           else return true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           console.log("User has no lists.");
           return false;
         });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       console.log("User Doesn't exist.");
     });
@@ -53,13 +53,13 @@ async function checkListExists(userId, listName) {
 async function getAllLists(getUserId) {
   const userAllLists = await List.findAll({
     attributes: ["listName", "listImageURL"],
-    where: { userId: getUserId }
+    where: { userId: getUserId },
   })
-    .then(function(res) {
+    .then(function (res) {
       //console.log(res);
       return res;
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log(err);
       return [];
     });
@@ -82,11 +82,11 @@ async function getAllListsWithValues(userId) {
     return: return list with products
 */
 async function getList(userId, listName) {
-  const userList = await getUser("userId", userId).then(function(user) {
+  const userList = await getUser("userId", userId).then(function (user) {
     return List.findOne({
       where: { listName: listName },
-      include: [user]
-    }).then(function(list) {
+      include: [user],
+    }).then(function (list) {
       if (list) return getAllProductsbyListId(list.listId);
     });
   });
@@ -100,7 +100,7 @@ async function getList(userId, listName) {
 */
 async function addList(userId, listName, listImage) {
   let addListBool = await getUser("userId", userId)
-    .then(async function(user) {
+    .then(async function (user) {
       var listExistsBool = await checkListExists(user.userId, listName);
       console.log("listExistsAlready: " + listExistsBool);
       if (listExistsBool) return false;
@@ -109,33 +109,33 @@ async function addList(userId, listName, listImage) {
           return List.create({
             listName: listName,
             listImageURL: listImage,
-            userId: user.userId
+            userId: user.userId,
           })
-            .then(function(res) {
+            .then(function (res) {
               console.log(
                 "Creating New List for User " + userId + " named " + listName
               );
               //console.log(res);
               return res;
             })
-            .catch(function(err) {
+            .catch(function (err) {
               console.log(err);
               return null;
             });
         } else {
           // Add implementation for default image here
           return await List.create({ listName: listName, userId: user.userId })
-            .then(function(res) {
+            .then(function (res) {
               return res;
             })
-            .catch(function(err) {
+            .catch(function (err) {
               console.log(err);
               return null;
             });
         }
       }
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log(err);
     });
   return addListBool != null;
@@ -146,5 +146,5 @@ module.exports = {
   getAllLists,
   getList,
   addList,
-  getAllListsWithValues
+  getAllListsWithValues,
 };
