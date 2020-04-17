@@ -5,18 +5,16 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
+const { createUser, getUser } = require("../database/handlers/userDBHandler");
 const {
-  createUser,
-  getUser,
-  updateUser
-} = require("../database/handlers/userDBHandler");
-const {
-  checkListExists,
-  getAllLists,
-  getList,
   addList,
-  getAllListsWithValues
+  getAllListsWithValues,
+  getListIdByListName
 } = require("../database/handlers/listDBHandler");
+const {
+  getAllProductsbyListId,
+  addProductToList
+} = require("../database/handlers/productDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
@@ -154,12 +152,11 @@ router.get("/logout", async (req, res) => {
 
 // POST edit template to edit Username/Password/Email once authorized.
 router.post("/edit", authCheck, function(req, res) {
-  console.log("\nValid jwt-auth-cookie. Beginning /edit.");
   return res.send("Editing File");
 });
 
+// create a new list, and assign it to user userId, with name and picture in req.body
 router.post("/itemLists/addLists", authCheck, async (req, res) => {
-  console.log("In AddLists");
   const currentUserId = req.userData.userId;
   addList(currentUserId, req.body.listName, req.body.listPicture)
     .then(function(ret) {
@@ -174,15 +171,43 @@ router.post("/itemLists/addLists", authCheck, async (req, res) => {
 // GET - retrieve all Lists for current user
 router.get("/itemLists/getLists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
-  console.log("\nIn GetLists");
-  let allLists = await getAllLists(currentUserId)
+  let allLists = await getAllListsWithValues(currentUserId)
     .then(function(allLists) {
       return allLists;
     })
     .catch(function(err) {
       console.log(err);
     });
-
+  // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
+  //console.log(allLists[0].products);
   return res.status(200).send({ itemLists: allLists });
 });
+
+// GET - retrieve all Lists for current user
+router.get("/itemLists/getProductList", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  const listName = req.query.listName;
+
+  const currentList = await getListIdByListName(currentUserId, listName);
+  const currentListProducts = await getAllProductsbyListId(currentList.listId);
+  return res.status(200).send({ productList: currentListProducts });
+});
+
+//add a product defined in req.body to list: listName (req.body.listName)
+router.post("/itemLists/addItems", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  var itemAddedBool = await addProductToList(
+    req.body.productId,
+    req.body.productName,
+    req.body.productURL,
+    req.body.productImageURL,
+    req.body.productCurrency,
+    req.body.productPrice,
+    req.body.productSalePrice,
+    currentUserId,
+    req.body.listName
+  );
+  return res.status(200).send({ message: "Item Added." });
+});
+
 module.exports = router;

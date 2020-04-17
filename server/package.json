@@ -6,7 +6,7 @@
     "dev": "nodemon ./bin/www",
     "debug": "nodemon  --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-    "setupDB": "npm install sequelize sequelize-cli pg pg-hstore && sequelize db:migrate"
+    "setupDB": "sequelize db:migrate"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",

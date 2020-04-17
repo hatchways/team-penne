@@ -26,6 +26,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
 
   const openEditList = (name) => {
     console.log("Jump to EditList with ", name);
+
     setListName(name);
     setChangedListName("true");
   };
@@ -36,7 +37,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
       setChangedListName("false");
       history.push("/dashboard/edit-list", { name: listName });
     }
-  }); // Only re-run the effect if listName changes
+  });
 
   const classes = useStyles();
   return !addCard ? (

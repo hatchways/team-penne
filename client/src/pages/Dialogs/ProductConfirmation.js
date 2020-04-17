@@ -8,7 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import Truncate from "react-truncate";
 import dialogStyles from "./Styles/dialogStyles";
@@ -23,7 +23,7 @@ function ProductConfirmationDialog() {
   const [success, setSuccess] = React.useState(false);
   const [
     loadingButtonLabelConfirm,
-    setLoadingButtonLabelConfirm,
+    setLoadingButtonLabelConfirm
   ] = React.useState("CONFIRM");
   const [loadingButtonLabelDeny, setLoadingButtonLabelDeny] = React.useState(
     "GO BACK"
@@ -34,7 +34,7 @@ function ProductConfirmationDialog() {
     history.push(window.location.pathname.replace("/confirm-product", ""));
   };
   const buttonClassname = clsx({
-    [classes.buttonSuccess]: success,
+    [classes.buttonSuccess]: success
   });
   const handleConfirmButtonClick = () => {
     if (!loadingConfirm) {
@@ -42,9 +42,38 @@ function ProductConfirmationDialog() {
       setLoadingConfirm(true);
     }
     // INSERT POST REQUEST TO UPDATE DATABASE HERE
+
+    fetch("/itemLists/addItems", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId: history.location.state.productId,
+        productName: history.location.state.title,
+        productURL: history.location.state.productURL,
+        productImageURL: history.location.state.imageURL,
+        productCurrency: history.location.state.currency,
+        productPrice: history.location.state.price,
+        productSale: history.location.state.sale,
+        productSalePrice: history.location.state.salePrice,
+        listName: history.location.state.listName
+      })
+    })
+      .then(() => {
+        timer.current = setTimeout(() => {
+          history.push(
+            window.location.pathname.replace("/confirm-product", "")
+          );
+        }, 1000);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    /*
     timer.current = setTimeout(() => {
       history.push(window.location.pathname.replace("/confirm-product", ""));
-    }, 1000);
+    }, 1000);*/
   };
   const handleDenyButtonClick = () => {
     if (!loadingDeny) {
@@ -95,7 +124,12 @@ function ProductConfirmationDialog() {
                 {history.location.state.productURL}
               </Truncate>
             </Typography>
-            <h5>{history.location.state.price}</h5>
+            <h5>
+              {history.location.state.currency}
+              {history.location.state.price}
+              {history.location.state.sale && history.location.state.currency}
+              {history.location.state.sale && history.location.state.salePrice}
+            </h5>
           </div>
         </Card>
         <div>
