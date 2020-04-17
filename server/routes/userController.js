@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
     userID: 1,
     userName: "Jon Snow",
     userPassword: "nothing",
-    userEmail: "JonSnow@example.com",
+    userEmail: "JonSnow@example.com"
   };
   var userArray = new Array();
   userArray.push(userJon);
@@ -42,11 +42,11 @@ router.post("/login", async (req, res) => {
     return res.status(401).send();
   }
 
-  bcrypt.hash(user.userPassword, saltRounds, function (err, hash) {
+  bcrypt.hash(user.userPassword, saltRounds, function(err, hash) {
     if (err) {
       throw err;
     }
-    bcrypt.compare(password, hash, function (err, result) {
+    bcrypt.compare(password, hash, function(err, result) {
       if (err) {
         throw err;
       } else if (!result) {
@@ -58,17 +58,17 @@ router.post("/login", async (req, res) => {
           {
             data: {
               userEmail: userEmail,
-              userId: user.userID,
-            },
+              userId: user.userID
+            }
           },
           secret,
           {
-            expiresIn: 60 * 60, // would expire after 1 hour
+            expiresIn: 60 * 60 // would expire after 1 hour
           }
         );
         let options = {
           maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
+          httpOnly: true // The cookie only accessible by the web server
         };
         res.clearCookie("jwt-auth-cookie");
         res.cookie("jwt-auth-cookie", token, options);
@@ -89,7 +89,7 @@ router.post("/signup", async (req, res) => {
   if (userName.length < 6 || userPassword.length < 6) {
     res.status(401);
     return res.send({
-      error: "Username and Password have to be at least 6 characters long.",
+      error: "Username and Password have to be at least 6 characters long."
     });
   }
 
@@ -105,7 +105,7 @@ router.post("/signup", async (req, res) => {
     // nothing after the . (e.g. no "com" or "ca")
     res.status(401);
     return res.send({
-      error: "Invalid Email.",
+      error: "Invalid Email."
     });
   }
 
@@ -120,17 +120,17 @@ router.post("/signup", async (req, res) => {
       {
         data: {
           userEmail: user.userEmail,
-          userId: user.userID,
-        },
+          userId: user.userID
+        }
       },
       secret,
       {
-        expiresIn: 60 * 60, // would expire after 1 hour
+        expiresIn: 60 * 60 // would expire after 1 hour
       }
     );
     let options = {
       maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-      httpOnly: true, // The cookie only accessible by the web server
+      httpOnly: true // The cookie only accessible by the web server
     };
     res.clearCookie("jwt-auth-cookie");
     res.cookie("jwt-auth-cookie", token, options);
@@ -162,7 +162,7 @@ router.get("/logout", async (req, res) => {
 });
 
 // POST edit template to edit Username/Password/Email once authorized.
-router.post("/edit", authCheck, function (req, res) {
+router.post("/edit", authCheck, function(req, res) {
   console.log("\nValid jwt-auth-cookie. Beginning /edit.");
   return res.send("Editing File");
 });
