@@ -14,6 +14,7 @@ import {
 
 import navbarStyles from "./styles/navbarStyles";
 import notifStyles from "./styles/notificationStyles";
+import StyledMenu from "./styles/styledMenu";
 import logo from "../../assets/logo.png";
 
 const userProfile = {
@@ -22,8 +23,8 @@ const userProfile = {
   profilePicImage:
     "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg"
 };
-const updatedItemList = [];
-var exampleItemList = [
+const updatedItemList1 = [];
+var updatedItemList = [
   {
     name:
       "FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men",
@@ -59,26 +60,6 @@ var exampleItemList = [
   }
 ];
 
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5"
-  }
-})(props => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center"
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center"
-    }}
-    {...props}
-  />
-));
-
 function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileMenuBool, setProfileMenu] = useState(false);
@@ -86,6 +67,7 @@ function Navbar(props) {
   const [itemList, setItemList] = useState(updatedItemList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
+
   const navbarClasses = navbarStyles();
   const classes = notifStyles();
   const bull = <span className={classes.bullet}>•</span>;
@@ -186,7 +168,11 @@ function Navbar(props) {
                   disabled={itemList.indexOf(listItem) == deleteItem}
                 >
                   <div className={classes.cardImageBox}>
-                    <img src={listItem.image} className={classes.cardImg} />
+                    <img
+                      src={listItem.image}
+                      className={classes.cardImg}
+                      alt="product-image"
+                    />
                   </div>
                   <div className={classes.cardTextBox}>
                     <div>
@@ -201,22 +187,10 @@ function Navbar(props) {
                         <Truncate width={100 * 3}>{listItem.url}</Truncate>
                       </Typography>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%"
-                      }}
-                    >
-                      <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div className={classes.cardDivider}>
+                      <div className={classes.alignVertically}>
                         {listItem.salePrice != null && (
-                          <div
-                            style={{
-                              color: "red",
-                              textDecorationLine: "line-through",
-                              fontSize: "10px"
-                            }}
-                          >
+                          <div className={classes.strikeThroughText}>
                             {listItem.currency}
                             {listItem.price}
                           </div>
@@ -234,7 +208,7 @@ function Navbar(props) {
                           </div>
                         )}
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div className={classes.alignVertically}>
                         <Button
                           size="small"
                           onClick={() => window.open(listItem.url, "_blank")}
@@ -259,14 +233,17 @@ function Navbar(props) {
             </div>
           </StyledMenu>
 
-          <Button onClick={handleLogout} style={{ textTransform: "none" }}>
+          <Button
+            onClick={handleLogout}
+            className={classes.removeTextTransform}
+          >
             Logout
           </Button>
           <Button
             aria-controls="customized-menu"
             aria-haspopup="true"
             onClick={handleProfileClick}
-            style={{ textTransform: "none" }}
+            className={classes.removeTextTransform}
           >
             <div className={navbarClasses.circular}>
               <img src={userProfile.profilePicImage} alt="profile-pic" />

@@ -5,6 +5,10 @@ const useStyles = makeStyles({
     minWidth: 275,
     maxWidth: 300
   },
+  alignVertically: {
+    display: "flex",
+    flexDirection: "column"
+  },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
@@ -20,6 +24,11 @@ const useStyles = makeStyles({
     height: "150px",
     display: "flex",
     flexDirection: "row"
+  },
+  cardDivider: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%"
   },
   cardImageBox: {
     overflow: "hidden",
@@ -93,6 +102,9 @@ const useStyles = makeStyles({
     marginTop: "25px",
     fontSize: "0.7em"
   },
+  removeTextTransform: {
+    textTransform: "none"
+  },
   seeAllButton: {
     marginTop: 10,
     display: "flex",
@@ -102,6 +114,11 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
+  },
+  strikeThroughText: {
+    color: "red",
+    textDecorationLine: "line-through",
+    fontSize: "10px"
   }
 });
 
