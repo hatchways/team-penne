@@ -23,14 +23,14 @@ const useStyles = makeStyles({
   },
   cardImageBox: {
     overflow: "hidden",
-    borderRadius: 2,
-    border: "1px solid #eaeaea",
     maxWidth: "25%",
     maxHeight: "100%",
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    borderRadius: 2,
+    border: "1px solid #eaeaea"
   },
   cardImg: {
     display: "block",
@@ -40,8 +40,9 @@ const useStyles = makeStyles({
   cardTextBox: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-between",
     overflow: "hidden",
-    maxWidth: "100%",
+    width: "100%",
     maxHeight: "100%",
     marginTop: 10,
     marginLeft: 10,

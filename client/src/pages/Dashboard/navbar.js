@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Truncate from "react-truncate";
 import {
   AppBar,
@@ -22,8 +22,8 @@ const userProfile = {
   profilePicImage:
     "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg"
 };
-const itemList1 = [];
-const itemList = [
+const updatedItemList = [];
+var exampleItemList = [
   {
     name:
       "FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men",
@@ -47,14 +47,15 @@ const itemList = [
       "https://www.amazon.ca/Coofandy-Casual-Sleeve-Button-Shirts/dp/B01FM46HI2/ref=lp_10287298011_1_22?s=apparel&ie=UTF8&qid=1586275913&sr=1-22"
   },
   {
-    name: "FLY HAWK Mens Dress Shirts, Bamboo Button",
+    name:
+      "Zengjo Sports T Shirt Men, Quick Dry Gym T Shirt Men’s Running Top Short Sleeve",
     currency: "CDN$",
-    price: 31.99,
-    salePrice: 23.99,
+    price: 22.98,
+    salePrice: 19.98,
     image:
-      "https://images-na.ssl-images-amazon.com/images/I/41Q4rw8qRsL._SL260_SX200_CR0,0,200,260_.jpg",
+      "https://images-na.ssl-images-amazon.com/images/I/715fjbtzJnL._AC_UX679_.jpg",
     url:
-      "https://www.amazon.ca/FLY-HAWK-Button-Bamboo-Casual/dp/B07CT36T9F/ref=lp_10287298011_1_1_sspa?s=apparel&ie=UTF8&qid=1586275913&sr=1-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFZQlFFMzFSQjFRUUUmZW5jcnlwdGVkSWQ9QTA5MzM1MzU2Ukk4R0pPUEEwMTgmZW5jcnlwdGVkQWRJZD1BMDA2MzM4OTFTNThZRThDVDRVWDUmd2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3NlJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ=="
+      "https://www.amazon.ca/Zengjo-Sports-Running-Sleeve-Marled/dp/B07S1DNLZ1/ref=pd_ybh_a_10?_encoding=UTF8&psc=1&refRID=NFTPJ0WGECCEKTMZ40NX"
   }
 ];
 
@@ -79,9 +80,12 @@ const StyledMenu = withStyles({
 ));
 
 function Navbar(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [profileMenuBool, setProfileMenu] = React.useState(false);
-  const [notificationMenuBool, setNotificationMenu] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [profileMenuBool, setProfileMenu] = useState(false);
+  const [notificationMenuBool, setNotificationMenu] = useState(false);
+  const [itemList, setItemList] = useState(updatedItemList);
+  const [deleteItem, setDeleteItem] = useState(-1);
+  const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
   const navbarClasses = navbarStyles();
   const classes = notifStyles();
   const bull = <span className={classes.bullet}>•</span>;
@@ -111,6 +115,18 @@ function Navbar(props) {
     setProfileMenu(true);
     setAnchorEl(event.currentTarget);
   };
+
+  const handleRemoveItem = index => {
+    setOnDeleteIndex(index);
+  };
+
+  useEffect(() => {
+    if (onDeleteIndex != -1) {
+      itemList.splice(onDeleteIndex, 1);
+      setDeleteItem(onDeleteIndex);
+      setOnDeleteIndex(-1);
+    }
+  });
 
   return (
     <AppBar position="sticky">
@@ -167,26 +183,29 @@ function Navbar(props) {
                   elevation={3}
                   value={listItem.name}
                   variant="outlined"
+                  disabled={itemList.indexOf(listItem) == deleteItem}
                 >
                   <div className={classes.cardImageBox}>
                     <img src={listItem.image} className={classes.cardImg} />
                   </div>
                   <div className={classes.cardTextBox}>
-                    <Typography
-                      className={classes.cardTitle}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      <Truncate width={100 * 6}>{listItem.name}</Truncate>
-                    </Typography>
-                    <Typography className={classes.cardURL} gutterBottom>
-                      <Truncate width={100 * 3}>{listItem.url}</Truncate>
-                    </Typography>
+                    <div>
+                      <Typography
+                        className={classes.cardTitle}
+                        color="textSecondary"
+                        gutterBottom
+                      >
+                        <Truncate width={100 * 6}>{listItem.name}</Truncate>
+                      </Typography>
+                      <Typography className={classes.cardURL} gutterBottom>
+                        <Truncate width={100 * 3}>{listItem.url}</Truncate>
+                      </Typography>
+                    </div>
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        marginTop: 18
+                        width: "100%"
                       }}
                     >
                       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -215,11 +234,20 @@ function Navbar(props) {
                           </div>
                         )}
                       </div>
-                      <div style={{ alignSelf: "flex-end" }}>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
                         <Button
+                          size="small"
                           onClick={() => window.open(listItem.url, "_blank")}
                         >
                           Go to product
+                        </Button>
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            handleRemoveItem(itemList.indexOf(listItem));
+                          }}
+                        >
+                          Remove from list
                         </Button>
                       </div>
                     </div>
