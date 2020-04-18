@@ -14,33 +14,13 @@ import {
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
-function EditListDialog(props) {
-  const [listName, setListName] = React.useState(props.listName);
-  const [itemListLoaded, setItemListLoaded] = React.useState(false);
+function EditListDialog() {
+  const [listName, setListName] = React.useState("");
   const [productList, setProductList] = React.useState([]);
 
   const classes = dialogStyles();
   const history = useHistory();
 
-  /*
-  var itemList;
-  if (!itemListLoaded) {
-    itemList = JSON.parse(localStorage.getItem("itemLists")).filter(
-      itemList => itemList.name.toUpperCase() === listName.toUpperCase()
-    );
-    var i;
-    for (i = 0; i < itemList.length; i++) {
-      if (itemList[i].name == listName) {
-        setProductList(itemList.products);
-        break;
-      }
-    }
-    setItemListLoaded(true);
-  }
-  if (itemList) {
-    setItemListAmount(itemList.amount);
-  }
-*/
   const handleClose = () => {
     history.push(window.location.pathname.replace("/edit-list", ""));
   };
@@ -52,27 +32,9 @@ function EditListDialog(props) {
     );
   };
 
-  fetch("/itemLists/getProductList/?listName=" + listName, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => {
-      if (res.status === 200) {
-        return res.json();
-      }
-    })
-    .then(res => {
-      setProductList(res.productList);
-    })
-    .catch(err => {
-      console.log(err);
-      setItemListLoaded(false);
-    });
-
   useEffect(() => {
-    setListName(history.location.state.name);
+    setListName(history.location.state.listName);
+    setProductList(history.location.state.productList);
   });
 
   return (

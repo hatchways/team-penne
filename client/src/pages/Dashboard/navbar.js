@@ -12,7 +12,7 @@ function Navbar(props) {
   const classes = useStyles();
 
   const handleLogout = () => {
-    fetch("/logout").then((res) => {
+    fetch("/logout").then(res => {
       if (res.status === 200) {
         localStorage.clear();
         props.history.push("/");

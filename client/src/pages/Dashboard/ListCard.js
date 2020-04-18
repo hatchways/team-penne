@@ -7,7 +7,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Box,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/listCardStyles";
@@ -18,24 +18,54 @@ import NewProductDialog from "../Dialogs/NewProductDialog";
 function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const history = useHistory();
   const [listName, setListName] = useState("");
-  const [changedListName, setChangedListName] = useState("false");
+  const [productList, setProductList] = useState([]);
+  const [changedListName, setChangedListName] = useState(false);
+  const [getProductListBool, setGetProductListBool] = useState(false);
+  const [productListLoadedBool, setProductListLoadedBool] = useState(false);
 
   const openNewList = () => {
     history.push("/dashboard/create-new-list");
   };
 
-  const openEditList = (name) => {
+  const openEditList = name => {
     console.log("Jump to EditList with ", name);
 
     setListName(name);
-    setChangedListName("true");
+    setChangedListName(true);
+    setGetProductListBool(true);
   };
 
   useEffect(() => {
-    if (changedListName === "true") {
+    if (changedListName == true && getProductListBool == true) {
       console.log("ListName changed to: ", listName);
       setChangedListName("false");
-      history.push("/dashboard/edit-list", { name: listName });
+
+      fetch("/itemLists/getProductList/?listName=" + listName, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then(res => {
+          setProductList(res.productList);
+          setGetProductListBool(false);
+          setProductListLoadedBool(true);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    if (productListLoadedBool == true) {
+      setProductListLoadedBool(false);
+      history.push("/dashboard/edit-list", {
+        listName: listName,
+        productList: productList
+      });
     }
   });
 
@@ -54,7 +84,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
       <Route
         path="/dashboard/edit-list"
         render={() => {
-          return <EditListDialog listName={listName} />;
+          return <EditListDialog />;
         }}
       />
       <Route
