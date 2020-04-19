@@ -1,64 +1,58 @@
 require("dotenv").config();
 const express = require("express");
-const bcrypt = require("bcrypt");
 const router = express.Router();
-//const models = require('../database/models');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
-const { addUserDB, getUserDBEmail } = require("../db/modelDB");
+const { createUser, getUser } = require("../database/handlers/userDBHandler");
+const {
+  addList,
+  getAllListsWithValues,
+  getListIdByListName,
+} = require("../database/handlers/listDBHandler");
+const {
+  getAllProductsbyListId,
+  addProductToList,
+  getSalePrices,
+} = require("../database/handlers/productDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
+
+router.get("/cronJob", async (req, res) => {
+  getSalePrices.start();
+  res.status(200).send();
+  console.log("Cron Job started.");
+});
 
 router.post("/login", async (req, res) => {
   const secret = process.env.JWT_SECRET;
   const userEmail = req.body.userEmail;
   const password = req.body.userPassword;
-  console.log("\nLog in being attempted.");
 
   //no username or password provided
   if (!userEmail || !password) {
-    console.log("User email and password required.");
     return res.status(401).send();
   }
 
-  // NO DATABASE TEST CASE
-  // userPassword is "nothing" after it's been bcrypted.
-  var userJon = {
-    userID: 1,
-    userName: "Jon Snow",
-    userPassword: "nothing",
-    userEmail: "JonSnow@example.com",
-  };
-  var userArray = new Array();
-  userArray.push(userJon);
-  // END OF NO DATABASE TEST CASE. Replace everything in between with DB handling.
-
-  const user = getUserDBEmail(userEmail);
-
+  let user = await getUser("userEmail", userEmail);
   if (!user || user.userEmail != userEmail) {
-    console.log("Invalid email address.");
-    return res.status(401).send();
+    return res.status(401).send({ message: "User created." });
   }
-
-  bcrypt.hash(user.userPassword, saltRounds, function (err, hash) {
-    if (err) {
-      throw err;
-    }
-    bcrypt.compare(password, hash, function (err, result) {
-      if (err) {
-        throw err;
-      } else if (!result) {
-        console.log("Incorrect password.");
-        return res.status(401).send();
+  try {
+    bcrypt.compare(password, user.userPassword, function (err, result) {
+      if (err || !result) {
+        res.status(401);
+        return res.send({
+          error: "Invalid username or password",
+        });
       } else {
-        console.log("Correct log in, creating Cookie.");
         const token = jwt.sign(
           {
             data: {
               userEmail: userEmail,
-              userId: user.userID,
+              userId: user.userId,
             },
           },
           secret,
@@ -72,10 +66,14 @@ router.post("/login", async (req, res) => {
         };
         res.clearCookie("jwt-auth-cookie");
         res.cookie("jwt-auth-cookie", token, options);
-        return res.status(200).send("response from server");
+        return res.send("response from server");
       }
     });
-  });
+  } catch (ex) {
+    console.error(ex);
+    res.status(400);
+    return res.send({ error: ex });
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -83,7 +81,6 @@ router.post("/signup", async (req, res) => {
   const userName = req.body.userName;
   const userEmail = req.body.userEmail;
   const userPassword = req.body.userPassword;
-  console.log("Creating User:");
 
   // username and password validation.
   if (userName.length < 6 || userPassword.length < 6) {
@@ -109,50 +106,49 @@ router.post("/signup", async (req, res) => {
     });
   }
 
-  // addUserDB adds the user with userName, userPassword, userEmail to the fakeDB.
-  // return 0 or 1 for results.
-  if (!addUserDB(userName, userPassword, userEmail)) {
-    console.log("User already exists.");
-    return res.status(400).send({ error: "User already exists." });
-  } else {
-    const user = getUserDBEmail(userEmail);
-    const token = jwt.sign(
-      {
-        data: {
-          userEmail: user.userEmail,
-          userId: user.userID,
-        },
-      },
-      secret,
-      {
-        expiresIn: 60 * 60, // would expire after 1 hour
-      }
-    );
-    let options = {
-      maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-      httpOnly: true, // The cookie only accessible by the web server
-    };
-    res.clearCookie("jwt-auth-cookie");
-    res.cookie("jwt-auth-cookie", token, options);
-    console.log("User created");
-    return res.status(200).send({ message: "User created." });
-  }
-
   //For the no db test cases,
   //      userName = "Jon Snow", userPassword = "nothing", userEmail = "JonSnow@example.com"
   // DELETE NEXT LINES if not saving password as encrypted.
   try {
+    const hashedPassword = await bcrypt.hash(userPassword, saltRounds);
     //create model here for database
     //  use: userName, userEmail and userPassword
-
-    return res.status(200).send({ message: "User created" });
+    const addUser = {
+      userName: userName,
+      userEmail: userEmail,
+      userPassword: hashedPassword,
+    };
+    const addedUser = await createUser(addUser);
+    //console.log(addedUser);
+    if (addedUser != null) {
+      console.log("Correct Sign Up. Creating Cookie.");
+      const token = jwt.sign(
+        {
+          data: {
+            userEmail: userEmail,
+            userId: addedUser.userId,
+          },
+        },
+        secret,
+        { expiresIn: 60 * 60 } // would expire after 1 hour
+      );
+      let options = {
+        maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
+        httpOnly: true, // The cookie only accessible by the web server
+      };
+      res.clearCookie("jwt-auth-cookie");
+      res.cookie("jwt-auth-cookie", token, options);
+      return res.status(200).send({ message: "User created." });
+    } else {
+      return res
+        .status(400)
+        .send({ message: "User creation error. User already exists." });
+    }
   } catch (ex) {
-    //logger.error(ex);
     console.error(ex);
     res.status(400);
     return res.send({ error: ex });
   }
-  // DELETE UNTIL HERE.
 });
 
 router.get("/logout", async (req, res) => {
@@ -163,8 +159,62 @@ router.get("/logout", async (req, res) => {
 
 // POST edit template to edit Username/Password/Email once authorized.
 router.post("/edit", authCheck, function (req, res) {
-  console.log("\nValid jwt-auth-cookie. Beginning /edit.");
   return res.send("Editing File");
+});
+
+// create a new list, and assign it to user userId, with name and picture in req.body
+router.post("/itemLists/addLists", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  addList(currentUserId, req.body.listName, req.body.listPicture)
+    .then(function (ret) {
+      res.status(200).send({ message: "Added List." });
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.status(400).send({ err });
+    });
+});
+
+// GET - retrieve all Lists for current user
+router.get("/itemLists/getLists", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  let allLists = await getAllListsWithValues(currentUserId)
+    .then(function (allLists) {
+      return allLists;
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
+  //console.log(allLists[0].products);
+  return res.status(200).send({ itemLists: allLists });
+});
+
+// GET - retrieve all Lists for current user
+router.get("/itemLists/getProductList", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  const listName = req.query.listName;
+
+  const currentList = await getListIdByListName(currentUserId, listName);
+  const currentListProducts = await getAllProductsbyListId(currentList.listId);
+  return res.status(200).send({ productList: currentListProducts });
+});
+
+//add a product defined in req.body to list: listName (req.body.listName)
+router.post("/itemLists/addItems", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  var itemAddedBool = await addProductToList(
+    req.body.productId,
+    req.body.productName,
+    req.body.productURL,
+    req.body.productImageURL,
+    req.body.productCurrency,
+    req.body.productPrice,
+    req.body.productSalePrice,
+    currentUserId,
+    req.body.listName
+  );
+  return res.status(200).send({ message: "Item Added." });
 });
 
 module.exports = router;

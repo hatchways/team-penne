@@ -14,24 +14,13 @@ import {
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
-// Dummy data for items in shoes
-const clothes = [];
-
 function EditListDialog(props) {
-  const [, setProductUrl] = React.useState("");
   const [listName, setListName] = React.useState(props.listName);
+  const [itemListLoaded, setItemListLoaded] = React.useState(false);
+  const [productList, setProductList] = React.useState([]);
 
   const classes = dialogStyles();
   const history = useHistory();
-
-  const itemList = JSON.parse(localStorage.getItem("itemLists")).filter(
-    (itemList) => itemList.name.toUpperCase() === listName.toUpperCase()
-  )[0];
-
-  let itemListAmount;
-  if (itemList) {
-    itemListAmount = itemList.amount;
-  }
 
   const handleClose = () => {
     history.push(window.location.pathname.replace("/edit-list", ""));
@@ -44,9 +33,24 @@ function EditListDialog(props) {
     );
   };
 
-  useEffect(() => {
-    setListName(history.location.state.name);
-  });
+  fetch("/itemLists/getProductList/?listName=" + listName, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    })
+    .then((res) => {
+      setProductList(res.productList);
+    })
+    .catch((err) => {
+      console.log(err);
+      setItemListLoaded(false);
+    });
 
   return (
     <Dialog
@@ -62,20 +66,23 @@ function EditListDialog(props) {
       >
         {listName}
         <Typography variant="body2" component="h1" color="textSecondary">
-          {itemListAmount} items
+          {productList.length} items
         </Typography>
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>
-        {clothes.map((listItem) => (
+        {productList.map((listItem) => (
           <Card
             className={classes.cardManager}
             raised={true}
-            value={listItem.name}
+            value={listItem.productName}
           >
             <CardActions>
               <div className={classes.cardDivider}>
                 <div className={classes.cardImageBox}>
-                  <img src={listItem.image} className={classes.cardImg} />
+                  <img
+                    src={listItem.productImageURL}
+                    className={classes.cardImg}
+                  />
                 </div>
                 <div className={classes.cardTextBox}>
                   <Typography
@@ -83,12 +90,21 @@ function EditListDialog(props) {
                     color="textSecondary"
                     gutterBottom
                   >
-                    <Truncate width={100 * 6}>{listItem.name}</Truncate>
+                    <Truncate width={100 * 6}>{listItem.productName}</Truncate>
                   </Typography>
                   <Typography className={classes.cardURL} gutterBottom>
-                    <Truncate width={100 * 3}>{listItem.url}</Truncate>
+                    <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
                   </Typography>
-                  <h5>{listItem.price}</h5>
+                  <h5>
+                    {listItem.productCurrency}
+                    {listItem.productPrice}
+                  </h5>
+                  <h5>
+                    {listItem.productSalePrice != null &&
+                      listItem.productCurrency}
+                    {listItem.productSalePrice != null &&
+                      listItem.productSalePrice}
+                  </h5>
                 </div>
               </div>
               <Button

@@ -12,44 +12,77 @@ const __launchPuppeteer = async (url) => {
 };
 
 const scrapeAmazon = async (url) => {
-  const page = await __launchPuppeteer(url);
+  const page = await __launchPuppeteer(url).catch((err) => {
+    console.log(err);
+  });
   const splitUrl = url.split("/");
   var productId = "";
-  for (i=0; i<splitUrl.length; i++){
-    if (splitUrl[i] == "product"){
-      productId = splitUrl[i+1];
+  for (i = 0; i < splitUrl.length; i++) {
+    if (splitUrl[i] == "dp") {
+      productId = splitUrl[i + 1];
       break;
     }
   }
   productId = productId.split("?")[0];
 
-  const item = await page.evaluate(() => {
-    let title = document
-      .getElementById("productTitle")
-      .innerHTML.split("\n")[9];
+  const item = await page
+    .evaluate(() => {
+      let title = document
+        .getElementById("productTitle")
+        .innerHTML.split("\n")[9];
+      while (title.charAt(0) === " ") {
+        title = title.split("");
+        title.splice(0, 1);
+        title = title.join("");
+      }
 
-    while (title.charAt(0) === " ") {
-      title = title.split("");
-      title.splice(0, 1);
-      title = title.join("");
-    }
+      const priceHTML = document.getElementById("priceblock_ourprice")
+        .innerHTML;
+      const priceHTMLSplit = priceHTML.split("&nbsp;");
+      const currency = priceHTMLSplit[0];
+      var priceString = priceHTMLSplit[1];
+      var priceSplit = priceString.split("."); // split string by decimal point
+      const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+      const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+      var price = priceFH + priceSH;
+      const salePriceHTML = document.getElementsByClassName(
+        "priceBlockStrikePriceString"
+      )[0];
 
-    const price = document.getElementById("priceblock_ourprice").innerHTML;
+      if (salePriceHTML) {
+        var salePriceHTMLSplit = salePriceHTML.innerHTML.split("&nbsp;");
+        var salePriceCurrency = salePriceHTMLSplit[0];
+        var salePriceString = salePriceHTMLSplit[1];
+        var salePriceSplit = salePriceString.split("."); // split string by decimal point
+        var salePriceFH = parseInt(salePriceSplit[0], 10); // FH = first half (i.e Integer part)
+        var salePriceSH = parseInt(salePriceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+        var salePrice = salePriceFH + salePriceSH;
 
-    const listPrice = document.getElementsByClassName(
-      "priceBlockStrikePriceString"
-    )[0];
+        let saleTemp = salePrice;
+        salePrice = price;
+        price = saleTemp;
+      }
 
-    const imageURL = document.getElementById("landingImage").src;
+      const imageURL = document.getElementById("landingImage").src;
 
-    return listPrice
-      ? { title, price, imageURL, listPrice: listPrice.innerHTML, sale: true }
-      : { title, price, imageURL, sale: false };
-  });
+      return salePriceHTML
+        ? {
+            title,
+            currency,
+            price,
+            imageURL,
+            salePrice,
+            sale: true,
+          }
+        : { title, currency, price, imageURL, sale: false };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   item["productId"] = productId;
-  console.log("Generated item: ");
-  console.log(item);
+  //console.log("Generated item: ");
+  //console.log(item);
   return item;
 };
 
@@ -87,7 +120,11 @@ const scrapeEbay = async (url) => {
           .innerHTML.split(" ")[1];
       }
       let imageURL;
-      if (document.getElementsByClassName("a-dynamic-image-a-stretch-horizontal")[1]){
+      if (
+        document.getElementsByClassName(
+          "a-dynamic-image-a-stretch-horizontal"
+        )[1]
+      ) {
         imageURL = document
           .getElementsByClassName("a-dynamic-image-a-stretch-horizontal")[1]
           .getElementsByTagName("SRC")[1];

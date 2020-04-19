@@ -1,6 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router";
 import clsx from "clsx";
+import { useHistory } from "react-router";
 import {
   Button,
   CircularProgress,
@@ -100,19 +100,7 @@ function NewProductDialog(props) {
         .then((res) => {
           setLoading(false);
           setSuccess(true);
-          setLoadingButtonLabel("Product Retrieved");
-          console.log(
-            "Product Added!\nId: " +
-              res.productId +
-              "\nTitle: " +
-              res.title +
-              "\nProduct Price: " +
-              res.price +
-              "\nProduct URL: " +
-              res.imageURL +
-              "\nProduct on sale: " +
-              res.sale
-          );
+          setLoadingButtonLabel("PRODUCT RETRIEVED");
           timer.current = setTimeout(() => {
             history.push(
               window.location.pathname.replace(
@@ -121,10 +109,14 @@ function NewProductDialog(props) {
               ),
               {
                 title: res.title,
+                currency: res.currency,
                 price: res.price,
                 imageURL: res.imageURL,
                 sale: res.sale,
+                salePrice: res.salePrice,
                 productURL: productUrl,
+                productId: res.productId,
+                listName: list,
               }
             );
           }, 1000);
@@ -140,7 +132,6 @@ function NewProductDialog(props) {
           setLoadingButtonLabel("ADD ITEM");
         });
     } else {
-      console.log("Invalid username/password.");
       setLoading(false);
       setSuccess(false);
     }

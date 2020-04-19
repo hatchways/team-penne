@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "nodemon ./bin/www",
     "debug": "nodemon  --inspect ./bin/www",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
+    "setupDB": "sequelize db:migrate"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
     "cloudinary": "^1.21.0",
     "cookie-parser": "^1.4.5",
     "cookies": "^0.8.0",
+    "cron": "^1.8.2",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
@@ -20,8 +22,13 @@
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
+    "node-fetch": "^2.6.0",
     "nodemon": "^1.19.1",
-    "puppeteer": "^2.1.1"
+    "pg": "^8.0.2",
+    "pg-hstore": "^2.3.3",
+    "puppeteer": "^2.1.1",
+    "sequelize": "^5.21.6",
+    "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
