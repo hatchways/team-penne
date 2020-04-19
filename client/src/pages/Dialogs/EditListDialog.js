@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
@@ -22,25 +22,6 @@ function EditListDialog(props) {
   const classes = dialogStyles();
   const history = useHistory();
 
-  /*
-  var itemList;
-  if (!itemListLoaded) {
-    itemList = JSON.parse(localStorage.getItem("itemLists")).filter(
-      itemList => itemList.name.toUpperCase() === listName.toUpperCase()
-    );
-    var i;
-    for (i = 0; i < itemList.length; i++) {
-      if (itemList[i].name == listName) {
-        setProductList(itemList.products);
-        break;
-      }
-    }
-    setItemListLoaded(true);
-  }
-  if (itemList) {
-    setItemListAmount(itemList.amount);
-  }
-*/
   const handleClose = () => {
     history.push(window.location.pathname.replace("/edit-list", ""));
   };
@@ -55,25 +36,21 @@ function EditListDialog(props) {
   fetch("/itemLists/getProductList/?listName=" + listName, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   })
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
         return res.json();
       }
     })
-    .then(res => {
+    .then((res) => {
       setProductList(res.productList);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       setItemListLoaded(false);
     });
-
-  useEffect(() => {
-    setListName(history.location.state.name);
-  });
 
   return (
     <Dialog
@@ -93,7 +70,7 @@ function EditListDialog(props) {
         </Typography>
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>
-        {productList.map(listItem => (
+        {productList.map((listItem) => (
           <Card
             className={classes.cardManager}
             raised={true}

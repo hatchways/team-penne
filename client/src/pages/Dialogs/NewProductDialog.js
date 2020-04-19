@@ -14,7 +14,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  Select
+  Select,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
@@ -34,23 +34,23 @@ function NewProductDialog(props) {
   const [loadErr, setLoadErr] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [listError, setListError] = React.useState(false);
-  const listNames = props.itemLists.map(list => list.name);
+  const listNames = props.itemLists.map((list) => list.name);
   const timer = React.useRef();
 
   const handleClose = () => {
     history.push(window.location.pathname.replace("/add-new-product", ""));
   };
   const buttonClassname = clsx({
-    [classes.buttonSuccess]: success
+    [classes.buttonSuccess]: success,
   });
   const handleButtonClick = () => {
     getProductFromUrl();
   };
 
-  const handleList = event => {
+  const handleList = (event) => {
     setList(event.target.value);
   };
-  const handleProductUrl = event => {
+  const handleProductUrl = (event) => {
     setProductUrl(event.target.value);
   };
 
@@ -89,15 +89,15 @@ function NewProductDialog(props) {
       fetch("/api/scrape/?url=" + productUrl, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             return res.json();
           }
         })
-        .then(res => {
+        .then((res) => {
           setLoading(false);
           setSuccess(true);
           setLoadingButtonLabel("PRODUCT RETRIEVED");
@@ -116,12 +116,12 @@ function NewProductDialog(props) {
                 salePrice: res.salePrice,
                 productURL: productUrl,
                 productId: res.productId,
-                listName: list
+                listName: list,
               }
             );
           }, 1000);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           setLoading(false);
           setSuccess(false);
@@ -137,7 +137,7 @@ function NewProductDialog(props) {
     }
   };
 
-  const enterSubmit = event => {
+  const enterSubmit = (event) => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
     if (keyCode == 13) {
       getProductFromUrl();
@@ -166,7 +166,7 @@ function NewProductDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput
+              input: classes.outlinedInputInput,
             }}
             //onKeyPress={enterSubmit}
             onChange={handleProductUrl}
@@ -199,7 +199,7 @@ function NewProductDialog(props) {
               <option value="" disabled selected hidden>
                 Select
               </option>
-              {listNames.map(name => (
+              {listNames.map((name) => (
                 <option value={name}>{name}</option>
               ))}
             </Select>

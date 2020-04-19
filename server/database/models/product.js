@@ -6,25 +6,25 @@ module.exports = (sequelize, DataTypes) => {
       productId: {
         type: DataTypes.STRING,
         primaryKey: true,
-        defaultValue: ""
+        defaultValue: "",
       },
       productName: DataTypes.STRING,
       productURL: DataTypes.TEXT,
       productImageURL: DataTypes.TEXT,
       productCurrency: DataTypes.STRING,
       productPrice: DataTypes.DECIMAL,
-      productSalePrice: DataTypes.DECIMAL
+      productSalePrice: DataTypes.DECIMAL,
     },
     {
-      timestamps: false
+      timestamps: false,
     }
   );
-  Products.associate = function(models) {
+  Products.associate = function (models) {
     // associations can be defined here
     Products.belongsToMany(models.Lists, {
       through: "ListProducts",
       foreignKey: "productId",
-      as: "product"
+      as: "product",
     });
   };
   return Products;
