@@ -85,6 +85,12 @@ function NewProductDialog(props) {
     if (verificationCheck()) {
       setSuccess(false);
       setLoading(true);
+      timer.current = setTimeout(() => {
+        setLoadErr(true);
+        setErrorMessage(
+          "Your product is taking longer to load than usual. Please keep waiting, or refresh the page."
+        );
+      }, 5000);
       localStorage.setItem("productUrl", productUrl);
       fetch("/api/scrape/?url=" + productUrl, {
         method: "GET",
@@ -93,13 +99,14 @@ function NewProductDialog(props) {
         }
       })
         .then(res => {
-          if (res.status === 200) {
+          if (res.status == 200) {
             return res.json();
           }
         })
         .then(res => {
           setLoading(false);
           setSuccess(true);
+          clearInterval(timer.current);
           setLoadingButtonLabel("PRODUCT RETRIEVED");
           timer.current = setTimeout(() => {
             history.push(
@@ -108,12 +115,12 @@ function NewProductDialog(props) {
                 "/confirm-product"
               ),
               {
-                title: res.title,
-                currency: res.currency,
-                price: res.price,
-                imageURL: res.imageURL,
-                sale: res.sale,
-                salePrice: res.salePrice,
+                productTitle: res.title,
+                productCurrency: res.currency,
+                productPrice: res.price,
+                productImageURL: res.imageURL,
+                productSale: res.sale,
+                productSalePrice: res.salePrice,
                 productURL: productUrl,
                 productId: res.productId,
                 listName: list
@@ -137,13 +144,6 @@ function NewProductDialog(props) {
     }
   };
 
-  const enterSubmit = event => {
-    let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode == 13) {
-      getProductFromUrl();
-    }
-  };
-
   return (
     <Dialog
       scroll="paper"
@@ -152,13 +152,10 @@ function NewProductDialog(props) {
       aria-labelledby="form-dialog-title"
       open={true}
     >
-      <DialogTitle
-        classes={{ root: classes.dialogTitle }}
-        id="form-dialog-title"
-      >
+      <DialogTitle className={classes.nPDialogTitle} id="form-dialog-title">
         Add new item:
       </DialogTitle>
-      <DialogContent classes={{ root: classes.dialogContent }}>
+      <DialogContent className={classes.dialogContent}>
         <InputLabel classes={{ root: classes.inputLabel }}>
           Paste link to item
         </InputLabel>

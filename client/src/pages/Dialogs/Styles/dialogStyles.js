@@ -35,14 +35,15 @@ const dialogStyles = makeStyles({
     height: "100%"
   },
   cardManager: {
-    marginTop: 20,
+    marginBottom: 20,
     height: "100%"
   },
   cardDivider: {
     display: "flex",
     alignItems: "flex-start",
     padding: 5,
-    textAlign: "left"
+    textAlign: "left",
+    minHeight: "100px"
   },
   cardImageBox: {
     overflow: "hidden",
@@ -57,7 +58,9 @@ const dialogStyles = makeStyles({
     height: "auto"
   },
   cardTextBox: {
-    marginLeft: "10px"
+    marginLeft: "10px",
+    display: "flex",
+    flexDirection: "column"
   },
   cardTitle: {
     fontSize: "10pt",
@@ -81,11 +84,11 @@ const dialogStyles = makeStyles({
     paddingTop: "0"
   },
   dialogContent: {
-    paddingBottom: "0",
+    paddingBottom: 0,
     textAlign: "center"
   },
   dialogTitle: {
-    paddingBottom: "0",
+    marginBottom: 0,
     textAlign: "center",
     fontSize: "22px",
     fontWeight: "bolder"
@@ -164,14 +167,23 @@ const dialogStyles = makeStyles({
     fontWeight: "bold",
     cursor: "pointer"
   },
+  nPDialogTitle: {
+    paddingBottom: 0,
+    textAlign: "center",
+    fontSize: "22px",
+    fontWeight: "bolder"
+  },
   outlinedInputInput: {
     textAlign: "center"
   },
   outlinedInputRoot: {
     width: "75%"
   },
-  selectDropdown: {
-    textAlignLast: "center"
+  pCDialogTitle: {
+    marginBottom: 10,
+    textAlign: "center",
+    fontSize: "22px",
+    fontWeight: "bolder"
   },
   removeButton: {
     backgroundColor: "#FFFFFF",
@@ -181,6 +193,14 @@ const dialogStyles = makeStyles({
     marginBottom: "25px",
     marginTop: "25px",
     fontSize: "0.7em"
+  },
+  selectDropdown: {
+    textAlignLast: "center"
+  },
+  strikeThroughText: {
+    color: "red",
+    textDecorationLine: "line-through",
+    fontSize: "10px"
   }
 });
 

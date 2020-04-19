@@ -70,26 +70,40 @@ function EditListDialog() {
                   />
                 </div>
                 <div className={classes.cardTextBox}>
-                  <Typography
-                    className={classes.cardTitle}
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    <Truncate width={100 * 6}>{listItem.productName}</Truncate>
-                  </Typography>
-                  <Typography className={classes.cardURL} gutterBottom>
-                    <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
-                  </Typography>
-                  <h5>
-                    {listItem.productCurrency}
-                    {listItem.productPrice}
-                  </h5>
-                  <h5>
-                    {listItem.productSalePrice != null &&
-                      listItem.productCurrency}
-                    {listItem.productSalePrice != null &&
-                      listItem.productSalePrice}
-                  </h5>
+                  <div>
+                    <Typography
+                      className={classes.cardTitle}
+                      color="textSecondary"
+                      gutterBottom
+                    >
+                      <Truncate width={100 * 6}>
+                        {listItem.productName}
+                      </Truncate>
+                    </Typography>
+                    <Typography className={classes.cardURL} gutterBottom>
+                      <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
+                    </Typography>
+                  </div>
+                  <div style={{ marginTop: 30 }}>
+                    {listItem.productSalePrice != null && (
+                      <div className={classes.strikeThroughText}>
+                        {listItem.productCurrency}
+                        {listItem.productPrice}
+                      </div>
+                    )}
+                    {listItem.productSalePrice != null && (
+                      <div style={{ fontWeight: "bold" }}>
+                        {listItem.productCurrency}
+                        {listItem.productSalePrice}
+                      </div>
+                    )}
+                    {listItem.productSalePrice == null && (
+                      <div>
+                        {listItem.productCurrency}
+                        {listItem.productPrice}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <Button
