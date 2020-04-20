@@ -14,7 +14,7 @@ function reformatProductStyle(Products) {
       productImageURL: Products[i].productImageURL,
       productCurrency: Products[i].productCurrency,
       productPrice: Products[i].productPrice,
-      productSalePrice: Products[i].productSalePrice,
+      productSalePrice: Products[i].productSalePrice
     };
     formattedList.push(tempProductsItem);
   }
@@ -36,14 +36,14 @@ async function getProductIfExists(productId) {
       "productImageURL",
       "productCurrency",
       "productPrice",
-      "productSalePrice",
+      "productSalePrice"
     ],
-    where: { productId: productId },
+    where: { productId: productId }
   })
-    .then((product) => {
+    .then(product => {
       return product;
     })
-    .catch((err) => {
+    .catch(err => {
       //console.log("No Products in list");
       return null;
     });
@@ -53,13 +53,13 @@ async function getProductIfExists(productId) {
 async function checkIfProductInList(productId, listId) {
   const inListBool = await ListProducts.findOne({
     attributes: ["listId", "productId"],
-    where: { listId: listId, productId: productId },
+    where: { listId: listId, productId: productId }
   })
-    .then((res) => {
+    .then(res => {
       if (res == null) return false;
       else return true;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return false;
     });
@@ -74,9 +74,9 @@ async function checkIfProductInList(productId, listId) {
 async function getAllProductsbyListId(listId) {
   var allProducts = await ListProducts.findAll({
     attributes: ["listId", "productId"],
-    where: { listId: listId },
+    where: { listId: listId }
   })
-    .then(async (listProducts) => {
+    .then(async listProducts => {
       var i;
       var listOfProducts = [];
       for (i = 0; i < listProducts.length; i++) {
@@ -88,14 +88,14 @@ async function getAllProductsbyListId(listId) {
             "productImageURL",
             "productCurrency",
             "productPrice",
-            "productSalePrice",
+            "productSalePrice"
           ],
-          where: { productId: listProducts[i].productId },
+          where: { productId: listProducts[i].productId }
         })
-          .then((res) => {
+          .then(res => {
             return res;
           })
-          .catch((err) => {
+          .catch(err => {
             // Product exists in ListProducts Table, but not in Products Table (??)
             console.log(err);
             return [];
@@ -104,13 +104,13 @@ async function getAllProductsbyListId(listId) {
       }
       return listOfProducts;
     })
-    .catch(function (err) {
+    .catch(function(err) {
       // Empty Products Table
       console.log("Empty Products Table.");
       //console.log(err);
       return [];
     })
-    .catch((err) => {
+    .catch(err => {
       return [];
     });
   return reformatProductStyle(allProducts);
@@ -119,12 +119,12 @@ async function getAllProductsbyListId(listId) {
 async function getListIdFromUser(listName, userId) {
   var returnedListId = await List.findOne({
     attributes: ["listId", "listName", "listImageURL"],
-    where: { listName: listName, userId: userId },
+    where: { listName: listName, userId: userId }
   })
-    .then((listId) => {
+    .then(listId => {
       return listId;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return null;
     });
@@ -159,13 +159,13 @@ async function addProductToList(
       productImageURL: productImageURL,
       productCurrency: productCurrency,
       productPrice: productPrice,
-      productSalePrice: productSalePrice,
+      productSalePrice: productSalePrice
     })
-      .then(function (res) {
+      .then(function(res) {
         //console.log(res);
         return res;
       })
-      .catch(function (err) {
+      .catch(function(err) {
         console.log(err);
         console.log("Product Not Added.");
         return null;
@@ -182,23 +182,23 @@ async function addProductToList(
   if (productInListBool) return false; // Product Already in specified List.
   ListProducts.create({
     productId: productId,
-    listId: listId,
+    listId: listId
   });
   return true;
 }
 
-const getSalePrices = new CronJob("*/2 * * * *", async function () {
-  await Product.findAll().then((products) => {
-    products.map((product) => {
+const getSalePrices = new CronJob("* 1 * * *", async function() {
+  await Product.findAll().then(products => {
+    products.map(product => {
       const url = product.productURL;
       const website = url.split(".")[1];
       if (website === "amazon") {
-        scrapeAmazon(url).then((res) => {
+        scrapeAmazon(url).then(res => {
           product.productSalePrice = res.salePrice.toString();
           product.save();
         });
       } else if (website === "ebay") {
-        scrapeEbay(url).then((res) => {
+        scrapeEbay(url).then(res => {
           product.productSalePrice = res.salePrice.toString();
           product.save();
         });
@@ -210,5 +210,5 @@ const getSalePrices = new CronJob("*/2 * * * *", async function () {
 module.exports = {
   getAllProductsbyListId,
   addProductToList,
-  getSalePrices,
+  getSalePrices
 };

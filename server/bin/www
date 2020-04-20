@@ -52,6 +52,9 @@ var io = socket(server);
 io.on("connection", function(socket) {
   console.log("made socket connection");
 });
+io.close(function() {
+  console.log("closed all socket connections");
+});
 
 /**
  * Normalize a port into a number, string, or false.

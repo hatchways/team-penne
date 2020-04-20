@@ -11,10 +11,12 @@ import {
   InputLabel,
   Link,
   OutlinedInput,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
+import socketIOClient from "socket.io-client";
+require("dotenv").config();
 
 function SignUpDialog(props) {
   const [name, setName] = React.useState("");
@@ -34,28 +36,28 @@ function SignUpDialog(props) {
     props.history.push(window.location.pathname.replace("/sign-up", "/login"));
   };
 
-  const changeName = (event) => {
+  const changeName = event => {
     setName(event.target.value);
   };
 
-  const changeEmail = (event) => {
+  const changeEmail = event => {
     setEmail(event.target.value);
   };
 
-  const changePassword = (event) => {
+  const changePassword = event => {
     setPassword(event.target.value);
   };
 
-  const validateName = (name) => {
+  const validateName = name => {
     return name.length > 0 && !name.match(/\d/);
   };
 
-  const validateEmail = (email) => {
+  const validateEmail = email => {
     let regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regExpression.test(String(email).toLowerCase());
   };
 
-  const validatePassword = (password) => {
+  const validatePassword = password => {
     return password.length >= 6;
   };
 
@@ -86,26 +88,27 @@ function SignUpDialog(props) {
       fetch("/signup", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           userName: name,
           userEmail: email,
-          userPassword: password,
-        }),
-      }).then((res) => {
+          userPassword: password
+        })
+      }).then(res => {
         status = res.status;
         if (status === 200) {
           props.handleLogin();
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
+          const socket = socketIOClient(process.env.ENDPOINT);
           fetch("/cronJob");
         }
       });
     }
   };
 
-  const enterSubmit = (event) => {
+  const enterSubmit = event => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
     if (keyCode === 13) {
       validateSignUp();
@@ -135,7 +138,7 @@ function SignUpDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changeName}
@@ -156,7 +159,7 @@ function SignUpDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changeEmail}
@@ -177,7 +180,7 @@ function SignUpDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changePassword}

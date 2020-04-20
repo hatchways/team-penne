@@ -11,10 +11,12 @@ import {
   InputLabel,
   Link,
   OutlinedInput,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
+import socketIOClient from "socket.io-client";
+require("dotenv").config();
 
 function LoginDialog(props) {
   const [email, setEmail] = React.useState("");
@@ -32,20 +34,20 @@ function LoginDialog(props) {
     props.history.push(window.location.pathname.replace("/login", "/sign-up"));
   };
 
-  const changeEmail = (event) => {
+  const changeEmail = event => {
     setEmail(event.target.value);
   };
 
-  const changePassword = (event) => {
+  const changePassword = event => {
     setPassword(event.target.value);
   };
 
-  const validateEmail = (email) => {
+  const validateEmail = email => {
     let regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regExpression.test(String(email).toLowerCase());
   };
 
-  const validatePassword = (password) => {
+  const validatePassword = password => {
     return password.length >= 6;
   };
 
@@ -69,22 +71,23 @@ function LoginDialog(props) {
       fetch("/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ userEmail: email, userPassword: password }),
-      }).then((res) => {
+        body: JSON.stringify({ userEmail: email, userPassword: password })
+      }).then(res => {
         status = res.status;
         if (status === 200) {
           props.handleLogin();
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
           fetch("/cronJob");
+          const socket = socketIOClient(process.env.ENDPOINT);
         }
       });
     }
   };
 
-  const enterSubmit = (event) => {
+  const enterSubmit = event => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
     if (keyCode === 13) {
       validateLogin();
@@ -114,7 +117,7 @@ function LoginDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changeEmail}
@@ -135,7 +138,7 @@ function LoginDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changePassword}
