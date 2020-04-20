@@ -16,13 +16,8 @@ import navbarStyles from "./styles/navbarStyles";
 import notifStyles from "./styles/notificationStyles";
 import StyledMenu from "./styles/styledMenu";
 import logo from "../../assets/logo.png";
+import noUserProfilePic from "../../assets/noUserProfilePic.png";
 
-const userProfile = {
-  userName: "Patrick Star",
-  userEmail: "thisispatrick@example.com",
-  profilePicImage:
-    "https://i2-prod.mirror.co.uk/incoming/article10883656.ece/ALTERNATES/s615b/PROD-Lost-In-Space-Anniversary-party.jpg"
-};
 const updatedItemList1 = [];
 var updatedItemList = [
   {
@@ -67,6 +62,7 @@ function Navbar(props) {
   const [itemList, setItemList] = useState(updatedItemList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
+  const [userProfile, setUserProfile] = useState("");
 
   const navbarClasses = navbarStyles();
   const classes = notifStyles();
@@ -107,6 +103,30 @@ function Navbar(props) {
       itemList.splice(onDeleteIndex, 1);
       setDeleteItem(onDeleteIndex);
       setOnDeleteIndex(-1);
+    }
+    if (userProfile == "") {
+      fetch("/userprofile")
+        .then(res => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then(res => {
+          console.log(res.userImageURL == null);
+          if (res.userImageURL == null) {
+            setUserProfile({
+              userName: res.userName,
+              userEmail: res.userEmail,
+              profilePicImage: noUserProfilePic
+            });
+          } else {
+            setUserProfile({
+              userName: res.userName,
+              userEmail: res.userEmail,
+              profilePicImage: res.userImageURL
+            });
+          }
+        });
     }
   });
 

@@ -84,14 +84,14 @@ function EditListDialog() {
                       <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
                     </Typography>
                   </div>
-                  {listItem.productPrice == 0 && (
+                  {listItem.productPrice == 0 && ( // if product is unavailable
                     <div
                       style={{ marginTop: 20, fontSize: "12px", color: "red" }}
                     >
                       Sorry, your product is currently unavailable.
                     </div>
                   )}
-                  {listItem.productPrice != 0 && ( // if product is unavailable
+                  {listItem.productPrice != 0 && ( // if product is available
                     <div style={{ marginTop: 30 }}>
                       {listItem.productSalePrice != null && (
                         <div className={classes.strikeThroughText}>

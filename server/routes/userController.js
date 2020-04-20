@@ -31,7 +31,7 @@ router.post("/login", async (req, res) => {
 
   let user = await getUser("userEmail", userEmail);
   if (!user || user.userEmail != userEmail) {
-    return res.status(401).send({ message: "User created." });
+    return res.status(401).send({ message: "Invalid User." });
   }
   try {
     bcrypt.compare(password, user.userPassword, function(err, result) {
@@ -44,6 +44,7 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
           {
             data: {
+              userName: user.userName,
               userEmail: userEmail,
               userId: user.userId
             }
@@ -118,6 +119,7 @@ router.post("/signup", async (req, res) => {
       const token = jwt.sign(
         {
           data: {
+            userName: userName,
             userEmail: userEmail,
             userId: addedUser.userId
           }
@@ -153,6 +155,15 @@ router.get("/logout", async (req, res) => {
 // POST edit template to edit Username/Password/Email once authorized.
 router.post("/edit", authCheck, function(req, res) {
   return res.send("Editing File");
+});
+
+router.get("/userprofile", authCheck, async function(req, res) {
+  let user = await getUser("userEmail", req.userData.userEmail);
+  res.status(200).send({
+    userName: req.userData.userName,
+    userEmail: req.userData.userEmail,
+    userImageUrl: user.userImageURL
+  });
 });
 
 // create a new list, and assign it to user userId, with name and picture in req.body
