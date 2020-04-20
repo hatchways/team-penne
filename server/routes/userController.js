@@ -9,12 +9,12 @@ const { createUser, getUser } = require("../database/handlers/userDBHandler");
 const {
   addList,
   getAllListsWithValues,
-  getListIdByListName,
+  getListIdByListName
 } = require("../database/handlers/listDBHandler");
 const {
   getAllProductsbyListId,
   addProductToList,
-  getSalePrices,
+  getSalePrices
 } = require("../database/handlers/productDBHandler");
 
 const saltRounds = 10;
@@ -41,28 +41,28 @@ router.post("/login", async (req, res) => {
     return res.status(401).send({ message: "User created." });
   }
   try {
-    bcrypt.compare(password, user.userPassword, function (err, result) {
+    bcrypt.compare(password, user.userPassword, function(err, result) {
       if (err || !result) {
         res.status(401);
         return res.send({
-          error: "Invalid username or password",
+          error: "Invalid username or password"
         });
       } else {
         const token = jwt.sign(
           {
             data: {
               userEmail: userEmail,
-              userId: user.userId,
-            },
+              userId: user.userId
+            }
           },
           secret,
           {
-            expiresIn: 60 * 60, // would expire after 1 hour
+            expiresIn: 60 * 60 // would expire after 1 hour
           }
         );
         let options = {
           maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
+          httpOnly: true // The cookie only accessible by the web server
         };
         res.clearCookie("jwt-auth-cookie");
         res.cookie("jwt-auth-cookie", token, options);
@@ -86,7 +86,7 @@ router.post("/signup", async (req, res) => {
   if (userName.length < 6 || userPassword.length < 6) {
     res.status(401);
     return res.send({
-      error: "Username and Password have to be at least 6 characters long.",
+      error: "Username and Password have to be at least 6 characters long."
     });
   }
 
@@ -102,7 +102,7 @@ router.post("/signup", async (req, res) => {
     // nothing after the . (e.g. no "com" or "ca")
     res.status(401);
     return res.send({
-      error: "Invalid Email.",
+      error: "Invalid Email."
     });
   }
 
@@ -116,7 +116,7 @@ router.post("/signup", async (req, res) => {
     const addUser = {
       userName: userName,
       userEmail: userEmail,
-      userPassword: hashedPassword,
+      userPassword: hashedPassword
     };
     const addedUser = await createUser(addUser);
     //console.log(addedUser);
@@ -126,15 +126,15 @@ router.post("/signup", async (req, res) => {
         {
           data: {
             userEmail: userEmail,
-            userId: addedUser.userId,
-          },
+            userId: addedUser.userId
+          }
         },
         secret,
         { expiresIn: 60 * 60 } // would expire after 1 hour
       );
       let options = {
         maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-        httpOnly: true, // The cookie only accessible by the web server
+        httpOnly: true // The cookie only accessible by the web server
       };
       res.clearCookie("jwt-auth-cookie");
       res.cookie("jwt-auth-cookie", token, options);
@@ -158,7 +158,7 @@ router.get("/logout", async (req, res) => {
 });
 
 // POST edit template to edit Username/Password/Email once authorized.
-router.post("/edit", authCheck, function (req, res) {
+router.post("/edit", authCheck, function(req, res) {
   return res.send("Editing File");
 });
 
@@ -166,10 +166,10 @@ router.post("/edit", authCheck, function (req, res) {
 router.post("/itemLists/addLists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   addList(currentUserId, req.body.listName, req.body.listPicture)
-    .then(function (ret) {
+    .then(function(ret) {
       res.status(200).send({ message: "Added List." });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
       res.status(400).send({ err });
     });
@@ -179,10 +179,10 @@ router.post("/itemLists/addLists", authCheck, async (req, res) => {
 router.get("/itemLists/getLists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   let allLists = await getAllListsWithValues(currentUserId)
-    .then(function (allLists) {
+    .then(function(allLists) {
       return allLists;
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
     });
   // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
