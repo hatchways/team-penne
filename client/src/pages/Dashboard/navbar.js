@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import Truncate from "react-truncate";
 import {
   AppBar,
@@ -6,12 +7,9 @@ import {
   Card,
   CardActions,
   CardContent,
-  Menu,
   Toolbar,
-  Typography,
-  withStyles
+  Typography
 } from "@material-ui/core";
-
 import navbarStyles from "./styles/navbarStyles";
 import notifStyles from "./styles/notificationStyles";
 import StyledMenu from "./styles/styledMenu";
@@ -60,12 +58,11 @@ function Navbar(props) {
   const [profileMenuBool, setProfileMenu] = useState(false);
   const [notificationMenuBool, setNotificationMenu] = useState(false);
   const [shoppingListsMenuBool, setShoppingListsMenu] = useState(
-    props.currentTab == "ShoppingLists"
+    props.currentTab == "shoppingLists"
   );
-  const [friendsMenuBool, setFriendsMenu] = useState(
-    props.currentTab == "Friends"
+  const [followersMenuBool, setFollowersMenu] = useState(
+    props.currentTab == "followers"
   );
-  const [homeMenuBool, setHomeMenu] = useState(props.currentTab == "Home");
   const [itemList, setItemList] = useState(updatedItemList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
@@ -74,6 +71,7 @@ function Navbar(props) {
   const navbarClasses = navbarStyles();
   const classes = notifStyles();
   const bull = <span className={classes.bullet}>•</span>;
+  const history = useHistory();
 
   const handleLogout = () => {
     fetch("/logout").then(res => {
@@ -91,42 +89,31 @@ function Navbar(props) {
     setProfileMenu(false);
   };
 
-  const handleHomeClick = event => {
-    setHomeMenu(true);
-    setShoppingListsMenu(false);
-    setFriendsMenu(false);
-    setNotificationMenu(false);
-    setProfileMenu(false);
-  };
-
   const handleShoppingListsClick = event => {
-    setHomeMenu(false);
+    console.log(event);
     setShoppingListsMenu(true);
-    setFriendsMenu(false);
+    setFollowersMenu(false);
     setNotificationMenu(false);
     setProfileMenu(false);
+
+    history.push("/dashboard/shoppingLists");
   };
-  const handleFriendsClick = event => {
-    setHomeMenu(false);
+  const handleFollowersClick = event => {
     setShoppingListsMenu(false);
-    setFriendsMenu(true);
+    setFollowersMenu(true);
     setNotificationMenu(false);
     setProfileMenu(false);
+
+    history.push("/dashboard/followers");
   };
 
   const handleNotificationClick = event => {
-    setHomeMenu(false);
-    setShoppingListsMenu(false);
-    setFriendsMenu(false);
     setNotificationMenu(true);
     setProfileMenu(false);
     setAnchorEl(event.currentTarget);
   };
 
   const handleProfileClick = event => {
-    setHomeMenu(false);
-    setShoppingListsMenu(false);
-    setFriendsMenu(false);
     setNotificationMenu(false);
     setProfileMenu(true);
     setAnchorEl(event.currentTarget);
@@ -175,14 +162,6 @@ function Navbar(props) {
           <img src={logo} alt="" />
         </div>
         <div className={navbarClasses.alignRight}>
-          <div onClick={handleHomeClick}>
-            {!homeMenuBool && (
-              <p style={{ fontWeight: "normal", color: "black" }}>Home</p>
-            )}
-            {homeMenuBool && (
-              <p style={{ fontWeight: "bold", color: "red" }}>Home</p>
-            )}
-          </div>
           <div onClick={handleShoppingListsClick}>
             {!shoppingListsMenuBool && (
               <p style={{ fontWeight: "normal", color: "black" }}>
@@ -193,12 +172,12 @@ function Navbar(props) {
               <p style={{ fontWeight: "bold", color: "red" }}>Shopping Lists</p>
             )}
           </div>
-          <div onClick={handleFriendsClick}>
-            {!friendsMenuBool && (
-              <p style={{ fontWeight: "normal", color: "black" }}>Friends</p>
+          <div onClick={handleFollowersClick}>
+            {!followersMenuBool && (
+              <p style={{ fontWeight: "normal", color: "black" }}>Followers</p>
             )}
-            {friendsMenuBool && (
-              <p style={{ fontWeight: "bold", color: "red" }}>Friends</p>
+            {followersMenuBool && (
+              <p style={{ fontWeight: "bold", color: "red" }}>Followers</p>
             )}
           </div>
           <Button

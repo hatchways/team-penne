@@ -13,6 +13,10 @@ import {
 
 import ListCard from "./ListCard.js";
 import useStyles from "./styles/shoppingListsStyles";
+import ProductConfirmation from "../Dialogs/ProductConfirmation";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
+import EditListDialog from "../Dialogs/EditListDialog";
+import NewProductDialog from "../Dialogs/NewProductDialog";
 
 export default function ShoppingLists() {
   const classes = useStyles();
@@ -43,7 +47,6 @@ export default function ShoppingLists() {
         }
       })
       .then(res => {
-        //console.log("itemLists: " + res.itemLists);
         setItemLists(res.itemLists);
         localStorage.setItem("itemLists", JSON.stringify(res.itemLists));
       })
@@ -79,6 +82,22 @@ export default function ShoppingLists() {
 
   return (
     <div className={classes.dashBody}>
+      <Route
+        path="/dashboard/shoppingLists/confirm-product"
+        component={ProductConfirmation}
+      />
+      <Route
+        path="/dashboard/shoppingLists/edit-list"
+        render={() => {
+          return <EditListDialog />;
+        }}
+      />
+      <Route
+        path="/dashboard/shoppingLists/add-new-product"
+        render={() => {
+          return <NewProductDialog itemLists={itemLists} />;
+        }}
+      />
       <div className={classes.newItem}>
         <Typography variant="h5">Add new item:</Typography>
         <div className={classes.input}>

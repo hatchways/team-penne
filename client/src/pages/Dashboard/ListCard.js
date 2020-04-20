@@ -12,8 +12,6 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/listCardStyles";
 import NewListDialog from "../Dialogs/NewListDialog";
-import EditListDialog from "../Dialogs/EditListDialog";
-import NewProductDialog from "../Dialogs/NewProductDialog";
 
 function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const history = useHistory();
@@ -24,7 +22,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const [productListLoadedBool, setProductListLoadedBool] = useState(false);
 
   const openNewList = () => {
-    history.push("/dashboard/create-new-list");
+    history.push("/dashboard/shoppingLists/create-new-list");
   };
 
   const openEditList = name => {
@@ -62,7 +60,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     }
     if (productListLoadedBool == true) {
       setProductListLoadedBool(false);
-      history.push("/dashboard/edit-list", {
+      history.push("/dashboard/shoppingLists/edit-list", {
         listName: listName,
         productList: productList
       });
@@ -81,18 +79,6 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <Route
-        path="/dashboard/edit-list"
-        render={() => {
-          return <EditListDialog />;
-        }}
-      />
-      <Route
-        path="/dashboard/add-new-product"
-        render={() => {
-          return <NewProductDialog itemLists={itemLists} />;
-        }}
-      />
     </Card>
   ) : (
     <Card className={classes.addCard}>
@@ -110,7 +96,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         </Box>
       </CardActionArea>
       <Route
-        path="/dashboard/create-new-list"
+        path="/dashboard/shoppingLists/create-new-list"
         render={() => {
           return <NewListDialog addItemList={addItemList} />;
         }}
