@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "productId",
       as: "product",
     });
+    Products.hasMany(models.Notification, { as: "notification" });
   };
   return Products;
 };

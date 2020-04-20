@@ -2,8 +2,6 @@ const models = require("../models");
 const Product = models.Products;
 const ListProducts = models.ListProducts;
 const List = models.Lists;
-const CronJob = require("cron").CronJob;
-const { scrapeAmazon, scrapeEbay } = require("../../scrapers/index");
 
 function reformatProductStyle(Products) {
   var formattedList = [];
@@ -187,28 +185,7 @@ async function addProductToList(
   return true;
 }
 
-const getSalePrices = new CronJob("*/2 * * * *", async function () {
-  await Product.findAll().then((products) => {
-    products.map((product) => {
-      const url = product.productURL;
-      const website = url.split(".")[1];
-      if (website === "amazon") {
-        scrapeAmazon(url).then((res) => {
-          product.productSalePrice = res.salePrice.toString();
-          product.save();
-        });
-      } else if (website === "ebay") {
-        scrapeEbay(url).then((res) => {
-          product.productSalePrice = res.salePrice.toString();
-          product.save();
-        });
-      }
-    });
-  });
-});
-
 module.exports = {
   getAllProductsbyListId,
   addProductToList,
-  getSalePrices,
 };
