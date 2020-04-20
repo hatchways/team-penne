@@ -110,10 +110,12 @@ function ProductConfirmationDialog() {
         >
           <div className={classes.cardDivider}>
             <div className={classes.cardImageBox}>
-              <img
-                src={history.location.state.productImageURL}
-                className={classes.cardImg}
-              />
+              <div>
+                <img
+                  src={history.location.state.productImageURL}
+                  className={classes.cardImg}
+                />
+              </div>
             </div>
             <div className={classes.cardTextBox}>
               <div>
@@ -132,26 +134,33 @@ function ProductConfirmationDialog() {
                   </Truncate>
                 </Typography>
               </div>
-              <div style={{ marginTop: 10 }}>
-                {history.location.state.productSalePrice != null && (
-                  <div className={classes.strikeThroughText}>
-                    {history.location.state.productCurrency}
-                    {history.location.state.productPrice}
-                  </div>
-                )}
-                {history.location.state.productSalePrice != null && (
-                  <div style={{ fontWeight: "bold" }}>
-                    {history.location.state.productCurrency}
-                    {history.location.state.productSalePrice}
-                  </div>
-                )}
-                {history.location.state.productSalePrice == null && (
-                  <div>
-                    {history.location.state.productCurrency}
-                    {history.location.state.productPrice}
-                  </div>
-                )}
-              </div>
+              {history.location.state.productPrice == 0 && (
+                <div style={{ marginTop: 10, fontSize: "12px", color: "red" }}>
+                  Sorry, your product is currently unavailable.
+                </div>
+              )}
+              {history.location.state.productPrice != 0 && ( // if product is unavailable
+                <div style={{ marginTop: 10 }}>
+                  {history.location.state.productSalePrice != null && (
+                    <div className={classes.strikeThroughText}>
+                      {history.location.state.productCurrency}
+                      {history.location.state.productPrice}
+                    </div>
+                  )}
+                  {history.location.state.productSalePrice != null && (
+                    <div style={{ fontWeight: "bold" }}>
+                      {history.location.state.productCurrency}
+                      {history.location.state.productSalePrice}
+                    </div>
+                  )}
+                  {history.location.state.productSalePrice == null && (
+                    <div>
+                      {history.location.state.productCurrency}
+                      {history.location.state.productPrice}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </Card>

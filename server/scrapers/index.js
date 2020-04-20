@@ -39,17 +39,23 @@ const scrapeAmazon = async url => {
 
       var priceHTML;
       try {
-        priceHTML = document.getElementById("priceblock_ourprice").innerHTML;
+        // try block if product doesn't exist/unavailable
+        try {
+          priceHTML = document.getElementById("priceblock_ourprice").innerHTML;
+        } catch {
+          priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
+        }
+        const priceHTMLSplit = priceHTML.split("&nbsp;");
+        var currency = priceHTMLSplit[0];
+        var priceString = priceHTMLSplit[1];
+        var priceSplit = priceString.split("."); // split string by decimal point
+        const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+        const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+        var price = priceFH + priceSH;
       } catch {
-        priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
+        var price = 0;
+        var currency = "";
       }
-      const priceHTMLSplit = priceHTML.split("&nbsp;");
-      const currency = priceHTMLSplit[0];
-      var priceString = priceHTMLSplit[1];
-      var priceSplit = priceString.split("."); // split string by decimal point
-      const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
-      const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
-      var price = priceFH + priceSH;
 
       const salePriceHTML = document.getElementsByClassName(
         "priceBlockStrikePriceString"

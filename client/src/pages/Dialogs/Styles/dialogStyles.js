@@ -43,19 +43,23 @@ const dialogStyles = makeStyles({
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
-    minHeight: "100px"
+    minHeight: "120px"
   },
   cardImageBox: {
     overflow: "hidden",
-    borderRadius: 2,
-    border: "1px solid #eaeaea",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     maxWidth: "25%",
-    height: "100%"
+    minHeight: "120px"
   },
   cardImg: {
     display: "block",
     width: "100%",
-    height: "auto"
+    height: "auto",
+    padding: 5,
+    borderRadius: 2,
+    border: "1px solid #eaeaea"
   },
   cardTextBox: {
     marginLeft: "10px",

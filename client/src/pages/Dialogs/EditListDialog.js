@@ -84,26 +84,35 @@ function EditListDialog() {
                       <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
                     </Typography>
                   </div>
-                  <div style={{ marginTop: 30 }}>
-                    {listItem.productSalePrice != null && (
-                      <div className={classes.strikeThroughText}>
-                        {listItem.productCurrency}
-                        {listItem.productPrice}
-                      </div>
-                    )}
-                    {listItem.productSalePrice != null && (
-                      <div style={{ fontWeight: "bold" }}>
-                        {listItem.productCurrency}
-                        {listItem.productSalePrice}
-                      </div>
-                    )}
-                    {listItem.productSalePrice == null && (
-                      <div>
-                        {listItem.productCurrency}
-                        {listItem.productPrice}
-                      </div>
-                    )}
-                  </div>
+                  {listItem.productPrice == 0 && (
+                    <div
+                      style={{ marginTop: 20, fontSize: "12px", color: "red" }}
+                    >
+                      Sorry, your product is currently unavailable.
+                    </div>
+                  )}
+                  {listItem.productPrice != 0 && ( // if product is unavailable
+                    <div style={{ marginTop: 30 }}>
+                      {listItem.productSalePrice != null && (
+                        <div className={classes.strikeThroughText}>
+                          {listItem.productCurrency}
+                          {listItem.productPrice}
+                        </div>
+                      )}
+                      {listItem.productSalePrice != null && (
+                        <div style={{ fontWeight: "bold" }}>
+                          {listItem.productCurrency}
+                          {listItem.productSalePrice}
+                        </div>
+                      )}
+                      {listItem.productSalePrice == null && (
+                        <div>
+                          {listItem.productCurrency}
+                          {listItem.productPrice}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <Button
