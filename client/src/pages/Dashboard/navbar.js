@@ -59,6 +59,13 @@ function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileMenuBool, setProfileMenu] = useState(false);
   const [notificationMenuBool, setNotificationMenu] = useState(false);
+  const [shoppingListsMenuBool, setShoppingListsMenu] = useState(
+    props.currentTab == "ShoppingLists"
+  );
+  const [friendsMenuBool, setFriendsMenu] = useState(
+    props.currentTab == "Friends"
+  );
+  const [homeMenuBool, setHomeMenu] = useState(props.currentTab == "Home");
   const [itemList, setItemList] = useState(updatedItemList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
@@ -84,12 +91,43 @@ function Navbar(props) {
     setProfileMenu(false);
   };
 
-  const handleClick = event => {
+  const handleHomeClick = event => {
+    setHomeMenu(true);
+    setShoppingListsMenu(false);
+    setFriendsMenu(false);
+    setNotificationMenu(false);
+    setProfileMenu(false);
+  };
+
+  const handleShoppingListsClick = event => {
+    setHomeMenu(false);
+    setShoppingListsMenu(true);
+    setFriendsMenu(false);
+    setNotificationMenu(false);
+    setProfileMenu(false);
+  };
+  const handleFriendsClick = event => {
+    setHomeMenu(false);
+    setShoppingListsMenu(false);
+    setFriendsMenu(true);
+    setNotificationMenu(false);
+    setProfileMenu(false);
+  };
+
+  const handleNotificationClick = event => {
+    setHomeMenu(false);
+    setShoppingListsMenu(false);
+    setFriendsMenu(false);
     setNotificationMenu(true);
+    setProfileMenu(false);
     setAnchorEl(event.currentTarget);
   };
 
   const handleProfileClick = event => {
+    setHomeMenu(false);
+    setShoppingListsMenu(false);
+    setFriendsMenu(false);
+    setNotificationMenu(false);
     setProfileMenu(true);
     setAnchorEl(event.currentTarget);
   };
@@ -137,19 +175,47 @@ function Navbar(props) {
           <img src={logo} alt="" />
         </div>
         <div className={navbarClasses.alignRight}>
-          <p>Shopping Lists</p>
-          <p>Friends</p>
+          <div onClick={handleHomeClick}>
+            {!homeMenuBool && (
+              <p style={{ fontWeight: "normal", color: "black" }}>Home</p>
+            )}
+            {homeMenuBool && (
+              <p style={{ fontWeight: "bold", color: "red" }}>Home</p>
+            )}
+          </div>
+          <div onClick={handleShoppingListsClick}>
+            {!shoppingListsMenuBool && (
+              <p style={{ fontWeight: "normal", color: "black" }}>
+                Shopping Lists
+              </p>
+            )}
+            {shoppingListsMenuBool && (
+              <p style={{ fontWeight: "bold", color: "red" }}>Shopping Lists</p>
+            )}
+          </div>
+          <div onClick={handleFriendsClick}>
+            {!friendsMenuBool && (
+              <p style={{ fontWeight: "normal", color: "black" }}>Friends</p>
+            )}
+            {friendsMenuBool && (
+              <p style={{ fontWeight: "bold", color: "red" }}>Friends</p>
+            )}
+          </div>
           <Button
             aria-controls="customized-menu"
             aria-haspopup="true"
-            onClick={handleClick}
+            onClick={handleNotificationClick}
             style={{ textTransform: "none" }}
           >
             {!notificationMenuBool && (
-              <div style={{ fontWeight: "normal" }}>Notifications</div>
+              <div style={{ fontWeight: "normal", color: "black" }}>
+                Notifications
+              </div>
             )}
             {notificationMenuBool && (
-              <div style={{ fontWeight: "bold" }}>Notifications</div>
+              <div style={{ fontWeight: "bold", color: "red" }}>
+                Notifications
+              </div>
             )}
             {itemList.length != 0 && <div>{bull}</div>}
           </Button>
@@ -269,10 +335,12 @@ function Navbar(props) {
               <img src={userProfile.profilePicImage} alt="profile-pic" />
             </div>
             {!profileMenuBool && (
-              <div style={{ fontWeight: "normal" }}>Profile</div>
+              <div style={{ fontWeight: "normal", color: "black" }}>
+                Profile
+              </div>
             )}
             {profileMenuBool && (
-              <div style={{ fontWeight: "bold" }}>Profile</div>
+              <div style={{ fontWeight: "bold", color: "red" }}>Profile</div>
             )}
           </Button>
           <StyledMenu

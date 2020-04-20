@@ -8,7 +8,11 @@ import ProductConfirmation from "../Dialogs/ProductConfirmation";
 function Dashboard(props) {
   return (
     <Container>
-      <Navbar handleLogout={props.handleLogout} history={props.history} />
+      <Navbar
+        currentTab={"Home"}
+        handleLogout={props.handleLogout}
+        history={props.history}
+      />
       <ShoppingLists />
       <Route
         path="/dashboard/confirm-product"
