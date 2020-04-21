@@ -8,8 +8,6 @@ import {
   Collapse,
   FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
   Select,
   Typography
 } from "@material-ui/core";
@@ -119,7 +117,7 @@ export default function ShoppingLists() {
           setLoading(false);
           setSuccess(true);
           clearInterval(timer.current);
-          setLoadingButtonLabel("PRODUCT RETRIEVED");
+          setLoadingButtonLabel("ADDING ITEM");
           timer.current = setTimeout(() => {
             history.push("/dashboard/shoppingLists/confirm-product", {
               productTitle: res.title,
@@ -219,7 +217,7 @@ export default function ShoppingLists() {
         <div className={classes.input}>
           <input
             onChange={handleUrlChange}
-            style={{ fontSize: "12pt" }}
+            style={{ fontSize: "14pt" }}
             placeholder="Paste your link here"
           />
           <Box display="flex">
@@ -261,7 +259,10 @@ export default function ShoppingLists() {
           <Button
             variant="contained"
             color="primary"
+            size="large"
             onClick={handleButtonClick}
+            className={buttonClassname}
+            disabled={loading}
           >
             {loadingButtonLabel}
             {loading && (
