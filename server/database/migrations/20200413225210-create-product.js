@@ -5,34 +5,34 @@ module.exports = {
       productId: {
         type: Sequelize.STRING,
         primaryKey: true,
-        allowNull: false
+        allowNull: false,
       },
       productName: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       productURL: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
       },
       productImageURL: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
       },
       productCurrency: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       productPrice: {
         type: Sequelize.DECIMAL,
-        allowNull: false
+        allowNull: false,
       },
       productSalePrice: {
-        type: Sequelize.DECIMAL
-      }
+        type: Sequelize.DECIMAL,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("Products");
-  }
+  },
 };

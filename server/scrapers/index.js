@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const avoidDetection = require("./util");
 
-const __launchPuppeteer = async url => {
+const __launchPuppeteer = async (url) => {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
@@ -11,8 +11,8 @@ const __launchPuppeteer = async url => {
   return page;
 };
 
-const scrapeAmazon = async url => {
-  const page = await __launchPuppeteer(url).catch(err => {
+const scrapeAmazon = async (url) => {
+  const page = await __launchPuppeteer(url).catch((err) => {
     console.log(err);
     return -1;
   });
@@ -83,11 +83,11 @@ const scrapeAmazon = async url => {
             price,
             imageURL,
             salePrice,
-            sale: true
+            sale: true,
           }
         : { title, currency, price, imageURL, sale: false };
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 
@@ -95,7 +95,7 @@ const scrapeAmazon = async url => {
   return item;
 };
 
-const scrapeEbay = async url => {
+const scrapeEbay = async (url) => {
   const page = await __launchPuppeteer(url);
 
   let item;
@@ -160,5 +160,5 @@ const testScraper = async () => {
 module.exports = {
   scrapeAmazon,
   scrapeEbay,
-  testScraper
+  testScraper,
 };

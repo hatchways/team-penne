@@ -15,6 +15,8 @@ import notifStyles from "./styles/notificationStyles";
 import StyledMenu from "./styles/styledMenu";
 import logo from "../../assets/logo.png";
 import noUserProfilePic from "../../assets/noUserProfilePic.png";
+import socketIOClient from "socket.io-client";
+require("dotenv").config();
 
 const updatedItemList1 = [];
 var updatedItemList = [
@@ -76,9 +78,13 @@ function Navbar(props) {
   const handleLogout = () => {
     fetch("/logout").then(res => {
       if (res.status === 200) {
+        const socket = socketIOClient(process.env.ENDPOINT);
         localStorage.clear();
         props.history.push("/");
         props.handleLogout();
+        socket.close(function(socket) {
+          console.log("socket closed");
+        });
       }
     });
   };

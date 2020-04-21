@@ -13,11 +13,18 @@ const {
 } = require("../database/handlers/listDBHandler");
 const {
   getAllProductsbyListId,
-  addProductToList
+  addProductToList,
+  getSalePrices
 } = require("../database/handlers/productDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
+
+router.get("/cronJob", async (req, res) => {
+  getSalePrices.start();
+  res.status(200).send();
+  console.log("Cron Job started.");
+});
 
 router.post("/login", async (req, res) => {
   const secret = process.env.JWT_SECRET;
