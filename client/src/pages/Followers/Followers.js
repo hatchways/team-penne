@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "@material-ui/core";
-import { Box, Tab, Tabs, Typography } from "@material-ui/core";
+import { AppBar, Box, Tab, Tabs, Typography } from "@material-ui/core";
 import TabPanel from "./TabPanel";
 import UserCard from "./UserCard";
 import followerStyles from "./styles/FollowerStyles";
@@ -137,7 +137,7 @@ function Followers(props) {
           ))}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          No Suggestions yet
         </TabPanel>
       </Box>
     </Container>

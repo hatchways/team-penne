@@ -8,10 +8,10 @@ const followerStyles = makeStyles({
     paddingTop: 0,
     paddingBottom: 0,
     paddingRight: 0,
-    paddingLeft: 0,
+    paddingLeft: 0
   },
   followersContainer: {
-    marginTop: 50,
+    marginTop: 30,
     width: "60%",
     display: "flex",
     flexDirection: "column",

@@ -15,35 +15,36 @@ function UserCard(props) {
   const [cardType, setCardType] = React.useState(props.cardType);
 
   return (
-    <Container
-      className={classes.cardManager}
-      raised={true}
-      value={props.userName}
-    >
-      <div className={classes.cardImageBox}>
-        <div className={classes.circular}>
-          <img src={props.profilePicImage} alt="profile-pic" />
-        </div>
-      </div>
-      <div
-        style={{
-          alignSelf: "center",
-          fontWeight: "bold",
-          flexGrow: 2
-        }}
+    <Container>
+      <Container
+        className={classes.cardManager}
+        raised={true}
+        value={props.userName}
       >
-        {props.userName}
-      </div>
-      <div className={classes.buttonBox}>
-        <Button
-          classes={{ outlined: classes.viewProfileButton }}
-          size="normal"
-          variant="outlined"
+        <div className={classes.cardImageBox}>
+          <div className={classes.circular}>
+            <img src={props.profilePicImage} alt="profile-pic" />
+          </div>
+        </div>
+        <div
+          style={{
+            alignSelf: "center",
+            fontWeight: "bold",
+            flexGrow: 2
+          }}
         >
-          View Profile
-        </Button>
-      </div>
-      <Divider />
+          {props.userName}
+        </div>
+        <div className={classes.buttonBox}>
+          <Button
+            classes={{ outlined: classes.viewProfileButton }}
+            size="normal"
+            variant="outlined"
+          >
+            View Profile
+          </Button>
+        </div>
+      </Container>
     </Container>
   );
 }
