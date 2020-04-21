@@ -4,6 +4,23 @@ const Product = models.Products;
 const CronJob = require("cron").CronJob;
 const { scrapeAmazon, scrapeEbay } = require("../../scrapers/index");
 
+function reformatProductStyle(Products) {
+  var formattedList = [];
+  for (i = 0; i < Products.length; i++) {
+    var tempProductsItem = {
+      productId: Products[i].productId,
+      productName: Products[i].productName,
+      productURL: Products[i].productURL,
+      productImageURL: Products[i].productImageURL,
+      productCurrency: Products[i].productCurrency,
+      productPrice: Products[i].productPrice,
+      productSalePrice: Products[i].productSalePrice,
+    };
+    formattedList.push(tempProductsItem);
+  }
+  return formattedList;
+}
+
 async function createNotification(
   productId,
   userId,
@@ -15,6 +32,7 @@ async function createNotification(
     userId: userId,
     previousPrice: previousPrice,
     currentPrice: currentPrice,
+    dismissed: false,
   })
     .then((res) => {
       return res;
@@ -27,51 +45,63 @@ async function createNotification(
   return notification;
 }
 
-const getSalePrices = async function () {
+async function createNotifications(updatedProducts, userId) {
   const notifications = [];
-  await Product.findAll().then((products) => {
-    products.map((product) => {
-      const url = product.productURL;
+  for (let i = 0; i < updatedProducts.length; i++) {
+    const product = updatedProducts[i];
+    const notification = await createNotification(
+      product.productId,
+      userId,
+      product.productPrice,
+      product.productSalePrice
+    );
+    notifications.push(notification);
+  }
+  return notifications;
+}
+
+const getUpdatedProducts = async function () {
+  const productsOnSale = await Product.findAll().then(async (products) => {
+    const updatedProducts = [];
+    for (let i = 0; i < products.length; i++) {
+      const url = products[i].productURL;
       const website = url.split(".")[1];
       if (website === "amazon") {
-        scrapeAmazon(url).then((res) => {
+        const updatedProduct = await scrapeAmazon(url).then((res) => {
           if (res.salePrice) {
-            product.productSalePrice = res.salePrice.toString();
-            product.save();
-            const notification = createNotification(
-              product.dataValues.productId,
-              1,
-              product._previousDataValues.productPrice,
-              product.dataValues.productSalePrice
-            );
-            notifications.push(notification);
+            if (res.salePrice !== products[i].productSalePrice) {
+              products[i].productSalePrice = res.salePrice.toString();
+              products[i].save();
+              return products[i];
+            }
           }
         });
+        if (updatedProduct) {
+          updatedProducts.push(updatedProduct);
+        }
       } else if (website === "ebay") {
-        scrapeEbay(url).then((res) => {
+        const updatedProduct = await scrapeEbay(url).then((res) => {
           if (res.salePrice) {
-            product.productSalePrice = res.salePrice.toString();
-            product.save();
-            const notification = createNotification(
-              product.dataValues.productId,
-              1,
-              product.dataValues.productPrice,
-              product.dataValues.productSalePrice
-            );
-            notifications.push(notification);
+            if (res.salePrice !== products[i].productSalePrice) {
+              products[i].productSalePrice = res.salePrice.toString();
+              products[i].save();
+              return products[i];
+            }
           }
         });
+        if (updatedProduct) {
+          updatedProducts.push(updatedProduct);
+        }
       }
-    });
+    }
+    return updatedProducts;
   });
-  return notifications;
+  return reformatProductStyle(productsOnSale);
 };
 
 const checkForSales = async function () {
-  const salesCheck = new CronJob("*/2 * * * *", async function () {
-    await getSalePrices();
-  });
+  const salesCheck = new CronJob("*/2 * * * *", async function () {});
   salesCheck.start();
 };
 
-module.exports = { checkForSales, getSalePrices };
+module.exports = { createNotifications, checkForSales, getUpdatedProducts };

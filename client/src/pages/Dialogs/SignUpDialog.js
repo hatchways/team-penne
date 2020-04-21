@@ -99,7 +99,6 @@ function SignUpDialog(props) {
           props.handleLogin();
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
-          fetch("/getSalePrices");
           fetch("/checkSalePrices");
         }
       });

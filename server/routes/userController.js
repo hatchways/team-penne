@@ -17,15 +17,23 @@ const {
 } = require("../database/handlers/productDBHandler");
 
 const {
-  getSalePrices,
+  createNotifications,
+  getUpdatedProducts,
   checkForSales,
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
 
-router.get("/getSalePrices", async (req, res) => {
-  const notifications = getSalePrices();
+router.get("/updatedProducts", async (req, res) => {
+  const updatedProducts = await getUpdatedProducts();
+  res.status(200).send({ updatedProducts: updatedProducts });
+});
+
+router.post("/createNotifications", authCheck, async (req, res) => {
+  const userId = req.userData.userId;
+  const updatedProducts = req.body.updatedProducts;
+  const notifications = await createNotifications(updatedProducts, userId);
   res.status(200).send({ notifications: notifications });
 });
 
