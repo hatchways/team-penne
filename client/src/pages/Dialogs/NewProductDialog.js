@@ -25,6 +25,7 @@ function NewProductDialog(props) {
 
   const [productUrl, setProductUrl] = React.useState("");
   const [productUrlError, setProductUrlError] = React.useState(false);
+  const [listError, setListError] = React.useState(false);
   const [list, setList] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -33,7 +34,6 @@ function NewProductDialog(props) {
   );
   const [loadErr, setLoadErr] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [listError, setListError] = React.useState(false);
   const listNames = props.itemLists.map(list => list.name);
   const timer = React.useRef();
 
@@ -176,7 +176,7 @@ function NewProductDialog(props) {
         </Container>
         <Collapse in={productUrlError}>
           <Alert classes={{ root: classes.alert }} severity="error">
-            Error: List title format is invalid.
+            Error: Product URL format is invalid.
           </Alert>
         </Collapse>
         <InputLabel classes={{ root: classes.inputLabel }}>
