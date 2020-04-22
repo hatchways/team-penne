@@ -17,6 +17,7 @@ import dialogStyles from "./Styles/dialogStyles";
 function EditListDialog() {
   const [listName, setListName] = React.useState("");
   const [productList, setProductList] = React.useState([]);
+  const [productListRetrieved, setProductListRetrieved] = React.useState(false);
 
   const classes = dialogStyles();
   const history = useHistory();
