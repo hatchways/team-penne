@@ -14,16 +14,20 @@ const {
 const {
   getAllProductsbyListId,
   addProductToList,
-  getSalePrices,
 } = require("../database/handlers/productDBHandler");
+
+const {
+  getNotifications,
+} = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
 
-router.get("/cronJob", async (req, res) => {
-  getSalePrices.start();
-  res.status(200).send();
-  console.log("Cron Job started.");
+router.get("/getNotifications", authCheck, async (req, res) => {
+  const userId = req.userData.userId;
+  const notifications = await getNotifications(userId);
+  console.log(notifications);
+  res.status(200).send({ notifications: notifications });
 });
 
 router.post("/login", async (req, res) => {

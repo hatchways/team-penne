@@ -18,6 +18,7 @@ function EditListDialog(props) {
   const [listName, setListName] = React.useState(props.listName);
   const [itemListLoaded, setItemListLoaded] = React.useState(false);
   const [productList, setProductList] = React.useState([]);
+  const [productListRetrieved, setProductListRetrieved] = React.useState(false);
 
   const classes = dialogStyles();
   const history = useHistory();
@@ -33,24 +34,27 @@ function EditListDialog(props) {
     );
   };
 
-  fetch("/itemLists/getProductList/?listName=" + listName, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json();
-      }
+  if (!productListRetrieved) {
+    fetch("/itemLists/getProductList/?listName=" + listName, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
-    .then((res) => {
-      setProductList(res.productList);
-    })
-    .catch((err) => {
-      console.log(err);
-      setItemListLoaded(false);
-    });
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((res) => {
+        setProductList(res.productList);
+      })
+      .catch((err) => {
+        console.log(err);
+        setItemListLoaded(false);
+      });
+    setProductListRetrieved(true);
+  }
 
   return (
     <Dialog

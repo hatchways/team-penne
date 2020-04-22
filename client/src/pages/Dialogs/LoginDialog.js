@@ -78,7 +78,7 @@ function LoginDialog(props) {
           props.handleLogin();
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
-          fetch("/cronJob");
+          fetch("/getNotifications");
         }
       });
     }
