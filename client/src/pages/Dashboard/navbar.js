@@ -10,12 +10,16 @@ import {
   Toolbar,
   Typography
 } from "@material-ui/core";
+import io from "socket.io-client";
+
 import navbarStyles from "./styles/navbarStyles";
 import notifStyles from "./styles/notificationStyles";
 import StyledMenu from "./styles/styledMenu";
 import logo from "../../assets/logo.png";
 import noUserProfilePic from "../../assets/noUserProfilePic.png";
 
+let socket;
+let interval;
 const updatedItemList1 = [];
 var updatedItemList = [
   {
@@ -73,7 +77,45 @@ function Navbar(props) {
   const bull = <span className={classes.bullet}>•</span>;
   const history = useHistory();
 
+  const [getNotifications, setGetNotifications] = React.useState(true);
+  const [createSocket, setCreateSocket] = React.useState(true);
+  const [testIndex, setTestIndex] = React.useState(0);
+
+  // useEffect for creating and using the socket
+  useEffect(() => {
+    if (createSocket) {
+      socket = io();
+      setCreateSocket(false);
+    }
+
+    let payload = { message: "Hello server!", indexValue: testIndex };
+    socket.emit("getNotifications", payload, worked => {
+      // here, "worked" won't be a boolean, it'll be the table of notifications
+      // for the current user. Pass that into the state variable to be used
+      if (worked) console.log("Hooray! The socket worked!");
+      else console.log("The socket didn't work.");
+    });
+    setTestIndex(testIndex + 1);
+
+    return () => {
+      socket.emit("disconnect");
+      socket.off();
+      clearInterval(interval);
+    };
+  }, [getNotifications]);
+
+  useEffect(() => {
+    //timer useEffect function, so that the other useEffect gets triggered every second? :/
+    interval = setInterval(() => {
+      setGetNotifications(!getNotifications);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   const handleLogout = () => {
+    socket.emit("disconnect");
+    socket.off();
+    clearInterval(interval);
     fetch("/logout").then(res => {
       if (res.status === 200) {
         localStorage.clear();

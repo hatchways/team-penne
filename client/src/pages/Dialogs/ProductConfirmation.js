@@ -32,7 +32,6 @@ function ProductConfirmationDialog() {
 
   const handleClose = () => {
     history.push(window.location.pathname.replace("/confirm-product", ""));
-    window.location.reload();
   };
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success

@@ -54,6 +54,8 @@ io.on("connection", socket => {
 
   socket.on("getNotifications", (message, callback) => {
     console.log("Index is: " + message.indexValue);
+    // get Notifications table for current user here,
+    // and send it back in the callback function
 
     callback(true);
   });
