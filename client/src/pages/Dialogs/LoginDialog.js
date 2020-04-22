@@ -78,27 +78,7 @@ function LoginDialog(props) {
           props.handleLogin();
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
-          fetch("/checkSalePrices");
-          fetch("/updatedProducts")
-            .then((res) => {
-              return res.json();
-            })
-            .then((res) => {
-              const updatedProducts = res.updatedProducts;
-              fetch("/createNotifications", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ updatedProducts: updatedProducts }),
-              })
-                .then((res) => {
-                  return res.json();
-                })
-                .then((res) => {
-                  console.log(res);
-                });
-            });
+          fetch("/getNotifications");
         }
       });
     }

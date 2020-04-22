@@ -1,27 +1,13 @@
 const models = require("../models");
 const Notification = models.Notification;
 const Product = models.Products;
+const User = models.Users;
+const List = models.Lists;
+const ListProduct = models.ListProducts;
 const CronJob = require("cron").CronJob;
 const { scrapeAmazon, scrapeEbay } = require("../../scrapers/index");
 
-function reformatProductStyle(Products) {
-  var formattedList = [];
-  for (i = 0; i < Products.length; i++) {
-    var tempProductsItem = {
-      productId: Products[i].productId,
-      productName: Products[i].productName,
-      productURL: Products[i].productURL,
-      productImageURL: Products[i].productImageURL,
-      productCurrency: Products[i].productCurrency,
-      productPrice: Products[i].productPrice,
-      productSalePrice: Products[i].productSalePrice,
-    };
-    formattedList.push(tempProductsItem);
-  }
-  return formattedList;
-}
-
-async function createNotification(
+const createNotification = async function (
   productId,
   userId,
   previousPrice,
@@ -43,65 +29,102 @@ async function createNotification(
       return null;
     });
   return notification;
-}
+};
 
-async function createNotifications(updatedProducts, userId) {
-  const notifications = [];
-  for (let i = 0; i < updatedProducts.length; i++) {
-    const product = updatedProducts[i];
-    const notification = await createNotification(
-      product.productId,
-      userId,
-      product.productPrice,
-      product.productSalePrice
-    );
-    notifications.push(notification);
-  }
-  return notifications;
-}
+const getProductListIds = async function (productId) {
+  const listIds = await ListProduct.findAll({
+    attributes: ["listId", "productId"],
+    where: { productId: productId },
+  }).then((res) => {
+    const ids = [];
+    for (let i = 0; i < res.length; i++) {
+      ids.push(res[i].listId);
+    }
+    return ids;
+  });
+  return listIds;
+};
 
-const getUpdatedProducts = async function () {
-  const productsOnSale = await Product.findAll().then(async (products) => {
-    const updatedProducts = [];
+const getListUserId = async function (listId) {
+  const userId = await List.findOne({
+    attributes: ["listId", "listName", "listImageURL", "userId"],
+    where: { listId: listId },
+  }).then((res) => {
+    return res.userId;
+  });
+  return userId;
+};
+
+const createNotifications = async function () {
+  await Product.findAll().then(async (products) => {
     for (let i = 0; i < products.length; i++) {
       const url = products[i].productURL;
       const website = url.split(".")[1];
       if (website === "amazon") {
-        const updatedProduct = await scrapeAmazon(url).then((res) => {
+        await scrapeAmazon(url).then(async (res) => {
           if (res.salePrice) {
             if (res.salePrice !== products[i].productSalePrice) {
               products[i].productSalePrice = res.salePrice.toString();
               products[i].save();
-              return products[i];
+              const listIds = await getProductListIds(products[i].productId);
+              for (let j = 0; j < listIds.length; j++) {
+                const userId = await getListUserId(listIds[j]);
+                await createNotification(
+                  products[i].productId,
+                  userId,
+                  products[i].productPrice,
+                  products[i].productSalePrice
+                );
+              }
             }
           }
         });
-        if (updatedProduct) {
-          updatedProducts.push(updatedProduct);
-        }
       } else if (website === "ebay") {
-        const updatedProduct = await scrapeEbay(url).then((res) => {
+        await scrapeEbay(url).then(async (res) => {
           if (res.salePrice) {
             if (res.salePrice !== products[i].productSalePrice) {
               products[i].productSalePrice = res.salePrice.toString();
               products[i].save();
-              return products[i];
+              const listIds = await getProductListIds(products[i].productId);
+              for (let j = 0; j < listIds.length; j++) {
+                const userId = await getListUserId(listIds[j]);
+                await createNotification(
+                  products[i].productId,
+                  userId,
+                  products[i].productPrice,
+                  products[i].productSalePrice
+                );
+              }
             }
           }
         });
-        if (updatedProduct) {
-          updatedProducts.push(updatedProduct);
-        }
       }
     }
-    return updatedProducts;
   });
-  return reformatProductStyle(productsOnSale);
+};
+
+const getNotifications = async function (userId) {
+  const notifications = await Notification.findAll({
+    attributes: [
+      "productId",
+      "userId",
+      "previousPrice",
+      "currentPrice",
+      "dismissed",
+    ],
+    where: { userId: userId, dismissed: false },
+  }).then((res) => {
+    return res;
+  });
+  return notifications;
 };
 
 const checkForSales = async function () {
-  const salesCheck = new CronJob("*/2 * * * *", async function () {});
+  const salesCheck = new CronJob("*/2 * * * *", async function () {
+    createNotifications();
+    console.log("Cron Job is running");
+  });
   salesCheck.start();
 };
 
-module.exports = { createNotifications, checkForSales, getUpdatedProducts };
+module.exports = { getNotifications, checkForSales };

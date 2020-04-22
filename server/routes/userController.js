@@ -17,29 +17,17 @@ const {
 } = require("../database/handlers/productDBHandler");
 
 const {
-  createNotifications,
-  getUpdatedProducts,
-  checkForSales,
+  getNotifications,
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
 
-router.get("/updatedProducts", async (req, res) => {
-  const updatedProducts = await getUpdatedProducts();
-  res.status(200).send({ updatedProducts: updatedProducts });
-});
-
-router.post("/createNotifications", authCheck, async (req, res) => {
+router.get("/getNotifications", authCheck, async (req, res) => {
   const userId = req.userData.userId;
-  const updatedProducts = req.body.updatedProducts;
-  const notifications = await createNotifications(updatedProducts, userId);
+  const notifications = await getNotifications(userId);
+  console.log(notifications);
   res.status(200).send({ notifications: notifications });
-});
-
-router.get("/checkSalePrices", async (req, res) => {
-  checkForSales();
-  res.status(200).send();
 });
 
 router.post("/login", async (req, res) => {
