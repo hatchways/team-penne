@@ -14,6 +14,7 @@ const __launchPuppeteer = async (url) => {
 const scrapeAmazon = async (url) => {
   const page = await __launchPuppeteer(url).catch((err) => {
     console.log(err);
+    return -1;
   });
   const splitUrl = url.split("/");
   var productId = "";
@@ -36,19 +37,29 @@ const scrapeAmazon = async (url) => {
         title = title.join("");
       }
 
-      const priceHTML = document.getElementById("priceblock_ourprice")
-        .innerHTML;
-      const priceHTMLSplit = priceHTML.split("&nbsp;");
-      const currency = priceHTMLSplit[0];
-      var priceString = priceHTMLSplit[1];
-      var priceSplit = priceString.split("."); // split string by decimal point
-      const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
-      const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
-      var price = priceFH + priceSH;
+      var priceHTML;
+      try {
+        // try block if product doesn't exist/unavailable
+        try {
+          priceHTML = document.getElementById("priceblock_ourprice").innerHTML;
+        } catch {
+          priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
+        }
+        const priceHTMLSplit = priceHTML.split("&nbsp;");
+        var currency = priceHTMLSplit[0];
+        var priceString = priceHTMLSplit[1];
+        var priceSplit = priceString.split("."); // split string by decimal point
+        const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+        const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+        var price = priceFH + priceSH;
+      } catch {
+        var price = 0;
+        var currency = "";
+      }
+
       const salePriceHTML = document.getElementsByClassName(
         "priceBlockStrikePriceString"
       )[0];
-
       if (salePriceHTML) {
         var salePriceHTMLSplit = salePriceHTML.innerHTML.split("&nbsp;");
         var salePriceCurrency = salePriceHTMLSplit[0];
@@ -81,8 +92,6 @@ const scrapeAmazon = async (url) => {
     });
 
   item["productId"] = productId;
-  //console.log("Generated item: ");
-  //console.log(item);
   return item;
 };
 

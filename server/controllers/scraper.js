@@ -11,7 +11,11 @@ const scrapeWebsite = async (req, res) => {
   } else {
     res.status(501).send({ error: "invalid url" });
   }
-  res.send(item);
+  if (item == -1) {
+    res.status(501).send({ error: "puppeteer error" });
+  } else {
+    res.status(200).send(item);
+  }
 };
 
 module.exports = { scrapeWebsite };

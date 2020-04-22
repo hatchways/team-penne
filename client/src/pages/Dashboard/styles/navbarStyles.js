@@ -6,7 +6,7 @@ const useStyles = makeStyles({
     color: "black",
     display: "flex",
     justifyContent: "space-between",
-    minWidth: "720px",
+    minWidth: "720px"
   },
   alignLeft: {
     display: "block",
@@ -18,30 +18,31 @@ const useStyles = makeStyles({
     cursor: "pointer",
     "& p": {
       "&:hover": {
-        fontWeight: "bolder",
-      },
+        fontWeight: "bolder"
+      }
     },
     "& img": {
-      height: "2.5vh",
-    },
+      height: "2.5vh"
+    }
   },
   sameRow: {
     float: "left",
     marginTop: "10%",
-    marginLeft: "20px",
+    marginLeft: "20px"
   },
   alignRight: {
     display: "flex",
     flexDirection: "row",
     "& p": {
+      marginTop: "20px",
       marginRight: "20px",
       flexDirection: "row",
       cursor: "pointer",
       fontWeight: "lighter",
       "&:hover": {
-        fontWeight: "normal",
-      },
-    },
+        fontWeight: "normal"
+      }
+    }
   },
   circular: {
     width: "50px",
@@ -59,12 +60,31 @@ const useStyles = makeStyles({
       position: "absolute",
       left: "50%",
       top: "50%",
-      transform: "translate(-50%, -50%)",
-    },
+      transform: "translate(-50%, -50%)"
+    }
+  },
+  circularBigger: {
+    width: "120px",
+    height: "120px",
+    borderRadius: "50%",
+    position: "relative",
+    overflow: "hidden",
+    marginRight: "15px",
+    marginLeft: "30px",
+    marginBottom: "20px",
+    "& img": {
+      maxWidth: "100%",
+      width: "auto",
+      height: "auto",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)"
+    }
   },
   link: {
-    cursor: "pointer",
-  },
+    cursor: "pointer"
+  }
 });
 
 export default useStyles;

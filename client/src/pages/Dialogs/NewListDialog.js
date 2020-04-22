@@ -12,7 +12,7 @@ import {
   DialogTitle,
   Divider,
   InputLabel,
-  OutlinedInput,
+  OutlinedInput
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
@@ -32,10 +32,10 @@ function NewListDialog(props) {
   const maxSize = 1048576;
   const [files, setFiles] = useState([]);
 
-  const onDrop = useCallback((files) => {
+  const onDrop = useCallback(files => {
     setActiveImageBool(true);
     setFiles(
-      files.map((file) =>
+      files.map(file =>
         Object.assign(file, { preview: URL.createObjectURL(file) })
       )
     );
@@ -45,13 +45,16 @@ function NewListDialog(props) {
     });
     fetch("/itemLists/image-upload", {
       method: "POST",
-      body: formData,
+      body: formData
     })
-      .then((res) => {
+      .then(res => {
         return res.json();
       })
-      .then((image) => {
+      .then(image => {
         setImageUrl(image.url);
+      })
+      .catch(err => {
+        console.log(err);
       });
   }, []);
 
@@ -60,18 +63,18 @@ function NewListDialog(props) {
     getRootProps,
     getInputProps,
     isDragReject,
-    rejectedFiles,
+    rejectedFiles
   } = useDropzone({
     onDrop,
     accept: "image/*",
     minSize: 0,
-    maxSize,
+    maxSize
   });
 
   const isFileTooLarge =
     rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
 
-  const dropzoneFilePreview = files.map((file) => (
+  const dropzoneFilePreview = files.map(file => (
     <div className={classes.dropzoneOuter} key={file.name}>
       <div className={classes.dropzoneInner}>
         <img src={file.preview} className={classes.img} alt="list category" />
@@ -84,13 +87,13 @@ function NewListDialog(props) {
     history.push(window.location.pathname.replace("/create-new-list", ""));
   };
 
-  const changeListName = (event) => {
+  const changeListName = event => {
     setListName(event.target.value);
   };
 
   // Authentication
   // add anymore list validation
-  const checkListName = (lName) => {
+  const checkListName = lName => {
     return lName.length > 0;
   };
 
@@ -116,7 +119,7 @@ function NewListDialog(props) {
     }
   };
 
-  const enterSubmit = (event) => {
+  const enterSubmit = event => {
     let keyCode = event.keyCode ? event.keyCode : event.which;
     if (keyCode === 13) {
       validateList();
@@ -145,7 +148,7 @@ function NewListDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             onKeyPress={enterSubmit}
             onChange={changeListName}
