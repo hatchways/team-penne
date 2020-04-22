@@ -114,6 +114,11 @@ async function getAllProductsbyListId(listId) {
   return reformatProductStyle(allProducts);
 }
 
+/*
+    getListIdFromUser - get the listId for a user given the listName
+    arguments: listName - name of listId we need, userId - id of user with list
+    return: listId
+*/
 async function getListIdFromUser(listName, userId) {
   var returnedListId = await List.findOne({
     attributes: ["listId", "listName", "listImageURL"],
@@ -188,4 +193,5 @@ async function addProductToList(
 module.exports = {
   getAllProductsbyListId,
   addProductToList,
+  getProductIfExists,
 };

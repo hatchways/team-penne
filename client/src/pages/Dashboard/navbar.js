@@ -20,7 +20,7 @@ import noUserProfilePic from "../../assets/noUserProfilePic.png";
 
 let socket;
 let interval;
-const updatedItemList1 = [];
+const emptyList = [];
 var updatedItemList = [
   {
     name:
@@ -67,7 +67,7 @@ function Navbar(props) {
   const [followersMenuBool, setFollowersMenu] = useState(
     props.currentTab == "followers"
   );
-  const [itemList, setItemList] = useState(updatedItemList);
+  const [notificationsList, setNotificationsList] = useState(emptyList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
   const [userProfile, setUserProfile] = useState("");
@@ -79,7 +79,6 @@ function Navbar(props) {
 
   const [getNotifications, setGetNotifications] = React.useState(true);
   const [createSocket, setCreateSocket] = React.useState(true);
-  const [testIndex, setTestIndex] = React.useState(0);
 
   // useEffect for creating and using the socket
   useEffect(() => {
@@ -88,14 +87,12 @@ function Navbar(props) {
       setCreateSocket(false);
     }
 
-    let payload = { message: "Hello server!", indexValue: testIndex };
-    socket.emit("getNotifications", payload, worked => {
-      // here, "worked" won't be a boolean, it'll be the table of notifications
-      // for the current user. Pass that into the state variable to be used
-      if (worked) console.log("Hooray! The socket worked!");
-      else console.log("The socket didn't work.");
+    let payload = { message: "Need Notifications" };
+    socket.emit("getNotifications", payload, notificationsTable => {
+      // notificationsTable
+      setNotificationsList([]);
+      setNotificationsList(notificationsTable);
     });
-    setTestIndex(testIndex + 1);
 
     return () => {
       socket.emit("disconnect");
@@ -132,7 +129,6 @@ function Navbar(props) {
   };
 
   const handleShoppingListsClick = event => {
-    console.log(event);
     setShoppingListsMenu(true);
     setFollowersMenu(false);
     setNotificationMenu(false);
@@ -167,7 +163,7 @@ function Navbar(props) {
 
   useEffect(() => {
     if (onDeleteIndex != -1) {
-      itemList.splice(onDeleteIndex, 1);
+      notificationsList.splice(onDeleteIndex, 1);
       setDeleteItem(onDeleteIndex);
       setOnDeleteIndex(-1);
     }
@@ -179,7 +175,6 @@ function Navbar(props) {
           }
         })
         .then(res => {
-          console.log(res.userImageURL == null);
           if (res.userImageURL == null) {
             setUserProfile({
               userName: res.userName,
@@ -238,7 +233,7 @@ function Navbar(props) {
                 Notifications
               </div>
             )}
-            {itemList.length != 0 && <div>{bull}</div>}
+            {notificationsList.length != 0 && <div>{bull}</div>}
           </Button>
           <StyledMenu
             scroll="paper"
@@ -254,7 +249,7 @@ function Navbar(props) {
                 New Prices!
               </Typography>
             </div>
-            {itemList.length == 0 && (
+            {notificationsList.length == 0 && (
               <Card
                 className={classes.emptyCardManager}
                 elevation={3}
@@ -265,14 +260,14 @@ function Navbar(props) {
                 </CardContent>
               </Card>
             )}
-            {itemList.length != 0 &&
-              itemList.map(listItem => (
+            {notificationsList.length != 0 &&
+              notificationsList.map(listItem => (
                 <Card
                   className={classes.cardManager}
                   elevation={3}
                   value={listItem.name}
                   variant="outlined"
-                  disabled={itemList.indexOf(listItem) == deleteItem}
+                  disabled={notificationsList.indexOf(listItem) == deleteItem}
                 >
                   <div className={classes.cardImageBox}>
                     <img
@@ -325,7 +320,9 @@ function Navbar(props) {
                         <Button
                           size="small"
                           onClick={() => {
-                            handleRemoveItem(itemList.indexOf(listItem));
+                            handleRemoveItem(
+                              notificationsList.indexOf(listItem)
+                            );
                           }}
                         >
                           Remove from list

@@ -13,11 +13,11 @@ const {
 } = require("../database/handlers/listDBHandler");
 const {
   getAllProductsbyListId,
-  addProductToList,
+  addProductToList
 } = require("../database/handlers/productDBHandler");
 
 const {
-  getNotifications,
+  getNotifications
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
@@ -26,7 +26,6 @@ router.use(cookieParser());
 router.get("/getNotifications", authCheck, async (req, res) => {
   const userId = req.userData.userId;
   const notifications = await getNotifications(userId);
-  console.log(notifications);
   res.status(200).send({ notifications: notifications });
 });
 
@@ -126,7 +125,7 @@ router.post("/signup", async (req, res) => {
     const addedUser = await createUser(addUser);
     //console.log(addedUser);
     if (addedUser != null) {
-      console.log("Correct Sign Up. Creating Cookie.");
+      //console.log("Correct Sign Up. Creating Cookie.");
       const token = jwt.sign(
         {
           data: {
@@ -158,7 +157,7 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  console.log("Logout successful");
+  //console.log("Logout successful");
   res.clearCookie("jwt-auth-cookie");
   res.status(200).send({ message: "Logout successful" });
 });
