@@ -15,7 +15,6 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
-import socketIOClient from "socket.io-client";
 require("dotenv").config();
 
 function LoginDialog(props) {
@@ -81,7 +80,6 @@ function LoginDialog(props) {
           props.history.push("/dashboard");
           localStorage.setItem("email", email);
           fetch("/cronJob");
-          const socket = socketIOClient(process.env.ENDPOINT);
         }
       });
     }

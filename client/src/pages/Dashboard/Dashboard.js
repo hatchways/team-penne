@@ -7,6 +7,7 @@ import FollowersPage from "../../pages/Followers/Followers";
 
 // add reroute
 function Dashboard(props) {
+
   return (
     <Container>
       <Redirect

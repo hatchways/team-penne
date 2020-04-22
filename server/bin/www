@@ -11,7 +11,7 @@ var app = require("../app");
 var http = require("http");
 var debug = require("debug")("express-sequelize");
 var models = require("../database/models");
-var socket = require("socket.io");
+var socketio = require("socket.io");
 
 /**
  * Get port from environment and store in Express.
@@ -47,13 +47,20 @@ models.sequelize.sync().then(function() {
 /**
  * Socket setup
  */
-var io = socket(server);
+const io = socketio(server);
 
-io.on("connection", function(socket) {
-  console.log("made socket connection");
-});
-io.close(function() {
-  console.log("closed all socket connections");
+io.on("connection", socket => {
+  console.log("We have a new connection.");
+
+  socket.on("getNotifications", (message, callback) => {
+    console.log("Index is: " + message.indexValue);
+
+    callback(true);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User has left.");
+  });
 });
 
 /**

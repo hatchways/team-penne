@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { useHistory } from "react-router";
 import {
@@ -12,6 +12,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import io from "socket.io-client";
 
 import ListCard from "./ListCard.js";
 import useStyles from "./styles/shoppingListsStyles";
@@ -20,8 +21,14 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import EditListDialog from "../Dialogs/EditListDialog";
 import NewProductDialog from "../Dialogs/NewProductDialog";
 
-export default function ShoppingLists() {
+let socket;
+let interval;
+
+export default function ShoppingLists(props) {
   const classes = useStyles();
+  const timer = React.useRef();
+  const history = useHistory();
+
   const [itemLists, setItemLists] = useState([]);
   const [list, setList] = useState("");
   const [productUrl, setProductUrl] = React.useState("");
@@ -36,8 +43,40 @@ export default function ShoppingLists() {
   const [listError, setListError] = React.useState(false);
   const [loadErr, setLoadErr] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-  const timer = React.useRef();
-  const history = useHistory();
+  const [getNotifications, setGetNotifications] = React.useState(true);
+  const [createSocket, setCreateSocket] = React.useState(true);
+  const [testIndex, setTestIndex] = React.useState(0);
+
+  const ENDPOINT = "localhost:3000";
+  useEffect(() => {
+    if (createSocket) {
+      socket = io();
+      setCreateSocket(false);
+    }
+
+    let payload = { message: "Hello server!", indexValue: testIndex };
+    socket.emit("getNotifications", payload, worked => {
+      if (worked) console.log("Hooray! The socket worked!");
+      else console.log("The socket didn't work.");
+    });
+    setTestIndex(testIndex + 1);
+
+    return () => {
+      socket.emit("disconnect");
+      socket.off();
+      clearInterval(interval);
+    };
+  }, [getNotifications]);
+
+  useEffect(() => {
+    //timer useEffect function, so that the other useEffect gets triggered every second? :/
+    console.log("start timer");
+    interval = setInterval(() => {
+      console.log("This will run every second!");
+      setGetNotifications(!getNotifications);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
 
   const handleListChange = e => {
     setList(e.target.value);
