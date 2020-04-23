@@ -155,7 +155,7 @@ export default function ShoppingLists(props) {
   };
 
   const getItemLists = () => {
-    fetch("/itemLists/getLists", {
+    fetch("/item-lists/get-lists", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -177,7 +177,7 @@ export default function ShoppingLists(props) {
   };
 
   const addItemList = (name, image) => {
-    fetch("/itemLists/addLists", {
+    fetch("/item-lists/add-lists", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

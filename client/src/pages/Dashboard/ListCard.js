@@ -46,7 +46,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         }
       }
       /* //POSSIBLE FETCH REQUEST IF LISTS AREN'T UPDATING PROPERLY
-      fetch("/itemLists/getProductList/?listName=" + listName, {
+      fetch("/item-lists/get-product-list/?listName=" + listName, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"

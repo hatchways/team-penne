@@ -43,7 +43,7 @@ function NewListDialog(props) {
     files.forEach((file, i) => {
       formData.append(i, file);
     });
-    fetch("/itemLists/image-upload", {
+    fetch("/item-lists/image-upload", {
       method: "POST",
       body: formData
     })

@@ -21,7 +21,7 @@ app.use(express.static(join(__dirname, "public")));
 app.set("trust proxy", 1); // trust first proxy
 
 app.use("/", userRouter);
-app.use("/itemLists", itemListRouter);
+app.use("/item-lists", itemListRouter);
 app.use("/ping", pingRouter);
 app.use("/api", scraperRouter);
 
