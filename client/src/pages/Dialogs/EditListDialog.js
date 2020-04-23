@@ -35,6 +35,19 @@ function EditListDialog() {
 
   const handleRemove = listItem => {
     console.log(listItem);
+    history.push(
+      window.location.pathname.replace("/edit-list", "/remove-product"),
+      {
+        productId: listItem.productId,
+        productName: listItem.productName,
+        productImageURL: listItem.productImageURL,
+        productURL: listItem.productURL,
+        productCurrency: listItem.productCurrency,
+        productPrice: listItem.productPrice,
+        productSalePrice: listItem.productSalePrice,
+        listName: listName
+      }
+    );
   };
 
   useEffect(() => {

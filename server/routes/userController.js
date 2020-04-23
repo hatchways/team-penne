@@ -5,7 +5,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
-const { createUser, getUser } = require("../database/handlers/userDBHandler");
+const {
+  createUser,
+  getAllUsers,
+  getUser
+} = require("../database/handlers/userDBHandler");
 
 const {
   getNotifications
@@ -160,6 +164,13 @@ router.get("/userprofile", authCheck, async function(req, res) {
     userEmail: req.userData.userEmail,
     userImageUrl: user.userImageURL
   });
+});
+
+router.get("/get-all-users", authCheck, async function(req, res) {
+  let userId = req.userData.userId;
+  let allUsers = await getAllUsers(userId);
+  console.log(allUsers);
+  res.status(200).send({ usersList: allUsers });
 });
 
 module.exports = router;

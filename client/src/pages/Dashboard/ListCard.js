@@ -20,6 +20,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const [changedListName, setChangedListName] = useState(false);
   const [getProductListBool, setGetProductListBool] = useState(false);
   const [productListLoadedBool, setProductListLoadedBool] = useState(false);
+  const [productAmount, setProductAmount] = useState(amount);
 
   const openNewList = () => {
     history.push("/dashboard/shoppingLists/create-new-list");
@@ -37,16 +38,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     if (changedListName == true && getProductListBool == true) {
       //console.log("ListName changed to: ", listName);
       setChangedListName("false");
-      /*
-      var i;
-      for (i = 0; i < itemLists.length; i++) {
-        if (itemLists[i].name == listName) {
-          setProductList(itemLists[i].products);
-          setGetProductListBool(false);
-          setProductListLoadedBool(true);
-        }
-      }*/
-      //POSSIBLE FETCH REQUEST IF LISTS AREN'T UPDATING PROPERLY
+
       fetch("/item-lists/get-product-list/?listName=" + listName, {
         method: "GET",
         headers: {
@@ -76,6 +68,10 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     }
   });
 
+  useEffect(() => {
+    if (productListLoadedBool) setProductAmount(productList.length);
+  }, [productListLoadedBool]);
+
   const classes = useStyles();
   return !addCard ? (
     <Card className={classes.card}>
@@ -84,7 +80,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
-            {amount !== 1 ? `${amount} items` : "1 item"}
+            {productAmount !== 1 ? `${productAmount} items` : "1 item"}
           </Typography>
         </CardContent>
       </CardActionArea>

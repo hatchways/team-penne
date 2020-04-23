@@ -5,7 +5,6 @@ const formData = require("express-form-data");
 const router = express.Router();
 const { addItemList, getItemLists, getItemList } = require("../db/modelDB");
 const { authCheck } = require("./authCheck");
-
 const {
   addList,
   getAllListsWithValues,
@@ -13,7 +12,8 @@ const {
 } = require("../database/handlers/listDBHandler");
 const {
   getAllProductsbyListId,
-  addProductToList
+  addProductToList,
+  removeProductFromList
 } = require("../database/handlers/productDBHandler");
 
 cloudinary.config({
@@ -90,7 +90,6 @@ router.get("/get-product-list", authCheck, async (req, res) => {
   return res.status(200).send({ productList: currentListProducts });
 });
 
-//add a product defined in req.body to list: listName (req.body.listName)
 router.post("/add-items", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   var itemAddedBool = await addProductToList(
@@ -105,6 +104,28 @@ router.post("/add-items", authCheck, async (req, res) => {
     req.body.listName
   );
   return res.status(200).send({ message: "Item Added." });
+});
+
+//add a product defined in req.body to list: listName (req.body.listName)
+router.post("/remove-item", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+
+  let productRemovedBool = await removeProductFromList(
+    req.body.productId,
+    req.body.productName,
+    req.body.productURL,
+    req.body.productImageURL,
+    req.body.productCurrency,
+    req.body.productPrice,
+    req.body.productSalePrice,
+    currentUserId,
+    req.body.listName
+  );
+
+  let message = productRemovedBool
+    ? "Item Removed"
+    : "There was a problem removing the product.";
+  return res.status(200).send({ message: message });
 });
 
 module.exports = router;

@@ -7,6 +7,7 @@ function reformatProductStyle(Products) {
   var formattedList = [];
   for (i = 0; i < Products.length; i++) {
     var tempProductsItem = {
+      productId: Products[i].productId,
       productName: Products[i].productName,
       productURL: Products[i].productURL,
       productImageURL: Products[i].productImageURL,
@@ -190,8 +191,44 @@ async function addProductToList(
   return true;
 }
 
+async function removeProductFromList(
+  productId,
+  productName,
+  productURL,
+  productImageURL,
+  productCurrency,
+  productPrice,
+  productSalePrice,
+  userId,
+  listName
+) {
+  // Step 1
+  // Get the listId from userId and listName
+  var listId = await getListIdFromUser(listName, userId);
+  if (listId == null) return false; // specified list doesn't exist.
+
+  // Step 2
+  // Remove it and it's relationship with listId from the productLists table.
+  const ListProductEntry = await ListProducts.findOne({
+    attributes: ["listId", "productId"],
+    where: { listId: listId, productId: productId }
+  })
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+      return null;
+    });
+  if (ListProductEntry == null) return true; // product not in list
+
+  await ListProductEntry.destroy();
+  return true;
+}
+
 module.exports = {
   getAllProductsbyListId,
   addProductToList,
   getProductIfExists,
+  removeProductFromList
 };

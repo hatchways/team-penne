@@ -25,22 +25,22 @@ function reformatListStyle(list) {
 */
 async function checkListExists(userId, listName) {
   const userBool = await getUser("userId", userId)
-    .then(function (user) {
+    .then(function(user) {
       return List.findOne({
         attributes: ["listId", "listName", "listImageURL", "userId"],
-        where: { listName: listName, userId: user.userId },
+        where: { listName: listName, userId: user.userId }
       })
-        .then((foundList) => {
+        .then(foundList => {
           if (foundList == null) return false;
           else return true;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           console.log("User has no lists.");
           return false;
         });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       console.log("User Doesn't exist.");
     });
@@ -78,7 +78,7 @@ async function getAllLists(getUserId) {
     .then(function(res) {
       return res;
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
       return [];
     });
@@ -118,7 +118,7 @@ async function getAllListsWithValues(userId) {
 */
 async function addList(userId, listName, listImage) {
   let addListBool = await getUser("userId", userId)
-    .then(async function (user) {
+    .then(async function(user) {
       var listExistsBool = await checkListExists(user.userId, listName);
       if (listExistsBool) return false;
       else {
@@ -126,33 +126,33 @@ async function addList(userId, listName, listImage) {
           return List.create({
             listName: listName,
             listImageURL: listImage,
-            userId: user.userId,
+            userId: user.userId
           })
-            .then(function (res) {
+            .then(function(res) {
               console.log(
                 "Creating New List for User " + userId + " named " + listName
               );
               //console.log(res);
               return res;
             })
-            .catch(function (err) {
+            .catch(function(err) {
               console.log(err);
               return null;
             });
         } else {
           // Add implementation for default image here
           return await List.create({ listName: listName, userId: user.userId })
-            .then(function (res) {
+            .then(function(res) {
               return res;
             })
-            .catch(function (err) {
+            .catch(function(err) {
               console.log(err);
               return null;
             });
         }
       }
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
     });
   return addListBool != null;

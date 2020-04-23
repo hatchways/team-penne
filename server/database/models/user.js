@@ -7,18 +7,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         defaultValue: 0,
-        autoIncrement: true,
+        autoIncrement: true
       },
       userName: DataTypes.STRING,
       userEmail: DataTypes.STRING,
       userPassword: DataTypes.STRING,
-      userImageURL: DataTypes.STRING,
+      userImageURL: DataTypes.STRING
     },
     {
-      timestamps: false,
+      timestamps: false
     }
   );
-  Users.associate = function (models) {
+  Users.associate = function(models) {
     // associations can be defined here
     Users.hasMany(models.Lists, { as: "list" });
     Users.hasMany(models.Notification, { as: "notification" });

@@ -13,7 +13,7 @@ import {
 import Truncate from "react-truncate";
 import dialogStyles from "./Styles/dialogStyles";
 
-function ProductConfirmationDialog() {
+function RemoveProductConfirmationDialog() {
   const classes = dialogStyles();
   const history = useHistory();
 
@@ -24,14 +24,14 @@ function ProductConfirmationDialog() {
   const [
     loadingButtonLabelConfirm,
     setLoadingButtonLabelConfirm
-  ] = React.useState("CONFIRM");
+  ] = React.useState("REMOVE");
   const [loadingButtonLabelDeny, setLoadingButtonLabelDeny] = React.useState(
     "GO BACK"
   );
   const timer = React.useRef();
 
   const handleClose = () => {
-    history.push(window.location.pathname.replace("/confirm-product", ""));
+    history.push(window.location.pathname.replace("/remove-product", ""));
   };
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success
@@ -42,14 +42,14 @@ function ProductConfirmationDialog() {
       setLoadingConfirm(true);
     }
 
-    fetch("/item-lists/add-items", {
+    fetch("/item-lists/remove-item", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         productId: history.location.state.productId,
-        productName: history.location.state.productTitle,
+        productName: history.location.state.productName,
         productURL: history.location.state.productURL,
         productImageURL: history.location.state.productImageURL,
         productCurrency: history.location.state.productCurrency,
@@ -60,10 +60,11 @@ function ProductConfirmationDialog() {
       })
     })
       .then(() => {
+        setSuccess(true);
+        setLoadingConfirm(false);
+        setLoadingButtonLabelConfirm("REMOVED");
         timer.current = setTimeout(() => {
-          history.push(
-            window.location.pathname.replace("/confirm-product", "")
-          );
+          history.push(window.location.pathname.replace("/remove-product", ""));
         }, 1000);
       })
       .catch(err => {
@@ -76,9 +77,7 @@ function ProductConfirmationDialog() {
       setLoadingDeny(true);
     }
     timer.current = setTimeout(() => {
-      history.push(
-        window.location.pathname.replace("/confirm-product", "/add-new-product")
-      );
+      history.push(window.location.pathname.replace("/remove-product", ""));
     }, 1000);
   };
 
@@ -96,7 +95,7 @@ function ProductConfirmationDialog() {
           color="textSecondary"
           gutterBottom
         >
-          Are you sure you wish to add this product to your list:{" "}
+          Are you sure you wish to remove this product from your list:{" "}
         </Typography>
       </div>
       <div className={classes.pCDialogTitle} id="form-dialog-title">
@@ -106,7 +105,7 @@ function ProductConfirmationDialog() {
         <Card
           className={classes.cardManager}
           raised={true}
-          value={history.location.state.productTitle}
+          value={history.location.state.productName}
         >
           <div className={classes.cardDivider}>
             <div className={classes.cardImageBox}>
@@ -125,7 +124,7 @@ function ProductConfirmationDialog() {
                   gutterBottom
                 >
                   <Truncate width={100 * 6}>
-                    {history.location.state.productTitle}
+                    {history.location.state.productName}
                   </Truncate>
                 </Typography>
                 <Typography className={classes.cardURL} gutterBottom>
@@ -182,7 +181,6 @@ function ProductConfirmationDialog() {
             classes={{ contained: classes.button }}
             variant="contained"
             size="large"
-            className={buttonClassname}
             disabled={loadingConfirm || loadingDeny}
             onClick={handleDenyButtonClick}
           >
@@ -197,4 +195,4 @@ function ProductConfirmationDialog() {
   );
 }
 
-export default ProductConfirmationDialog;
+export default RemoveProductConfirmationDialog;
