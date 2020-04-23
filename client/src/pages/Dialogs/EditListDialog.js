@@ -85,10 +85,14 @@ function EditListDialog() {
                   <img
                     src={listItem.productImageURL}
                     className={classes.cardImg}
+                    onClick={() => window.open(listItem.productURL, "_blank")}
                   />
                 </div>
                 <div className={classes.cardTextBox}>
-                  <div>
+                  <div
+                    onClick={() => window.open(listItem.productURL, "_blank")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <Typography
                       className={classes.cardTitle}
                       color="textSecondary"

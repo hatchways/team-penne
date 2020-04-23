@@ -59,7 +59,8 @@ const dialogStyles = makeStyles({
     height: "auto",
     padding: 5,
     borderRadius: 2,
-    border: "1px solid #eaeaea"
+    border: "1px solid #eaeaea",
+    cursor: "pointer"
   },
   cardTextBox: {
     marginLeft: "10px",

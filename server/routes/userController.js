@@ -169,7 +169,6 @@ router.get("/userprofile", authCheck, async function(req, res) {
 router.get("/get-all-users", authCheck, async function(req, res) {
   let userId = req.userData.userId;
   let allUsers = await getAllUsers(userId);
-  console.log(allUsers);
   res.status(200).send({ usersList: allUsers });
 });
 

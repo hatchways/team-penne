@@ -125,7 +125,6 @@ function Followers(props) {
       .then(res => {
         setSuggestedUsersList(res.usersList);
         localStorage.setItem("usersList", JSON.stringify(res.usersList));
-        console.log("GOT LIST OF USERS!!");
       })
       .catch(err => {
         console.log(err);
