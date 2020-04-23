@@ -33,6 +33,10 @@ function EditListDialog() {
     );
   };
 
+  const handleRemove = listItem => {
+    console.log(listItem);
+  };
+
   useEffect(() => {
     setListName(history.location.state.listName);
     setProductList(history.location.state.productList);
@@ -120,6 +124,9 @@ function EditListDialog() {
                 classes={{ outlined: classes.removeButton }}
                 size="large"
                 variant="outlined"
+                onClick={() => {
+                  handleRemove(listItem);
+                }}
               >
                 Remove
               </Button>

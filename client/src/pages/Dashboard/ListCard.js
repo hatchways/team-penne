@@ -37,6 +37,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     if (changedListName == true && getProductListBool == true) {
       //console.log("ListName changed to: ", listName);
       setChangedListName("false");
+      /*
       var i;
       for (i = 0; i < itemLists.length; i++) {
         if (itemLists[i].name == listName) {
@@ -44,8 +45,8 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
           setGetProductListBool(false);
           setProductListLoadedBool(true);
         }
-      }
-      /* //POSSIBLE FETCH REQUEST IF LISTS AREN'T UPDATING PROPERLY
+      }*/
+      //POSSIBLE FETCH REQUEST IF LISTS AREN'T UPDATING PROPERLY
       fetch("/item-lists/get-product-list/?listName=" + listName, {
         method: "GET",
         headers: {
@@ -64,7 +65,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         })
         .catch(err => {
           console.log(err);
-        });*/
+        });
     }
     if (productListLoadedBool == true) {
       setProductListLoadedBool(false);
