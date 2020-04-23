@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
+import { green, red } from "@material-ui/core/colors";
 
 const cardStyles = makeStyles({
   buttonBox: {
@@ -27,6 +28,7 @@ const cardStyles = makeStyles({
     borderRadius: "50%",
     position: "relative",
     overflow: "hidden",
+    cursor: "pointer",
     "& img": {
       maxWidth: "100%",
       width: "auto",
@@ -40,13 +42,26 @@ const cardStyles = makeStyles({
   container: {
     textAlign: "center"
   },
-  viewProfileButton: {
-    backgroundColor: "#FF0000",
-    color: "white",
+  buttonFollow: {
+    backgroundColor: "#FFFFFF",
+    color: "black",
     borderRadius: 30,
     marginBottom: "25px",
     marginTop: "25px",
-    fontSize: "0.7em"
+    fontSize: "0.7em",
+    width: "100px",
+    "&:hover": {
+      backgroundColor: "#C6C6C6"
+    }
+  },
+  buttonUnfollow: {
+    color: "white",
+    backgroundColor: red[500],
+    borderRadius: 30,
+    marginBottom: "25px",
+    "&:hover": {
+      backgroundColor: red[700]
+    }
   }
 });
 

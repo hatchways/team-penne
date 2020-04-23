@@ -119,7 +119,10 @@ export default function ShoppingLists(props) {
           setSuccess(true);
           clearInterval(timer.current);
           setLoadingButtonLabel("ADDING ITEM");
+          setList("");
+          setProductUrl("");
           timer.current = setTimeout(() => {
+            setSuccess(false);
             history.push("/dashboard/shoppingLists/confirm-product", {
               productTitle: res.title,
               productCurrency: res.currency,
@@ -141,6 +144,8 @@ export default function ShoppingLists(props) {
           setErrorMessage(
             "Error: There was an error loading your product. Please check the link and try again."
           );
+          setList("");
+          setProductUrl("");
           setLoadingButtonLabel("ADD ITEM");
         });
     } else {
@@ -221,6 +226,7 @@ export default function ShoppingLists(props) {
           <input
             onChange={handleUrlChange}
             style={{ fontSize: "14pt" }}
+            value={productUrl}
             placeholder="Paste your link here"
           />
           <Box display="flex">
@@ -294,7 +300,11 @@ export default function ShoppingLists(props) {
                   />
                 );
               })}
-              <ListCard addCard={true} addItemList={addItemList} />
+              <ListCard
+                addCard={true}
+                addItemList={addItemList}
+                itemLists={itemLists}
+              />
             </Grid>
           </Box>
         </div>
