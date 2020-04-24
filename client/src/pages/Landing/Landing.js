@@ -15,27 +15,29 @@ class LandingPage extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Container classes={{ root: classes.container }}>
-        <Container>
-          <img alt="logo" src={logo} />
-        </Container>
-        <Container>
-          <Button
-            classes={{ contained: classes.button }}
-            variant="contained"
-            onClick={this.openLogin}
-          >
-            Sign In
-          </Button>
-        </Container>
-        <Container>
-          <Button
-            classes={{ contained: classes.button }}
-            variant="contained"
-            onClick={this.openSignUp}
-          >
-            Sign Up
-          </Button>
+      <Container>
+        <Container classes={{ root: classes.container }}>
+          <Container>
+            <img alt="logo" src={logo} />
+          </Container>
+          <Container>
+            <Button
+              classes={{ contained: classes.button }}
+              variant="contained"
+              onClick={this.openLogin}
+            >
+              Sign In
+            </Button>
+          </Container>
+          <Container>
+            <Button
+              classes={{ contained: classes.button }}
+              variant="contained"
+              onClick={this.openSignUp}
+            >
+              Sign Up
+            </Button>
+          </Container>
         </Container>
       </Container>
     );

@@ -4,7 +4,7 @@ const avoidDetection = require("./util");
 var browser;
 const __launchPuppeteer = async url => {
   browser = await puppeteer
-    .launch({ headless: false })
+    .launch({ headless: true })
     .catch(err => console.log(err));
   const page = await browser.newPage().catch(err => {
     console.log(err);
@@ -13,14 +13,12 @@ const __launchPuppeteer = async url => {
   await avoidDetection(page).catch(err => console.log(err));
 
   await page.goto(url).catch(err => console.log(err));
-  //await browser.close();
+
   return page;
 };
 
 const scrapeAmazon = async url => {
-  const page = await __launchPuppeteer(
-    "https://www.amazon.ca/"
-  ).catch(err => {
+  const page = await __launchPuppeteer("https://www.amazon.ca/").catch(err => {
     console.log(err);
     return -1;
   });
