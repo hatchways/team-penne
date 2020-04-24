@@ -8,7 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Truncate from "react-truncate";
 import dialogStyles from "./Styles/dialogStyles";
@@ -23,7 +23,7 @@ function ProductConfirmationDialog() {
   const [success, setSuccess] = React.useState(false);
   const [
     loadingButtonLabelConfirm,
-    setLoadingButtonLabelConfirm
+    setLoadingButtonLabelConfirm,
   ] = React.useState("CONFIRM");
   const [loadingButtonLabelDeny, setLoadingButtonLabelDeny] = React.useState(
     "GO BACK"
@@ -34,7 +34,7 @@ function ProductConfirmationDialog() {
     history.push(window.location.pathname.replace("/confirm-product", ""));
   };
   const buttonClassname = clsx({
-    [classes.buttonSuccess]: success
+    [classes.buttonSuccess]: success,
   });
   const handleConfirmButtonClick = () => {
     if (!loadingConfirm) {
@@ -45,7 +45,7 @@ function ProductConfirmationDialog() {
     fetch("/item-lists/add-items", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         productId: history.location.state.productId,
@@ -56,8 +56,8 @@ function ProductConfirmationDialog() {
         productPrice: history.location.state.productPrice,
         productSale: history.location.state.productSale,
         productSalePrice: history.location.state.productSalePrice,
-        listName: history.location.state.listName
-      })
+        listName: history.location.state.listName,
+      }),
     })
       .then(() => {
         timer.current = setTimeout(() => {
@@ -66,7 +66,7 @@ function ProductConfirmationDialog() {
           );
         }, 1000);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };

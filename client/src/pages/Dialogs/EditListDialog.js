@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
@@ -33,7 +33,7 @@ function EditListDialog() {
     );
   };
 
-  const handleRemove = listItem => {
+  const handleRemove = (listItem) => {
     console.log(listItem);
     history.push(
       window.location.pathname.replace("/edit-list", "/remove-product"),
@@ -45,7 +45,7 @@ function EditListDialog() {
         productCurrency: listItem.productCurrency,
         productPrice: listItem.productPrice,
         productSalePrice: listItem.productSalePrice,
-        listName: listName
+        listName: listName,
       }
     );
   };
@@ -73,7 +73,7 @@ function EditListDialog() {
         </Typography>
       </DialogTitle>
       <DialogContent classes={{ root: classes.dialogContent }}>
-        {productList.map(listItem => (
+        {productList.map((listItem) => (
           <Card
             className={classes.cardManager}
             raised={true}
