@@ -82,7 +82,7 @@ const createNotifications = async function(socket, socketClients) {
                     const userId = await getListUserId(listIds[j]);
                     // send data via socketClients if userId has a socket open
                     //console.log(socketClients);
-                    if (socketClients[userId] != null) {
+                    /*if (socketClients[userId] != null) {
                       let payloadProduct = {
                         id: products[i].productId,
                         image: products[i].productImageURL,
@@ -96,7 +96,7 @@ const createNotifications = async function(socket, socketClients) {
                       socket
                         .to(socketClients[userId])
                         .emit("getNotifications", payloadProduct);
-                    }
+                    }*/
                     await createNotification(
                       products[i].productId,
                       userId,
@@ -188,9 +188,21 @@ const getProductsForNotifications = async function(userId) {
 
 const checkForSales = async function(socket, socketClients) {
   const salesCheck = new CronJob("*/2 * * * *", function() {
-    createNotifications(socket, socketClients);
-    //let date_ob = new Date();
-    //console.log(`Last Checked: ${date_ob}`);
+    //createNotifications(socket, socketClients);
+    let payloadProduct = {
+      id: "B07KG318MQ",
+      image:
+        "https://images-na.ssl-images-amazon.com/images/I/71xkwNx-nfL._AC_SX679_.jpg",
+      name: "TCL 50S425-CA 4K Ultra HD Smart LED Television (2019), 50",
+      url:
+        "https://www.amazon.ca/TCL-50S425-CA-Ultra-Smart-Television/dp/B07KG318MQ/ref=pd_ybh_a_5?_encoding=UTF8&psc=1&refRID=WZ9HZD9Z0X8T0GRHPP6D",
+      currency: "CDN$",
+      price: "379.99",
+      salePrice: "359.99"
+    };
+    socket.to(socketClients[1]).emit("getNotifications", payloadProduct);
+    let date_ob = new Date();
+    console.log(`Last Checked: ${date_ob}`);
   });
   salesCheck.start();
 };

@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer");
 const avoidDetection = require("./util");
 
+var browser;
 const __launchPuppeteer = async url => {
-  const browser = await puppeteer
-    .launch({ headless: true })
+  browser = await puppeteer
+    .launch({ headless: false })
     .catch(err => console.log(err));
   const page = await browser.newPage().catch(err => {
     console.log(err);
@@ -12,14 +13,20 @@ const __launchPuppeteer = async url => {
   await avoidDetection(page).catch(err => console.log(err));
 
   await page.goto(url).catch(err => console.log(err));
+  //await browser.close();
   return page;
 };
 
 const scrapeAmazon = async url => {
-  const page = await __launchPuppeteer(url).catch(err => {
+  const page = await __launchPuppeteer(
+    "https://www.amazon.ca/"
+  ).catch(err => {
     console.log(err);
     return -1;
   });
+
+  await page.goto(url);
+
   const splitUrl = url.split("/");
   var productId = "";
   for (i = 0; i < splitUrl.length; i++) {
@@ -29,7 +36,6 @@ const scrapeAmazon = async url => {
     }
   }
   productId = productId.split("?")[0];
-  console.log(page);
 
   const item = await page
     .evaluate(() => {
@@ -113,6 +119,7 @@ const scrapeAmazon = async url => {
     });
 
   item["productId"] = productId;
+  browser.close();
   return item;
 };
 
@@ -166,6 +173,7 @@ const scrapeEbay = async url => {
   } catch (err) {
     return { error: "Scraping website failed" };
   }
+  browser.close();
   return item;
 };
 
