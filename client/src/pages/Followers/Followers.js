@@ -6,87 +6,6 @@ import UserCard from "./UserCard";
 import followerStyles from "./styles/FollowerStyles";
 import noUserProfilePic from "../../assets/noUserProfilePic.png";
 
-const dummyUserListFollowers = [
-  {
-    userId: 1,
-    userName: "Frank Sinatra",
-    userImageURL:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNjg4MTE2MjM4/frank-sinatra-9484810-3-402.jpg",
-    following: false
-  },
-  {
-    userId: 2,
-    userName: "Michael Jackson",
-    userImageURL:
-      "https://vignette.wikia.nocookie.net/real-life-heroes/images/2/2c/Michael_Jackson.jpg/revision/latest?cb=20191122190551",
-    following: false
-  },
-  {
-    userId: 1,
-    userName: "Frank Sinatra",
-    userImageURL:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNjg4MTE2MjM4/frank-sinatra-9484810-3-402.jpg",
-    following: false
-  },
-  {
-    userId: 2,
-    userName: "Michael Jackson",
-    userImageURL:
-      "https://vignette.wikia.nocookie.net/real-life-heroes/images/2/2c/Michael_Jackson.jpg/revision/latest?cb=20191122190551",
-    following: false
-  },
-  {
-    userId: 1,
-    userName: "Frank Sinatra",
-    userImageURL:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNjg4MTE2MjM4/frank-sinatra-9484810-3-402.jpg",
-    following: true
-  },
-  {
-    userId: 2,
-    userName: "Michael Jackson",
-    userImageURL:
-      "https://vignette.wikia.nocookie.net/real-life-heroes/images/2/2c/Michael_Jackson.jpg/revision/latest?cb=20191122190551",
-    following: false
-  },
-  {
-    userId: 1,
-    userName: "Frank Sinatra",
-    userImageURL:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNjg4MTE2MjM4/frank-sinatra-9484810-3-402.jpg",
-    following: true
-  },
-  {
-    userId: 2,
-    userName: "Michael Jackson",
-    userImageURL:
-      "https://vignette.wikia.nocookie.net/real-life-heroes/images/2/2c/Michael_Jackson.jpg/revision/latest?cb=20191122190551",
-    following: false
-  }
-];
-const dummyUserListFollowing = [
-  {
-    userId: 3,
-    userName: "Spongebob Squarepants",
-    userImageURL:
-      "https://pbs.twimg.com/profile_images/1210618202457292802/lt9KD2lt_400x400.jpg",
-    following: true
-  },
-  {
-    userId: 4,
-    userName: "Rock Monster",
-    userImageURL: "https://i.imgur.com/TZv6jjb.jpg",
-    following: true
-  },
-  {
-    userId: 1,
-    userName: "Frank Sinatra",
-    userImageURL:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNjg4MTE2MjM4/frank-sinatra-9484810-3-402.jpg",
-    following: true
-  }
-];
-
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
@@ -97,21 +16,18 @@ function a11yProps(index) {
 function Followers(props) {
   const classes = followerStyles();
   const [tabValue, setTabValue] = React.useState(0);
-  const [userListFollowers, setUserListFollowers] = React.useState(
-    dummyUserListFollowers
-  );
-  const [userListFollowing, setUserListFollowing] = React.useState(
-    dummyUserListFollowing
-  );
+  const [userListFollowers, setUserListFollowers] = React.useState([]);
+  const [userListFollowing, setUserListFollowing] = React.useState([]);
   const [suggestedUsersList, setSuggestedUsersList] = React.useState([]);
   const [loadedUsers, setLoadedUsers] = React.useState(false);
 
   const handleChange = (event, newTabValue) => {
     setTabValue(newTabValue);
+    setLoadedUsers(false);
   };
 
-  const getAllUsers = () => {
-    fetch("/get-all-users", {
+  const getAllSuggestions = () => {
+    fetch("/followers/get-all-suggestions", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -132,13 +48,74 @@ function Followers(props) {
       });
   };
 
+  const getAllFollowingUsers = () => {
+    fetch("/followers/get-following-users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(res => {
+        setUserListFollowing(res.followingList);
+      })
+      .catch(err => {
+        console.log(err);
+        return;
+      });
+  };
+
+  const getAllFollowerUsers = () => {
+    fetch("/followers/get-follower-users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(res => {
+        setUserListFollowers(res.followingList);
+      })
+      .catch(err => {
+        console.log(err);
+        return;
+      });
+  };
+
+  const handleAllFollowChanges = (userId, following) => {
+    //console.log(userId, following);
+    fetch("/followers/set-follow-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId: userId, following: following })
+    })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   const handleProfileRouting = userId => {
     // #TODO: handle changing route here.
   };
 
   React.useEffect(() => {
     if (!loadedUsers) {
-      getAllUsers();
+      getAllSuggestions();
+      getAllFollowingUsers();
+      getAllFollowerUsers();
       setLoadedUsers(true);
     }
   }, [loadedUsers]);
@@ -164,68 +141,83 @@ function Followers(props) {
       </Container>
       <Box boxShadow={3} className={classes.cardBox}>
         <TabPanel value={tabValue} index={0}>
-          {userListFollowers.map((listItem, index) => (
-            <UserCard
-              userName={listItem.userName}
-              profilePicImage={
-                listItem.userImageURL == null
-                  ? noUserProfilePic
-                  : listItem.userImageURL
-              }
-              cardType={"Followers"}
-              handleProfileRouting={() => {
-                handleProfileRouting(listItem.userId);
-              }}
-              following={listItem.following}
-              handleFollowerButtonClick={() => {
-                userListFollowers[index].following = !listItem.following;
-              }}
-            />
-          ))}
+          {userListFollowers.length == 0 && <div>No followers yet.</div>}
+          {userListFollowers.length != 0 &&
+            userListFollowers.map((listItem, index) => (
+              <UserCard
+                userName={listItem.userName}
+                profilePicImage={
+                  listItem.userImageURL == null
+                    ? noUserProfilePic
+                    : listItem.userImageURL
+                }
+                cardType={"Followers"}
+                handleProfileRouting={() => {
+                  handleProfileRouting(listItem.userId);
+                }}
+                following={listItem.following}
+                handleFollowerButtonClick={() => {
+                  userListFollowers[index].following = !listItem.following;
+                  //call function to update db
+                  handleAllFollowChanges(listItem.userId, listItem.following);
+                }}
+              />
+            ))}
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
-          {userListFollowing.map((listItem, index) => (
-            <UserCard
-              userName={listItem.userName}
-              profilePicImage={
-                listItem.userImageURL == null
-                  ? noUserProfilePic
-                  : listItem.userImageURL
-              }
-              cardType={"Following"}
-              handleProfileRouting={() => {
-                handleProfileRouting(listItem.userId);
-              }}
-              following={listItem.following}
-              handleFollowerButtonClick={() => {
-                userListFollowing[index].following = !listItem.following;
-              }}
-            />
-          ))}
+          {userListFollowing.length == 0 && (
+            <div>
+              Not following anyone yet. Head over to the suggested or followers
+              tab and follow someone!
+            </div>
+          )}
+          {userListFollowing.length != 0 &&
+            userListFollowing.map((listItem, index) => (
+              <UserCard
+                userName={listItem.userName}
+                profilePicImage={
+                  listItem.userImageURL == null
+                    ? noUserProfilePic
+                    : listItem.userImageURL
+                }
+                cardType={"Following"}
+                handleProfileRouting={() => {
+                  handleProfileRouting(listItem.userId);
+                }}
+                following={listItem.following}
+                handleFollowerButtonClick={() => {
+                  userListFollowing[index].following = !listItem.following;
+                  //call function to update db
+                  handleAllFollowChanges(listItem.userId, listItem.following);
+                }}
+              />
+            ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {suggestedUsersList.map((listItem, index) => (
-            <UserCard
-              userName={listItem.userName}
-              profilePicImage={
-                listItem.userImageURL == null
-                  ? noUserProfilePic
-                  : listItem.userImageURL
-              }
-              cardType={"Suggested"}
-              handleProfileRouting={() => {
-                handleProfileRouting(listItem.userId);
-              }}
-              following={false}
-              handleFollowerButtonClick={() => {
-                console.log(
-                  `In handle follower button click, clicked on: ${index}` +
-                    ` with following as ${!listItem.following}`
-                );
-                suggestedUsersList[index].following = !listItem.following;
-              }}
-            />
-          ))}
+          {suggestedUsersList.length == 0 && (
+            <div>You currently have no suggestions.</div>
+          )}
+          {suggestedUsersList.length != 0 &&
+            suggestedUsersList.map((listItem, index) => (
+              <UserCard
+                userName={listItem.userName}
+                profilePicImage={
+                  listItem.userImageURL == null
+                    ? noUserProfilePic
+                    : listItem.userImageURL
+                }
+                cardType={"Suggested"}
+                handleProfileRouting={() => {
+                  handleProfileRouting(listItem.userId);
+                }}
+                following={listItem.following}
+                handleFollowerButtonClick={() => {
+                  suggestedUsersList[index].following = !listItem.following;
+                  //call function to update db
+                  handleAllFollowChanges(listItem.userId, listItem.following);
+                }}
+              />
+            ))}
         </TabPanel>
       </Box>
     </Container>

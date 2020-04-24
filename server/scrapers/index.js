@@ -29,6 +29,7 @@ const scrapeAmazon = async url => {
     }
   }
   productId = productId.split("?")[0];
+  console.log(page);
 
   const item = await page
     .evaluate(() => {
@@ -49,9 +50,19 @@ const scrapeAmazon = async url => {
         } catch {
           priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
         }
+        if (priceHTML.split(" - ")[1] != null) {
+          let priceHTMLSplit = priceHTML.split(" - ")[1].split("&nbsp;");
+          let currency = priceHTMLSplit[0];
+          let priceString = priceHTMLSplit[1].replace(",", "");
+          let priceSplit = priceString.split("."); // split string by decimal point
+          let priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+          let priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+          var priceUpper = priceFH + priceSH;
+          priceHTML = priceHTML.split(" - ")[0];
+        }
         const priceHTMLSplit = priceHTML.split("&nbsp;");
         var currency = priceHTMLSplit[0];
-        var priceString = priceHTMLSplit[1].replace(",", "");
+        var priceString = priceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
         var priceSplit = priceString.split("."); // split string by decimal point
         const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
         const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
@@ -61,13 +72,19 @@ const scrapeAmazon = async url => {
         var currency = "";
       }
 
+      if (priceUpper != null) {
+        let tempPrice = priceUpper;
+        priceUpper = price;
+        price = tempPrice;
+      }
+
       const salePriceHTML = document.getElementsByClassName(
         "priceBlockStrikePriceString"
       )[0];
       if (salePriceHTML) {
         var salePriceHTMLSplit = salePriceHTML.innerHTML.split("&nbsp;");
         var salePriceCurrency = salePriceHTMLSplit[0];
-        var salePriceString = salePriceHTMLSplit[1];
+        var salePriceString = salePriceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
         var salePriceSplit = salePriceString.split("."); // split string by decimal point
         var salePriceFH = parseInt(salePriceSplit[0], 10); // FH = first half (i.e Integer part)
         var salePriceSH = parseInt(salePriceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
