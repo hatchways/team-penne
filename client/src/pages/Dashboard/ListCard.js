@@ -20,6 +20,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const [changedListName, setChangedListName] = useState(false);
   const [getProductListBool, setGetProductListBool] = useState(false);
   const [productListLoadedBool, setProductListLoadedBool] = useState(false);
+  const [productAmount, setProductAmount] = useState(amount);
 
   const openNewList = () => {
     history.push("/dashboard/shoppingLists/create-new-list");
@@ -35,10 +36,10 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
 
   useEffect(() => {
     if (changedListName == true && getProductListBool == true) {
-      console.log("ListName changed to: ", listName);
+      //console.log("ListName changed to: ", listName);
       setChangedListName("false");
 
-      fetch("/itemLists/getProductList/?listName=" + listName, {
+      fetch("/item-lists/get-product-list/?listName=" + listName, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -67,6 +68,10 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     }
   });
 
+  useEffect(() => {
+    if (productListLoadedBool) setProductAmount(productList.length);
+  }, [productListLoadedBool]);
+
   const classes = useStyles();
   return !addCard ? (
     <Card className={classes.card}>
@@ -75,7 +80,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
-            {amount !== 1 ? `${amount} items` : "1 item"}
+            {productAmount !== 1 ? `${productAmount} items` : "1 item"}
           </Typography>
         </CardContent>
       </CardActionArea>

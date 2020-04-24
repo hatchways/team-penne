@@ -12,11 +12,12 @@ import {
   Typography
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
 
 import ListCard from "./ListCard.js";
 import useStyles from "./styles/shoppingListsStyles";
 import ProductConfirmation from "../Dialogs/ProductConfirmation";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
+import RemoveProductConfirmationDialog from "../Dialogs/RemoveProductConfirmation";
 import EditListDialog from "../Dialogs/EditListDialog";
 import NewProductDialog from "../Dialogs/NewProductDialog";
 
@@ -119,7 +120,13 @@ export default function ShoppingLists(props) {
           setSuccess(true);
           clearInterval(timer.current);
           setLoadingButtonLabel("ADDING ITEM");
+          setList("");
+          setProductUrl("");
+          setProductUrlError(false);
+          setLoadErr(false);
+          setListError(false);
           timer.current = setTimeout(() => {
+            setSuccess(false);
             history.push("/dashboard/shoppingLists/confirm-product", {
               productTitle: res.title,
               productCurrency: res.currency,
@@ -141,6 +148,11 @@ export default function ShoppingLists(props) {
           setErrorMessage(
             "Error: There was an error loading your product. Please check the link and try again."
           );
+          setList("");
+          setProductUrl("");
+          setProductUrlError(false);
+          setLoadErr(false);
+          setListError(false);
           setLoadingButtonLabel("ADD ITEM");
         });
     } else {
@@ -150,7 +162,7 @@ export default function ShoppingLists(props) {
   };
 
   const getItemLists = () => {
-    fetch("/itemLists/getLists", {
+    fetch("/item-lists/get-lists", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -172,7 +184,7 @@ export default function ShoppingLists(props) {
   };
 
   const addItemList = (name, image) => {
-    fetch("/itemLists/addLists", {
+    fetch("/item-lists/add-lists", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -204,6 +216,10 @@ export default function ShoppingLists(props) {
         component={ProductConfirmation}
       />
       <Route
+        path="/dashboard/shoppingLists/remove-product"
+        component={RemoveProductConfirmationDialog}
+      />
+      <Route
         path="/dashboard/shoppingLists/edit-list"
         render={() => {
           return <EditListDialog />;
@@ -221,6 +237,7 @@ export default function ShoppingLists(props) {
           <input
             onChange={handleUrlChange}
             style={{ fontSize: "14pt" }}
+            value={productUrl}
             placeholder="Paste your link here"
           />
           <Box display="flex">
@@ -289,12 +306,16 @@ export default function ShoppingLists(props) {
                   <ListCard
                     image={list.image}
                     name={list.name}
-                    amount={list.amount}
+                    amount={list.products.length}
                     itemLists={itemLists}
                   />
                 );
               })}
-              <ListCard addCard={true} addItemList={addItemList} />
+              <ListCard
+                addCard={true}
+                addItemList={addItemList}
+                itemLists={itemLists}
+              />
             </Grid>
           </Box>
         </div>

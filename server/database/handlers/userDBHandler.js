@@ -1,6 +1,23 @@
 const models = require("../models");
 const User = models.Users;
 
+function formatUserReturnWithoutUserId(userList, userId) {
+  var formattedList = [];
+  for (i = 0; i < userList.length; i++) {
+    if (userList[i].userId != userId) {
+      var tempUserItem = {
+        userId: userList[i].userId,
+        userName: userList[i].userName,
+        userEmail: userList[i].userEmail,
+        userImageURL: userList[i].userImageURL,
+        followed: false
+      };
+      formattedList.push(tempUserItem);
+    }
+  }
+  return formattedList;
+}
+
 /*
     createUser
     arguments: newUser - object ({userName, userPassword, userEmail})
@@ -10,11 +27,11 @@ function createUser(newUser) {
   console.log("Adding user to Database.");
   console.log(newUser);
   return (userCreatedBool = User.findOne({
-    where: { userEmail: newUser.userEmail },
+    where: { userEmail: newUser.userEmail }
   })
-    .then(function (foundUser) {
+    .then(function(foundUser) {
       if (foundUser == null) {
-        let addedUser = User.create(newUser).catch(function (err) {
+        let addedUser = User.create(newUser).catch(function(err) {
           console.log(err, newUser);
         });
         console.log("New User Added.");
@@ -24,7 +41,7 @@ function createUser(newUser) {
         return null;
       }
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
       return err;
     }));
@@ -42,28 +59,28 @@ function getUser(identifierType, userIdentifier) {
   // if userIdentifier is userEmail
   if (identifierType == "userEmail") {
     return User.findOne({ where: { userEmail: userIdentifier } })
-      .then(function (foundUser) {
+      .then(function(foundUser) {
         return foundUser;
       })
-      .catch(function (err) {
+      .catch(function(err) {
         console.log(err);
       });
   }
   // if userIdentifier is userName
   else if (identifierType == "userName") {
     return User.findOne({ where: { userName: userIdentifier } })
-      .then(function (foundUser) {
+      .then(function(foundUser) {
         return foundUser;
       })
-      .catch(function (err) {
+      .catch(function(err) {
         console.log(err);
       });
   } else if (identifierType == "userId") {
     return User.findByPk(userIdentifier)
-      .then(function (foundUser) {
+      .then(function(foundUser) {
         return foundUser;
       })
-      .catch(function (err) {
+      .catch(function(err) {
         console.log(err);
       });
   }
@@ -79,15 +96,26 @@ function getUser(identifierType, userIdentifier) {
 async function updateUser(updateUserEmail, updateVariableType, updateVariable) {
   console.log("Updating User in Database");
   var userToUpdate;
-  User.findOne({ where: { userEmail: updateUserEmail } }).then(function (
+  User.findOne({ where: { userEmail: updateUserEmail } }).then(function(
     foundUser
   ) {
     userToUpdate = foundUser;
   });
 }
 
+async function getAllUsers(userId) {
+  let allUsers = await User.findAll({
+    attributes: ["userId", "userName", "userEmail", "userImageURL"]
+  }).catch(err => {
+    console.log(err);
+  });
+
+  return formatUserReturnWithoutUserId(allUsers, userId);
+}
+
 module.exports = {
   createUser,
+  getAllUsers,
   getUser,
-  updateUser,
+  updateUser
 };

@@ -33,6 +33,23 @@ function EditListDialog() {
     );
   };
 
+  const handleRemove = listItem => {
+    console.log(listItem);
+    history.push(
+      window.location.pathname.replace("/edit-list", "/remove-product"),
+      {
+        productId: listItem.productId,
+        productName: listItem.productName,
+        productImageURL: listItem.productImageURL,
+        productURL: listItem.productURL,
+        productCurrency: listItem.productCurrency,
+        productPrice: listItem.productPrice,
+        productSalePrice: listItem.productSalePrice,
+        listName: listName
+      }
+    );
+  };
+
   useEffect(() => {
     setListName(history.location.state.listName);
     setProductList(history.location.state.productList);
@@ -68,10 +85,14 @@ function EditListDialog() {
                   <img
                     src={listItem.productImageURL}
                     className={classes.cardImg}
+                    onClick={() => window.open(listItem.productURL, "_blank")}
                   />
                 </div>
                 <div className={classes.cardTextBox}>
-                  <div>
+                  <div
+                    onClick={() => window.open(listItem.productURL, "_blank")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <Typography
                       className={classes.cardTitle}
                       color="textSecondary"
@@ -120,6 +141,9 @@ function EditListDialog() {
                 classes={{ outlined: classes.removeButton }}
                 size="large"
                 variant="outlined"
+                onClick={() => {
+                  handleRemove(listItem);
+                }}
               >
                 Remove
               </Button>

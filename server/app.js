@@ -8,6 +8,7 @@ const scraperRouter = require("./routes/scraper");
 const userRouter = require("./routes/userController");
 const pingRouter = require("./routes/ping");
 const itemListRouter = require("./routes/itemList");
+const followerRouter = require("./routes/followers");
 
 const { json, urlencoded } = express;
 
@@ -21,7 +22,8 @@ app.use(express.static(join(__dirname, "public")));
 app.set("trust proxy", 1); // trust first proxy
 
 app.use("/", userRouter);
-app.use("/itemLists", itemListRouter);
+app.use("/item-lists", itemListRouter);
+app.use("/followers", followerRouter);
 app.use("/ping", pingRouter);
 app.use("/api", scraperRouter);
 
