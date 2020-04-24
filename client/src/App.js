@@ -34,13 +34,13 @@ function App() {
           <Route exact path="/unauthorized" component={Unauthorized} />
           <Route
             path="/login"
-            render={props => (
+            render={(props) => (
               <LoginDialog {...props} handleLogin={handleLogin} />
             )}
           />
           <Route
             path="/sign-up"
-            render={props => (
+            render={(props) => (
               <SignUpDialog {...props} handleLogin={handleLogin} />
             )}
           />

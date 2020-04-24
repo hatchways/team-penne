@@ -3,13 +3,15 @@ import { Container } from "@material-ui/core";
 import { AppBar, Box, Tab, Tabs, Typography } from "@material-ui/core";
 import TabPanel from "./TabPanel";
 import UserCard from "./UserCard";
+import ProfilePage from "../Profile/ProfilePage";
 import followerStyles from "./styles/FollowerStyles";
 import noUserProfilePic from "../../assets/noUserProfilePic.png";
+import { Route } from "react-router-dom";
 
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 
@@ -30,19 +32,19 @@ function Followers(props) {
     fetch("/followers/get-all-suggestions", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           return res.json();
         }
       })
-      .then(res => {
+      .then((res) => {
         setSuggestedUsersList(res.usersList);
         localStorage.setItem("usersList", JSON.stringify(res.usersList));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         return;
       });
@@ -106,9 +108,13 @@ function Followers(props) {
         console.log(err);
       });
   };
-
-  const handleProfileRouting = userId => {
-    // #TODO: handle changing route here.
+  
+  const handleProfileRouting = (user) => {
+    props.history.push(`/dashboard/profile/${user.userId}`, {
+      userName: user.userName,
+      userEmail: user.userEmail,
+      userImageURL: user.userImageURL,
+    });
   };
 
   React.useEffect(() => {

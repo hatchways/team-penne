@@ -3,14 +3,14 @@ import { green } from "@material-ui/core/colors";
 
 const dialogStyles = makeStyles({
   alert: {
-    marginTop: "10px"
+    marginTop: "10px",
   },
   button: {
     backgroundColor: "#DF1B1B",
     color: "white",
     borderRadius: "500px",
     marginBottom: "25px",
-    marginTop: "25px"
+    marginTop: "25px",
   },
   buttonProgress: {
     //color: green[500],
@@ -18,13 +18,13 @@ const dialogStyles = makeStyles({
     top: "50%",
     left: "50%",
     marginTop: -12,
-    marginLeft: -12
+    marginLeft: -12,
   },
   buttonSuccess: {
     backgroundColor: green[500],
     "&:hover": {
-      backgroundColor: green[700]
-    }
+      backgroundColor: green[700],
+    },
   },
   singleCardManager: {
     display: "flex",
@@ -32,18 +32,18 @@ const dialogStyles = makeStyles({
     padding: 5,
     textAlign: "left",
     marginTop: 20,
-    height: "100%"
+    height: "100%",
   },
   cardManager: {
     marginBottom: 20,
-    height: "100%"
+    height: "100%",
   },
   cardDivider: {
     display: "flex",
     alignItems: "flex-start",
     padding: 5,
     textAlign: "left",
-    minHeight: "120px"
+    minHeight: "120px",
   },
   cardImageBox: {
     overflow: "hidden",
@@ -51,7 +51,7 @@ const dialogStyles = makeStyles({
     flexDirection: "column",
     justifyContent: "center",
     maxWidth: "25%",
-    minHeight: "120px"
+    minHeight: "120px",
   },
   cardImg: {
     display: "block",
@@ -60,46 +60,46 @@ const dialogStyles = makeStyles({
     padding: 5,
     borderRadius: 2,
     border: "1px solid #eaeaea",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   cardTextBox: {
     marginLeft: "10px",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   cardTitle: {
     fontSize: "10pt",
     marginLeft: "0",
     marginRight: "0",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   cardURL: {
     fontSize: "8pt",
     marginLeft: "0",
     marginRight: "0",
     fontWeight: "bold",
-    color: "rgb(181, 181, 181)"
+    color: "rgb(181, 181, 181)",
   },
   container: {
-    textAlign: "center"
+    textAlign: "center",
   },
   dialogActions: {
     justifyContent: "center",
     height: "90px",
-    paddingTop: "0"
+    paddingTop: "0",
   },
   dialogContent: {
     paddingBottom: 0,
-    textAlign: "center"
+    textAlign: "center",
   },
   dialogTitle: {
     marginBottom: 0,
     textAlign: "center",
     fontSize: "22px",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
   },
   divider: {
-    marginBottom: "20px"
+    marginBottom: "20px",
   },
   dropzone: {
     textAlign: "center",
@@ -111,23 +111,23 @@ const dialogStyles = makeStyles({
     justifyContent: "center",
     flexDirection: "column",
     fontSize: "16px",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   dropzoneBox: {
     paddingLeft: "10%",
-    paddingRight: "10%"
+    paddingRight: "10%",
   },
   dropzoneContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   dropzoneInner: {
     display: "flex",
     minWidth: 0,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   dropzoneOuter: {
     display: "inline-flex",
@@ -139,56 +139,56 @@ const dialogStyles = makeStyles({
     height: 175,
     padding: 4,
     boxSizing: "border-box",
-    textAlign: "center"
+    textAlign: "center",
   },
   errorMessage: {
     textAlign: "center",
     fontSize: 12,
     marginTop: 0,
-    color: "rgb(255, 0, 0)"
+    color: "rgb(255, 0, 0)",
   },
   footer: {
     marginBottom: "15px",
-    textAlign: "center"
+    textAlign: "center",
   },
   formControl: {
     textAlign: "center",
-    width: "68%"
+    width: "68%",
   },
   img: {
     display: "block",
     width: "auto",
-    height: "100%"
+    height: "100%",
   },
   inputLabel: {
     color: "black",
     fontWeight: "bolder",
     marginTop: "30px",
     textAlign: "center",
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   link: {
     color: "#DF1B1B",
     fontWeight: "bold",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   nPDialogTitle: {
     paddingBottom: 0,
     textAlign: "center",
     fontSize: "22px",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
   },
   outlinedInputInput: {
-    textAlign: "center"
+    textAlign: "center",
   },
   outlinedInputRoot: {
-    width: "75%"
+    width: "75%",
   },
   pCDialogTitle: {
     marginBottom: 10,
     textAlign: "center",
     fontSize: "22px",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
   },
   removeButton: {
     backgroundColor: "#FFFFFF",
@@ -197,16 +197,16 @@ const dialogStyles = makeStyles({
     borderRadius: 20,
     marginBottom: "25px",
     marginTop: "25px",
-    fontSize: "0.7em"
+    fontSize: "0.7em",
   },
   selectDropdown: {
-    textAlignLast: "center"
+    textAlignLast: "center",
   },
   strikeThroughText: {
     color: "red",
     textDecorationLine: "line-through",
-    fontSize: "10px"
-  }
+    fontSize: "10px",
+  },
 });
 
 export default dialogStyles;

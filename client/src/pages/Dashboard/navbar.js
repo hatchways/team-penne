@@ -8,7 +8,7 @@ import {
   CardActions,
   CardContent,
   Toolbar,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import io from "socket.io-client";
 
@@ -21,6 +21,41 @@ import noUserProfilePic from "../../assets/noUserProfilePic.png";
 let socket;
 let interval;
 const emptyList = [];
+var updatedItemList = [
+  {
+    name:
+      "FLY HAWK Mens Dress Shirts, Bamboo Button Down Casual Slim Long Sleeve Work Shirt for Men",
+    currency: "CDN$",
+    price: 31.99,
+    salePrice: 23.99,
+    image:
+      "https://images-na.ssl-images-amazon.com/images/I/41Q4rw8qRsL._SL260_SX200_CR0,0,200,260_.jpg",
+    url:
+      "https://www.amazon.ca/FLY-HAWK-Button-Bamboo-Casual/dp/B07CT36T9F/ref=lp_10287298011_1_1_sspa?s=apparel&ie=UTF8&qid=1586275913&sr=1-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFZQlFFMzFSQjFRUUUmZW5jcnlwdGVkSWQ9QTA5MzM1MzU2Ukk4R0pPUEEwMTgmZW5jcnlwdGVkQWRJZD1BMDA2MzM4OTFTNThZRThDVDRVWDUmd2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3NlJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==",
+  },
+  {
+    name:
+      "COOFANDY Men's Casual Long Sleeve Dress Shirt Denim Button Down Shirts",
+    currency: "CDN$",
+    price: 36.99,
+    salePrice: 33.99,
+    image:
+      "https://images-na.ssl-images-amazon.com/images/I/51+ws33sqEL._SL260_SX200_CR0,0,200,260_.jpg",
+    url:
+      "https://www.amazon.ca/Coofandy-Casual-Sleeve-Button-Shirts/dp/B01FM46HI2/ref=lp_10287298011_1_22?s=apparel&ie=UTF8&qid=1586275913&sr=1-22",
+  },
+  {
+    name:
+      "Zengjo Sports T Shirt Men, Quick Dry Gym T Shirt Men’s Running Top Short Sleeve",
+    currency: "CDN$",
+    price: 22.98,
+    salePrice: 19.98,
+    image:
+      "https://images-na.ssl-images-amazon.com/images/I/715fjbtzJnL._AC_UX679_.jpg",
+    url:
+      "https://www.amazon.ca/Zengjo-Sports-Running-Sleeve-Marled/dp/B07S1DNLZ1/ref=pd_ybh_a_10?_encoding=UTF8&psc=1&refRID=NFTPJ0WGECCEKTMZ40NX",
+  },
+];
 
 function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,7 +111,7 @@ function Navbar(props) {
     socket.emit("disconnect");
     socket.off();
     clearInterval(interval);
-    fetch("/logout").then(res => {
+    fetch("/logout").then((res) => {
       if (res.status === 200) {
         localStorage.clear();
         props.history.push("/");
@@ -91,7 +126,7 @@ function Navbar(props) {
     setProfileMenu(false);
   };
 
-  const handleShoppingListsClick = event => {
+  const handleShoppingListsClick = (event) => {
     setShoppingListsMenu(true);
     setFollowersMenu(false);
     setNotificationMenu(false);
@@ -99,7 +134,7 @@ function Navbar(props) {
 
     history.push("/dashboard/shoppingLists");
   };
-  const handleFollowersClick = event => {
+  const handleFollowersClick = (event) => {
     setShoppingListsMenu(false);
     setFollowersMenu(true);
     setNotificationMenu(false);
@@ -108,19 +143,19 @@ function Navbar(props) {
     history.push("/dashboard/followers");
   };
 
-  const handleNotificationClick = event => {
+  const handleNotificationClick = (event) => {
     setNotificationMenu(true);
     setProfileMenu(false);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleProfileClick = event => {
+  const handleProfileClick = (event) => {
     setNotificationMenu(false);
     setProfileMenu(true);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleRemoveItem = index => {
+  const handleRemoveItem = (index) => {
     setOnDeleteIndex(index);
   };
 
@@ -132,23 +167,23 @@ function Navbar(props) {
     }
     if (userProfile == "") {
       fetch("/userprofile")
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             return res.json();
           }
         })
-        .then(res => {
+        .then((res) => {
           if (res.userImageURL == null) {
             setUserProfile({
               userName: res.userName,
               userEmail: res.userEmail,
-              profilePicImage: noUserProfilePic
+              profilePicImage: noUserProfilePic,
             });
           } else {
             setUserProfile({
               userName: res.userName,
               userEmail: res.userEmail,
-              profilePicImage: res.userImageURL
+              profilePicImage: res.userImageURL,
             });
           }
         });
@@ -224,7 +259,7 @@ function Navbar(props) {
               </Card>
             )}
             {notificationsList.length != 0 &&
-              notificationsList.map(listItem => (
+              notificationsList.map((listItem) => (
                 <Card
                   className={classes.cardManager}
                   elevation={3}

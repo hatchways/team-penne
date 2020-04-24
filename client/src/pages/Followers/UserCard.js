@@ -13,7 +13,7 @@ function UserCard(props) {
   );
 
   const buttonClassname = clsx({
-    [classes.buttonUnfollow]: follow
+    [classes.buttonUnfollow]: follow,
   });
 
   const handleButtonClick = () => {
@@ -47,7 +47,7 @@ function UserCard(props) {
             alignSelf: "center",
             fontWeight: "bold",
             flexGrow: 2,
-            cursor: "pointer"
+            cursor: "pointer",
           }}
           onClick={props.handleProfileRouting}
         >

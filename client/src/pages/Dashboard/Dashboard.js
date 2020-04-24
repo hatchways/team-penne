@@ -4,16 +4,16 @@ import ShoppingLists from "./ShoppingLists";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import FollowersPage from "../../pages/Followers/Followers";
+import ProfilePage from "../Profile/ProfilePage";
 
 // add reroute
 function Dashboard(props) {
-
   return (
     <Container>
       <Redirect
         to={{
           pathname: "/dashboard/shoppingLists",
-          state: { from: "/dashboard" }
+          state: { from: "/dashboard" },
         }}
       />
       <Navbar
@@ -27,6 +27,7 @@ function Dashboard(props) {
         handleLogout={props.handleLogout}
         history={props.history}
       />
+      <Route path="/dashboard/profile/:userId" component={ProfilePage} />
       <Route
         path="/dashboard/shoppingLists"
         component={ShoppingLists}

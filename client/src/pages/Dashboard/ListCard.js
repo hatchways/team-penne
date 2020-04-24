@@ -7,7 +7,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Box
+  Box,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/listCardStyles";
@@ -26,7 +26,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
     history.push("/dashboard/shoppingLists/create-new-list");
   };
 
-  const openEditList = name => {
+  const openEditList = (name) => {
     console.log("Jump to EditList with ", name);
 
     setListName(name);
@@ -42,20 +42,20 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
       fetch("/item-lists/get-product-list/?listName=" + listName, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             return res.json();
           }
         })
-        .then(res => {
+        .then((res) => {
           setProductList(res.productList);
           setGetProductListBool(false);
           setProductListLoadedBool(true);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -63,7 +63,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
       setProductListLoadedBool(false);
       history.push("/dashboard/shoppingLists/edit-list", {
         listName: listName,
-        productList: productList
+        productList: productList,
       });
     }
   });
