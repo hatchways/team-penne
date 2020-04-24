@@ -2,9 +2,98 @@ const models = require("../models");
 const User = models.Users;
 const Followers = models.Followers;
 
+async function formatUsersWithFollowing(userId, userList) {
+  let formattedUserList = [];
+  for (i = 0; i < userList.length; i++) {
+    let foundUser = await Followers.findOne({
+      attributes: ["userIdFollower", "userIdFollowee"],
+      where: { userIdFollower: userId, userIdFollowee: userList[i].userId }
+    }).catch(err => {
+      console.log(err);
+    });
+    // if we found the user in the followers table, then set following to true
+    if (foundUser == null) {
+      formattedUserList.push(userList[i]);
+    }
+  }
+  return formattedUserList;
+}
+
+// followersList[i].userIdFollower/.userIdFollowee
+// > where userIdFollower is the current user
+async function formattedFollowing(followersList) {
+  let i;
+  let formattedList = [];
+  for (i = 0; i < followersList.length; i++) {
+    let foundUser = await User.findOne({
+      attributes: ["userId", "userName", "userEmail", "userImageURL"],
+      where: { userId: followersList[i].userIdFollowee }
+    })
+      .then(res => {
+        let tempUser = {
+          userId: res.userId,
+          userName: res.userName,
+          userImageURL: res.userImageURL,
+          following: true
+        };
+        return tempUser;
+      })
+      .catch(err => {
+        console.log(err);
+        return {};
+      });
+    formattedList.push(foundUser);
+  }
+  return formattedList;
+}
+
+// followersList[i].userIdFollower/.userIdFollowee
+// > where userIdFollowee is the current user
+async function formattedFollowers(followersList) {
+  let i;
+  let formattedList = [];
+  for (i = 0; i < followersList.length; i++) {
+    // check to see if the current user is following back already
+    let checkIfFollowedBackBool = await Followers.findOne({
+      attributes: ["userIdFollower", "userIdFollowee"],
+      where: {
+        userIdFollowee: followersList[i].userIdFollower,
+        userIdFollower: followersList[i].userIdFollowee
+      }
+    })
+      .then(res => {
+        if (res != null) return true;
+        else return false;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    let foundUser = await User.findOne({
+      attributes: ["userId", "userName", "userEmail", "userImageURL"],
+      where: { userId: followersList[i].userIdFollower }
+    })
+      .then(res => {
+        let tempUser = {
+          userId: res.userId,
+          userName: res.userName,
+          userImageURL: res.userImageURL,
+          following: checkIfFollowedBackBool
+        };
+        return tempUser;
+      })
+      .catch(err => {
+        console.log(err);
+        return {};
+      });
+    formattedList.push(foundUser);
+  }
+  return formattedList;
+}
+
 async function getFollowerRow(currentUserId, followeeUserId) {
   return await Followers.findOne({
-    attributes: ["userIdFollower", "userIdFollowee"],
+    attributes: ["id", "userIdFollower", "userIdFollowee"],
     where: { userIdFollower: currentUserId, userIdFollowee: followeeUserId }
   })
     .then(res => {
@@ -24,7 +113,11 @@ async function handleChangeOfFollow(
   followeeUserId,
   startFollowingBool
 ) {
-  let followingRow = await getFollowerRow(currentUserId, followeeUserId);
+  let followingRow = await getFollowerRow(currentUserId, followeeUserId).catch(
+    err => {
+      console.log(err);
+    }
+  );
   if (startFollowingBool) {
     if (followingRow != null) return { message: "Already following." };
     else {
@@ -46,6 +139,51 @@ async function handleChangeOfFollow(
   }
 }
 
+async function getAllFollowingUsers(userId) {
+  let allFollowers = await Followers.findAll({
+    attributes: ["userIdFollower", "userIdFollowee"],
+    where: { userIdFollower: userId }
+  })
+    .then(res => {
+      //console.log(res);
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+      return [];
+    });
+  let reformattedFollowers = await formattedFollowing(allFollowers).catch(
+    err => {
+      console.log(err);
+    }
+  );
+  return reformattedFollowers;
+}
+
+async function getAllFollowerUsers(userId) {
+  let allFollowers = await Followers.findAll({
+    attributes: ["userIdFollower", "userIdFollowee"],
+    where: { userIdFollowee: userId }
+  })
+    .then(res => {
+      //console.log(res);
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+      return [];
+    });
+  let reformattedFollowers = await formattedFollowers(allFollowers).catch(
+    err => {
+      console.log(err);
+    }
+  );
+  return reformattedFollowers;
+}
+
 module.exports = {
+  formatUsersWithFollowing,
+  getAllFollowingUsers,
+  getAllFollowerUsers,
   handleChangeOfFollow
 };

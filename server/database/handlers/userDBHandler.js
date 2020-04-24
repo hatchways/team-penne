@@ -10,7 +10,7 @@ function formatUserReturnWithoutUserId(userList, userId) {
         userName: userList[i].userName,
         userEmail: userList[i].userEmail,
         userImageURL: userList[i].userImageURL,
-        followed: false
+        following: false
       };
       formattedList.push(tempUserItem);
     }
