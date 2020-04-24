@@ -82,6 +82,17 @@ function ProductConfirmationDialog() {
     }, 1000);
   };
 
+  const addDecimalPlacesPrice = price => {
+    var upperPriceString = price.toString();
+    if (upperPriceString.split(".")[1] == null) {
+      upperPriceString = upperPriceString + ".00";
+    }
+    if (upperPriceString.split(".")[1].length < 2) {
+      upperPriceString = upperPriceString + "0";
+    }
+    return upperPriceString;
+  };
+
   return (
     <Dialog
       scroll="paper"
@@ -144,19 +155,25 @@ function ProductConfirmationDialog() {
                   {history.location.state.productSalePrice != null && (
                     <div className={classes.strikeThroughText}>
                       {history.location.state.productCurrency}
-                      {history.location.state.productPrice}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productPrice
+                      )}
                     </div>
                   )}
                   {history.location.state.productSalePrice != null && (
                     <div style={{ fontWeight: "bold" }}>
                       {history.location.state.productCurrency}
-                      {history.location.state.productSalePrice}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productSalePrice
+                      )}
                     </div>
                   )}
                   {history.location.state.productSalePrice == null && (
                     <div>
                       {history.location.state.productCurrency}
-                      {history.location.state.productPrice}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productPrice
+                      )}
                     </div>
                   )}
                 </div>

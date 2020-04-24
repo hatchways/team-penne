@@ -70,7 +70,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
 
   useEffect(() => {
     if (productListLoadedBool) setProductAmount(productList.length);
-  }, [productListLoadedBool]);
+  });
 
   const classes = useStyles();
   return !addCard ? (

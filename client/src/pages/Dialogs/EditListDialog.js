@@ -33,6 +33,17 @@ function EditListDialog() {
     );
   };
 
+  const addDecimalPlacesPrice = price => {
+    var upperPriceString = price.toString();
+    if (upperPriceString.split(".")[1] == null) {
+      upperPriceString = upperPriceString + ".00";
+    }
+    if (upperPriceString.split(".")[1].length < 2) {
+      upperPriceString = upperPriceString + "0";
+    }
+    return upperPriceString;
+  };
+
   const handleRemove = listItem => {
     console.log(listItem);
     history.push(
@@ -118,19 +129,19 @@ function EditListDialog() {
                       {listItem.productSalePrice != null && (
                         <div className={classes.strikeThroughText}>
                           {listItem.productCurrency}
-                          {listItem.productPrice}
+                          {addDecimalPlacesPrice(listItem.productPrice)}
                         </div>
                       )}
                       {listItem.productSalePrice != null && (
                         <div style={{ fontWeight: "bold" }}>
                           {listItem.productCurrency}
-                          {listItem.productSalePrice}
+                          {addDecimalPlacesPrice(listItem.productSalePrice)}
                         </div>
                       )}
                       {listItem.productSalePrice == null && (
                         <div>
                           {listItem.productCurrency}
-                          {listItem.productPrice}
+                          {addDecimalPlacesPrice(listItem.productPrice)}
                         </div>
                       )}
                     </div>
