@@ -83,15 +83,21 @@ function Navbar(props) {
   // useEffect for creating and using the socket
   useEffect(() => {
     if (createSocket) {
-      socket = io();
+      socket = io("localhost:3000");
       setCreateSocket(false);
     }
 
-    let payload = { message: "Need Notifications" };
-    socket.emit("getNotifications", payload, notificationsTable => {
-      // notificationsTable
-      setNotificationsList([]);
-      setNotificationsList(notificationsTable);
+    /*
+      let payload = { message: "Need Notifications" };
+      socket.emit("getNotifications", payload, notificationsTable => {
+        // notificationsTable
+        setNotificationsList([]);
+        //setNotificationsList(notificationsTable);
+      });*/
+
+    socket.on("getNotifications", message => {
+      console.log(message);
+      setNotificationsList([...notificationsList, message]);
     });
 
     return () => {
@@ -99,14 +105,6 @@ function Navbar(props) {
       socket.off();
       clearInterval(interval);
     };
-  }, [getNotifications]);
-
-  useEffect(() => {
-    //timer useEffect function, so that the other useEffect gets triggered every second? :/
-    interval = setInterval(() => {
-      setGetNotifications(!getNotifications);
-    }, 1000);
-    return () => clearInterval(interval);
   });
 
   const handleLogout = () => {

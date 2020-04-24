@@ -14,7 +14,7 @@ var cookie = require("cookie");
 var socketio = require("socket.io");
 
 var models = require("../database/models");
-const notificationHandler = require("../database/handlers/notificationDBHandler");
+const { checkForSales } = require("../database/handlers/notificationDBHandler");
 const { authJWTCheck } = require("../routes/authCheck");
 
 /**
@@ -52,6 +52,7 @@ models.sequelize.sync().then(function() {
  * Socket setup
  */
 const io = socketio(server);
+var socketClients = {};
 
 io.on("connection", socket => {
   console.log("We have a new connection.");
@@ -61,21 +62,19 @@ io.on("connection", socket => {
   // User data of current Socket User stored in userData
   // User data includes: userName, userEmail and userId
   var userData = authJWTCheck(parsedCookies);
+  // unable to get userData
+  if (userData.message != null) {
+    socket.disconnect(true);
+  } else {
+    // socket.id is a unique identifier created when socket is connected
+    // save socketId in list, and then connect with socket.to(socket.id).emit(...)
+    socketClients[userData.userId] = socket.id;
+  }
+});
 
-  socket.on("getNotifications", async (message, callback) => {
-    // userNotifications gets all the notifications for a certain user
-    // userNotifications.dataValues = all the data values
-    // dataValues are: productId, userId, previousPrice, currentPrice, dismissed
-    let userNotifications = await notificationHandler.getProductsForNotifications(
-      userData.userId
-    );
-
-    callback(userNotifications);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User has left.");
-  });
+io.on("disconnect", () => {
+  var userData = authJWTCheck(parsedCookies);
+  delete socketClients[userData.userId];
 });
 
 /**
@@ -129,9 +128,10 @@ function onError(error) {
  */
 
 function onListening() {
+  checkForSales(io, socketClients);
+
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
 
   console.log("Listening on " + bind);
-  //notificationHandler.checkForSales();
 }

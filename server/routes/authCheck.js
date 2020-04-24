@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET;
 
 function authJWTCheck(cookies) {
-  var returnData;
   if (cookies["jwt-auth-cookie"]) {
     const token = cookies["jwt-auth-cookie"];
     return jwt.verify(token, secret, (err, decoded) => {

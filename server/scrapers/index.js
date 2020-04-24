@@ -2,12 +2,16 @@ const puppeteer = require("puppeteer");
 const avoidDetection = require("./util");
 
 const __launchPuppeteer = async url => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  const browser = await puppeteer
+    .launch({ headless: true })
+    .catch(err => console.log(err));
+  const page = await browser.newPage().catch(err => {
+    console.log(err);
+  });
 
-  await avoidDetection(page);
+  await avoidDetection(page).catch(err => console.log(err));
 
-  await page.goto(url);
+  await page.goto(url).catch(err => console.log(err));
   return page;
 };
 
