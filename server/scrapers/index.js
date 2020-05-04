@@ -131,7 +131,6 @@ const scrapeAmazon = async url => {
       console.log(err);
     });
 
-  console.log(item["sale"], item["salePrice"]);
   item["productId"] = productId;
   browser.close();
   return item;

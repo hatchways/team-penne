@@ -12,17 +12,12 @@ const {
 } = require("../database/handlers/userDBHandler");
 
 const {
-  getNotifications
+  getNotifications,
+  getProductsForNotifications
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
-
-router.get("/getNotifications", authCheck, async (req, res) => {
-  const userId = req.userData.userId;
-  const notifications = await getNotifications(userId);
-  res.status(200).send({ notifications: notifications });
-});
 
 router.post("/login", async (req, res) => {
   const secret = process.env.JWT_SECRET;
@@ -164,6 +159,13 @@ router.get("/userprofile", authCheck, async function(req, res) {
     userEmail: req.userData.userEmail,
     userImageUrl: user.userImageURL
   });
+});
+
+router.get("/get-notifications", authCheck, async (req, res) => {
+  const userId = req.userData.userId;
+  const notifications = await getProductsForNotifications(userId);
+  console.log("Checking Notifications!");
+  res.status(200).send({ notifications: notifications });
 });
 
 module.exports = router;

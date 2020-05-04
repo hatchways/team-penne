@@ -15,6 +15,12 @@
 To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
 To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
 
+_Alternatively_\
+Type `cd client` followed by `npm start` to only start the client.\
+Followed by:\
+Type `cd server` followed by `npm run start` to only start the server **OR**\
+Type `cd server` followed by `npm run dev` to only start the server in dev mode.
+
 ## Core Functionality
 
 **NOTE:** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
