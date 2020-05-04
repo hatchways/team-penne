@@ -1,8 +1,8 @@
 # DEALSMATE
 
-### The Deal Tracker
+## The Deal Tracker
 
-#### The website that tracks products on a user's wishlist, and notifies them on any price changes.
+### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
 To run the application in dev mode, type `npm run dev` or `yarn run dev`.\
 To not run in dev mode, type `npm run dealsmate` or `yarn run dealsmate`.
@@ -10,13 +10,13 @@ To not run in dev mode, type `npm run dealsmate` or `yarn run dealsmate`.
 Jump to:\
 [Core Functionality](#core-functionality)\
 [Additional Features](#additional-features)\
-[Authors](#authors)\
+[Authors](#authors)
 
-### Core Functionality
+## Core Functionality
 
-**NOTE** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
+**NOTE:** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
 
-#### Adding to Lists
+### Adding to Lists
 
 Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"\
 ![adding-product-example1](./readme_assets/add_item_from_dash.gif)
@@ -24,16 +24,16 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 **OR** Click on "Add new item" after clicking on a list, and do the same.\
 ![adding-product-example2](./readme_assets/add_item_from_list.gif)
 
-#### Removing from Lists
+### Removing from Lists
 
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.\
 ![remove-product-example](./readme_assets/delete_product_example.gif)
 
-### Additional Features
+## Additional Features
 
-#### Followers
+### Followers
 
-### Authors
+## Authors
 
 Sagnik Roy\
 Ricardo Brites
