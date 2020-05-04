@@ -11,14 +11,13 @@ const __launchPuppeteer = async url => {
   });
 
   await avoidDetection(page).catch(err => console.log(err));
-
   await page.goto(url).catch(err => console.log(err));
 
   return page;
 };
 
 const scrapeAmazon = async url => {
-  const page = await __launchPuppeteer("https://www.amazon.ca/").catch(err => {
+  const page = await __launchPuppeteer("https://www.amazon.com/").catch(err => {
     console.log(err);
     return -1;
   });
@@ -47,17 +46,21 @@ const scrapeAmazon = async url => {
       }
 
       var priceHTML;
+      // try block if product doesn't exist/unavailable
       try {
-        // try block if product doesn't exist/unavailable
+        // try block to catch price ids of different names
         try {
           priceHTML = document.getElementById("priceblock_ourprice").innerHTML;
         } catch {
           priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
         }
+        // sometimes prices have two "prices"
+        // e.g. $25-$35.
+        // This if statement catches that, and parses it correctly
         if (priceHTML.split(" - ")[1] != null) {
           let priceHTMLSplit = priceHTML.split(" - ")[1].split("&nbsp;");
           let currency = priceHTMLSplit[0];
-          let priceString = priceHTMLSplit[1].replace(",", "");
+          let priceString = priceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
           let priceSplit = priceString.split("."); // split string by decimal point
           let priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
           let priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
@@ -82,9 +85,21 @@ const scrapeAmazon = async url => {
         price = tempPrice;
       }
 
-      const salePriceHTML = document.getElementsByClassName(
+      // At this point, price is the value that will always be output to the user
+      // in the case where priceUpper exists, (i.e. priceHTMLString is $25-$35 and priceUpper is 35)
+      // swap price (= 25) with priceUpper, so the higher price is the one output to the user.
+      // TODO also send and update lower price in database
+
+      // If product is on sale, original price is of class "priceBlockStrikePriceString"
+      // So, get that price, then swap it with price and "salePrice"
+      var salePriceHTML = document.getElementsByClassName(
         "priceBlockStrikePriceString"
       )[0];
+      if (salePriceHTML == null) {
+        salePriceHTML = document.getElementsByClassName(
+          "priceBlockStrikePriceString a-text-strike"
+        )[0];
+      }
       if (salePriceHTML) {
         var salePriceHTMLSplit = salePriceHTML.innerHTML.split("&nbsp;");
         var salePriceCurrency = salePriceHTMLSplit[0];
@@ -116,6 +131,7 @@ const scrapeAmazon = async url => {
       console.log(err);
     });
 
+  console.log(item["sale"], item["salePrice"]);
   item["productId"] = productId;
   browser.close();
   return item;

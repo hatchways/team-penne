@@ -3,7 +3,6 @@ var socketio = require("socket.io");
 const models = require("../models");
 const Notification = models.Notification;
 const Product = models.Products;
-const User = models.Users;
 const List = models.Lists;
 const ListProduct = models.ListProducts;
 const CronJob = require("cron").CronJob;
@@ -82,7 +81,7 @@ const createNotifications = async function(socket, socketClients) {
                     const userId = await getListUserId(listIds[j]);
                     // send data via socketClients if userId has a socket open
                     //console.log(socketClients);
-                    /*if (socketClients[userId] != null) {
+                    if (socketClients[userId] != null) {
                       let payloadProduct = {
                         id: products[i].productId,
                         image: products[i].productImageURL,
@@ -96,7 +95,7 @@ const createNotifications = async function(socket, socketClients) {
                       socket
                         .to(socketClients[userId])
                         .emit("getNotifications", payloadProduct);
-                    }*/
+                    }
                     await createNotification(
                       products[i].productId,
                       userId,
@@ -187,9 +186,9 @@ const getProductsForNotifications = async function(userId) {
 };
 
 const checkForSales = async function(socket, socketClients) {
-  const salesCheck = new CronJob("*/2 * * * *", function() {
-    //createNotifications(socket, socketClients);
-    let payloadProduct = {
+  const salesCheck = new CronJob("30 * * * *", function() {
+    createNotifications(socket, socketClients);
+    /*let payloadProduct = {
       id: "B07KG318MQ",
       image:
         "https://images-na.ssl-images-amazon.com/images/I/71xkwNx-nfL._AC_SX679_.jpg",
@@ -200,7 +199,7 @@ const checkForSales = async function(socket, socketClients) {
       price: "379.99",
       salePrice: "359.99"
     };
-    socket.to(socketClients[1]).emit("getNotifications", payloadProduct);
+    socket.to(socketClients[1]).emit("getNotifications", payloadProduct);*/
     let date_ob = new Date();
     console.log(`Last Checked: ${date_ob}`);
   });

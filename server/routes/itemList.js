@@ -4,7 +4,6 @@ const router = express.Router();
 const cloudinary = require("cloudinary");
 const formData = require("express-form-data");
 
-const { addItemList, getItemLists, getItemList } = require("../db/modelDB");
 const { authCheck } = require("./authCheck");
 const {
   addList,
@@ -32,25 +31,6 @@ router.post("/image-upload", async (req, res) => {
   Promise.all(promises).then(results => {
     res.json(results[0]);
   });
-});
-
-router.get("/lists", async (req, res) => {
-  res.status(200).send({ itemLists: getItemLists() });
-});
-
-router.get("/lists/:name", async (req, res) => {
-  let itemList = getItemList(req.params.name);
-  res.status(200).send({ itemList: itemList });
-});
-
-router.post("/", async (req, res) => {
-  let itemList = {
-    name: req.body.listName,
-    amount: 0,
-    image: req.body.listPicture
-  };
-  addItemList(itemList);
-  res.status(200).send();
 });
 
 // create a new list, and assign it to user userId, with name and picture in req.body

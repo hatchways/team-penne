@@ -6,7 +6,7 @@
     "client": "cd client && npm start",
     "devserver": "cd server && npm run dev",
     "server": "cd server && npm run start",
-    "start": "concurrently -kill-others \"npm run server\" \"npm run client\"",
+    "dealsmate": "concurrently -kill-others \"npm run server\" \"npm run client\"",
     "dev": "concurrently -kill-others \"npm run devserver\" \"npm run client\""
   },
   "author": "Sagnik Roy and Ricardo Brites",
