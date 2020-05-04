@@ -1,4 +1,4 @@
-# DEALSMATE
+![dealsmate-logo](./client/src/assets/logo.png)
 
 ## The Deal Tracker
 
