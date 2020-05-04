@@ -1,5 +1,5 @@
 <div align="center">
-![dealsmate-logo](./client/src/assets/logo.png)
+<img src="./client/src/assets/logo.png"/>
 
 ## The Deal Tracker
 
