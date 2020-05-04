@@ -38,6 +38,11 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.\
 ![remove-product-example](./readme_assets/delete_product_example.gif)
 
+### Recieving Notifications
+
+Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.\
+![notification-bar-example](./readme_assets/notifications.gif)
+
 ## Additional Features
 
 ### Followers

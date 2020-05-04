@@ -52,8 +52,18 @@ function Navbar(props) {
     }
 
     socket.on("getNotifications", message => {
-      console.log(message);
-      setNotificationsList([...notificationsList, message]);
+      // message contains an object which has had it's price changed
+      var messageFound = false;
+
+      for (let i = 0; i < notificationsList.length; i++) {
+        if (notificationsList[i].id == message.id) {
+          messageFound = true;
+          notificationsList[i] = message;
+          setNotificationsList(notificationsList);
+          break;
+        }
+      }
+      if (!messageFound) setNotificationsList([...notificationsList, message]);
     });
 
     return () => {
