@@ -1,6 +1,9 @@
+<div align="center">
 ![dealsmate-logo](./client/src/assets/logo.png)
 
 ## The Deal Tracker
+
+</div>
 
 ### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
