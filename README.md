@@ -7,4 +7,4 @@
 To run the application in dev mode, type `npm run dev` or `yarn run dev`.\
 To not run in dev mode, type `npm run dealsmate` or `yarn run dealsmate`.
 
-![remove-product-capability](delete_product_example.gif)
+![remove-product-capability](./readme_assets/delete_product_example.gif)
