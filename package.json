@@ -1,0 +1,14 @@
+{
+  "name": "dealsmate",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "client": "cd client && npm start",
+    "devserver": "cd server && npm run dev",
+    "server": "cd server && npm run start",
+    "start": "concurrently -kill-others \"npm run server\" \"npm run client\"",
+    "dev": "concurrently -kill-others \"npm run devserver\" \"npm run client\""
+  },
+  "author": "Sagnik Roy and Ricardo Brites",
+  "last updated": "2020"
+}
