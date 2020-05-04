@@ -4,13 +4,16 @@
 
 ### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
-To run the application in dev mode, type `npm run dev` or `yarn run dev`.\
-To not run in dev mode, type `npm run dealsmate` or `yarn run dealsmate`.
-
-Jump to:\
+**Contents:**\
+[Run Instructions](#how-to-run)\
 [Core Functionality](#core-functionality)\
 [Additional Features](#additional-features)\
 [Authors](#authors)
+
+## How to Run
+
+To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
+To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
 
 ## Core Functionality
 
