@@ -7,7 +7,14 @@
 To run the application in dev mode, type `npm run dev` or `yarn run dev`.\
 To not run in dev mode, type `npm run dealsmate` or `yarn run dealsmate`.
 
+Jump to:\
+[Core Functionality](#core-functionality)\
+[Additional Features](#additional-features)\
+[Authors](#authors)\
+
 ### Core Functionality
+
+**NOTE** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
 
 #### Adding to Lists
 
@@ -22,7 +29,11 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.\
 ![remove-product-example](./readme_assets/delete_product_example.gif)
 
-#### Authors
+### Additional Features
 
-Sagnik Roy
+#### Followers
+
+### Authors
+
+Sagnik Roy\
 Ricardo Brites
