@@ -7,13 +7,14 @@
 
 ### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
-**Contents:**\
+**Contents:**
 
 - [Core Functionality](#core-functionality)
   - [List Functionality](#list-functionality)
   - [Product Functionality](#product-functionality)
   - [Receiving Notifications](#receiving-notifications)
 - [Additional Features](#additional-features)
+  - [Followers](#followers)
 - [How to Run](#how-to-run)
 - [Authors](#authors)
 
