@@ -9,12 +9,12 @@
 
 **Contents:**\
 
-- [Core Functionality](#core-functionality)\
-  - [List Functionality](#list-functionality)\
-  - [Product Functionality](#product-functionality)\
-  - [Recieving Notifications](#recieving-notifications)\
-- [Additional Features](#additional-features)\
-- [How to Run](#how-to-run)\
+- [Core Functionality](#core-functionality)
+  - [List Functionality](#list-functionality)
+  - [Product Functionality](#product-functionality)
+  - [Recieving Notifications](#recieving-notifications)
+- [Additional Features](#additional-features)
+- [How to Run](#how-to-run)
 - [Authors](#authors)
 
 ## Core Functionality
@@ -30,7 +30,7 @@ Once added, the user will get notifications to any price changes to the products
 
 ### Product Functionality
 
-#### Adding to Lists
+#### Adding Products to Lists
 
 Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"
 
@@ -40,7 +40,7 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 
 <div align="center"> <img src="./readme_assets/add_item_from_list.gif"/></div>
 
-#### Removing from Lists
+#### Removing Products from Lists
 
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.
 
