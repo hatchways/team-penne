@@ -8,10 +8,14 @@
 ### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
 **Contents:**\
-[Core Functionality](#core-functionality)\
-[Additional Features](#additional-features)\
-[How to Run](#how-to-run)\
-[Authors](#authors)
+
+- [Core Functionality](#core-functionality)\
+  - [List Functionality](#list-functionality)\
+  - [Product Functionality](#product-functionality)\
+  - [Recieving Notifications](#recieving-notifications)\
+- [Additional Features](#additional-features)\
+- [How to Run](#how-to-run)\
+- [Authors](#authors)
 
 ## Core Functionality
 
@@ -20,7 +24,13 @@ Once added, the user will get notifications to any price changes to the products
 
 **NOTE:** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
 
-### Adding to Lists
+### List Functionality
+
+#TODO
+
+### Product Functionality
+
+#### Adding to Lists
 
 Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"
 
@@ -30,7 +40,7 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 
 <div align="center"> <img src="./readme_assets/add_item_from_list.gif"/></div>
 
-### Removing from Lists
+#### Removing from Lists
 
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.
 
@@ -45,6 +55,8 @@ Whenever one of the products on any of the lists goes on sale, the user gets a n
 ## Additional Features
 
 ### Followers
+
+#TODO
 
 ## How to Run
 
