@@ -15,6 +15,9 @@
 
 ## Core Functionality
 
+The User has to create a list (if one doesn't already exist), and add the products that they want to track.\
+Once added, the user will get notifications to any price changes to the products in their lists.
+
 **NOTE:** Drop down list not appearing in following gifs. Drop down list includes all of the current user's lists.
 
 ### Adding to Lists
@@ -45,7 +48,7 @@ Whenever one of the products on any of the lists goes on sale, the user gets a n
 
 ## How to Run
 
-In the main "team-penne" folder:
+In the main "team-penne" folder:\
 To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
 To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
 
