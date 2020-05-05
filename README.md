@@ -31,7 +31,7 @@ Type `cd server` followed by `npm run dev` to only start the server in dev mode.
 ### Adding to Lists
 
 Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"\
-![adding-product-example1](./readme_assets/add_item_from_dash.gif)
+<div align="center"> <img src="./readme_assets/add_item_from_dash.gif"/></div>
 
 **OR** Click on "Add new item" after clicking on a list, and do the same.\
 ![adding-product-example2](./readme_assets/add_item_from_list.gif)
