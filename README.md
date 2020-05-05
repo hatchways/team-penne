@@ -8,21 +8,10 @@
 ### The website that tracks products on a user's wishlist, and notifies them on any price changes.
 
 **Contents:**\
-[Run Instructions](#how-to-run)\
 [Core Functionality](#core-functionality)\
 [Additional Features](#additional-features)\
+[Run Instructions](#how-to-run)\
 [Authors](#authors)
-
-## How to Run
-
-To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
-To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
-
-_Alternatively_\
-Type `cd client` followed by `npm start` to only start the client.\
-Followed by:\
-Type `cd server` followed by `npm run start` to only start the server **OR**\
-Type `cd server` followed by `npm run dev` to only start the server in dev mode.
 
 ## Core Functionality
 
@@ -48,11 +37,22 @@ Click on "Remove" over a certain product in a list to permanently remove that pr
 
 Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.
 
-<div align="center"> <img style={{height: "100px"}} src="./readme_assets/notifications.gif"/></div>
+<div align="center"> <img src="./readme_assets/notifications.gif"/></div>
 
 ## Additional Features
 
 ### Followers
+
+## How to Run
+
+To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
+To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
+
+_Alternatively_\
+Type `cd client` followed by `npm start` to only start the client.\
+Followed by:\
+Type `cd server` followed by `npm run start` to only start the server **OR**\
+Type `cd server` followed by `npm run dev` to only start the server in dev mode.
 
 ## Authors
 
