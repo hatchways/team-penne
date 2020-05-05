@@ -60,7 +60,8 @@ Whenever one of the products on any of the lists goes on sale, the user gets a n
 
 ## How to Run
 
-In the main "team-penne" folder:\
+**In the main "team-penne" folder:**
+
 To run the application **in dev mode**, type `npm run dev` or `yarn run dev`.\
 To **not run in dev mode**, type `npm run dealsmate` or `yarn run dealsmate`.
 
