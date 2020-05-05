@@ -27,6 +27,7 @@ Once added, the user will get notifications to any price changes to the products
 ### List Functionality
 
 #TODO
+[Back to top](#the-deal-tracker)
 
 ### Product Functionality
 
@@ -40,11 +41,15 @@ Click on "Add item" straight from the dashboard after inputting a valid URL wher
 
 <div align="center"> <img src="./readme_assets/add_item_from_list.gif"/></div>
 
+[Back to top](#the-deal-tracker)
+
 #### Removing Products from Lists
 
 Click on "Remove" over a certain product in a list to permanently remove that product from that list.
 
 <div align="center"> <img src="./readme_assets/delete_product_example.gif"/></div>
+
+[Back to top](#the-deal-tracker)
 
 ### Receiving Notifications
 
@@ -52,11 +57,15 @@ Whenever one of the products on any of the lists goes on sale, the user gets a n
 
 <div align="center"> <img src="./readme_assets/notifications.gif"/></div>
 
+[Back to top](#the-deal-tracker)
+
 ## Additional Features
 
 ### Followers
 
 #TODO
+
+[Back to top](#the-deal-tracker)
 
 ## How to Run
 
@@ -71,7 +80,11 @@ Followed by:\
 Type `cd server` followed by `npm run start` to only start the server **OR**\
 Type `cd server` followed by `npm run dev` to only start the server in dev mode.
 
+[Back to top](#the-deal-tracker)
+
 ## Authors
 
 Sagnik Roy\
 Ricardo Brites
+
+[Back to top](#the-deal-tracker)
