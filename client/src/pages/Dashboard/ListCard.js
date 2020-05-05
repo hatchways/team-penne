@@ -12,31 +12,64 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./styles/listCardStyles";
 import NewListDialog from "../Dialogs/NewListDialog";
-import EditListDialog from "../Dialogs/EditListDialog";
-import NewProductDialog from "../Dialogs/NewProductDialog";
 
 function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   const history = useHistory();
   const [listName, setListName] = useState("");
-  const [changedListName, setChangedListName] = useState("false");
+  const [productList, setProductList] = useState([]);
+  const [changedListName, setChangedListName] = useState(false);
+  const [getProductListBool, setGetProductListBool] = useState(false);
+  const [productListLoadedBool, setProductListLoadedBool] = useState(false);
+  const [productAmount, setProductAmount] = useState(amount);
 
   const openNewList = () => {
-    history.push("/dashboard/create-new-list");
+    history.push("/dashboard/shoppingLists/create-new-list");
   };
 
   const openEditList = (name) => {
     console.log("Jump to EditList with ", name);
 
     setListName(name);
-    setChangedListName("true");
+    setChangedListName(true);
+    setGetProductListBool(true);
   };
 
   useEffect(() => {
-    if (changedListName === "true") {
-      console.log("ListName changed to: ", listName);
+    if (changedListName == true && getProductListBool == true) {
+      //console.log("ListName changed to: ", listName);
       setChangedListName("false");
-      history.push("/dashboard/edit-list", { name: listName });
+
+      fetch("/item-lists/get-product-list/?listName=" + listName, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then((res) => {
+          setProductList(res.productList);
+          setGetProductListBool(false);
+          setProductListLoadedBool(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
+    if (productListLoadedBool == true) {
+      setProductListLoadedBool(false);
+      history.push("/dashboard/shoppingLists/edit-list", {
+        listName: listName,
+        productList: productList,
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (productListLoadedBool) setProductAmount(productList.length);
   });
 
   const classes = useStyles();
@@ -47,22 +80,10 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         <CardContent className={classes.content}>
           <Typography component="p">{name}</Typography>
           <Typography variant="body2" component="h1" color="textSecondary">
-            {amount !== 1 ? `${amount} items` : "1 item"}
+            {productAmount !== 1 ? `${productAmount} items` : "1 item"}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <Route
-        path="/dashboard/edit-list"
-        render={() => {
-          return <EditListDialog listName={listName} />;
-        }}
-      />
-      <Route
-        path="/dashboard/add-new-product"
-        render={() => {
-          return <NewProductDialog itemLists={itemLists} />;
-        }}
-      />
     </Card>
   ) : (
     <Card className={classes.addCard}>
@@ -80,7 +101,7 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
         </Box>
       </CardActionArea>
       <Route
-        path="/dashboard/create-new-list"
+        path="/dashboard/shoppingLists/create-new-list"
         render={() => {
           return <NewListDialog addItemList={addItemList} />;
         }}

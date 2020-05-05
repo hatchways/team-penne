@@ -1,13 +1,15 @@
+var socketio = require("socket.io");
+
 const models = require("../models");
 const Notification = models.Notification;
 const Product = models.Products;
-const User = models.Users;
 const List = models.Lists;
 const ListProduct = models.ListProducts;
 const CronJob = require("cron").CronJob;
 const { scrapeAmazon, scrapeEbay } = require("../../scrapers/index");
+const { getProductIfExists } = require("./productDBHandler");
 
-const createNotification = async function (
+const createNotification = async function(
   productId,
   userId,
   previousPrice,
@@ -18,12 +20,12 @@ const createNotification = async function (
     userId: userId,
     previousPrice: previousPrice,
     currentPrice: currentPrice,
-    dismissed: false,
+    dismissed: false
   })
-    .then((res) => {
+    .then(res => {
       return res;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       console.log("Notification not created.");
       return null;
@@ -31,100 +33,183 @@ const createNotification = async function (
   return notification;
 };
 
-const getProductListIds = async function (productId) {
+const getProductListIds = async function(productId) {
   const listIds = await ListProduct.findAll({
     attributes: ["listId", "productId"],
-    where: { productId: productId },
-  }).then((res) => {
-    const ids = [];
-    for (let i = 0; i < res.length; i++) {
-      ids.push(res[i].listId);
-    }
-    return ids;
-  });
+    where: { productId: productId }
+  })
+    .then(res => {
+      const ids = [];
+      for (let i = 0; i < res.length; i++) {
+        ids.push(res[i].listId);
+      }
+      return ids;
+    })
+    .catch(err => console.log(err));
   return listIds;
 };
 
-const getListUserId = async function (listId) {
+const getListUserId = async function(listId) {
   const userId = await List.findOne({
     attributes: ["listId", "listName", "listImageURL", "userId"],
-    where: { listId: listId },
-  }).then((res) => {
-    return res.userId;
-  });
+    where: { listId: listId }
+  })
+    .then(res => {
+      return res.userId;
+    })
+    .catch(err => console.log(err));
   return userId;
 };
 
-const createNotifications = async function () {
-  await Product.findAll().then(async (products) => {
-    for (let i = 0; i < products.length; i++) {
-      const url = products[i].productURL;
-      const website = url.split(".")[1];
-      if (website === "amazon") {
-        await scrapeAmazon(url).then(async (res) => {
-          if (res.salePrice) {
-            if (res.salePrice !== products[i].productSalePrice) {
-              products[i].productSalePrice = res.salePrice.toString();
-              products[i].save();
-              const listIds = await getProductListIds(products[i].productId);
-              for (let j = 0; j < listIds.length; j++) {
-                const userId = await getListUserId(listIds[j]);
-                await createNotification(
-                  products[i].productId,
-                  userId,
-                  products[i].productPrice,
-                  products[i].productSalePrice
-                );
+const createNotifications = async function(socket, socketClients) {
+  await Product.findAll()
+    .then(async products => {
+      for (let i = 0; i < products.length; i++) {
+        const url = products[i].productURL;
+        const website = url.split(".")[1];
+        if (website === "amazon") {
+          await scrapeAmazon(url)
+            .then(async res => {
+              if (res.salePrice) {
+                if (res.salePrice !== products[i].productSalePrice) {
+                  products[i].productSalePrice = res.salePrice;
+                  products[i].save();
+                  const listIds = await getProductListIds(
+                    products[i].productId
+                  ).catch(err => console.log(err));
+                  for (let j = 0; j < listIds.length; j++) {
+                    const userId = await getListUserId(listIds[j]);
+                    // send data via socketClients if userId has a socket open
+                    //console.log(socketClients);
+                    if (socketClients[userId] != null) {
+                      let payloadProduct = {
+                        id: products[i].productId,
+                        image: products[i].productImageURL,
+                        name: products[i].productName,
+                        url: products[i].productURL,
+                        currency: products[i].productCurrency,
+                        price: products[i].productPrice,
+                        salePrice: products[i].productSalePrice
+                      };
+                      console.log(`update user ${userId}`);
+                      socket
+                        .to(socketClients[userId])
+                        .emit("getNotifications", payloadProduct);
+                    }
+                    await createNotification(
+                      products[i].productId,
+                      userId,
+                      products[i].productPrice,
+                      products[i].productSalePrice
+                    );
+                  }
+                }
+              }
+            })
+            .catch(err => console.log(err));
+        } else if (website === "ebay") {
+          await scrapeEbay(url).then(async res => {
+            if (res.salePrice) {
+              if (res.salePrice !== products[i].productSalePrice) {
+                products[i].productSalePrice = res.salePrice;
+                products[i].save();
+                const listIds = await getProductListIds(products[i].productId);
+                for (let j = 0; j < listIds.length; j++) {
+                  const userId = await getListUserId(listIds[j]);
+                  await createNotification(
+                    products[i].productId,
+                    userId,
+                    products[i].productPrice,
+                    products[i].productSalePrice
+                  );
+                }
               }
             }
-          }
-        });
-      } else if (website === "ebay") {
-        await scrapeEbay(url).then(async (res) => {
-          if (res.salePrice) {
-            if (res.salePrice !== products[i].productSalePrice) {
-              products[i].productSalePrice = res.salePrice.toString();
-              products[i].save();
-              const listIds = await getProductListIds(products[i].productId);
-              for (let j = 0; j < listIds.length; j++) {
-                const userId = await getListUserId(listIds[j]);
-                await createNotification(
-                  products[i].productId,
-                  userId,
-                  products[i].productPrice,
-                  products[i].productSalePrice
-                );
-              }
-            }
-          }
-        });
+          });
+        }
       }
-    }
-  });
+    })
+    .catch(err => console.log(err));
 };
 
-const getNotifications = async function (userId) {
+const getNotifications = async function(userId) {
   const notifications = await Notification.findAll({
     attributes: [
       "productId",
       "userId",
       "previousPrice",
       "currentPrice",
-      "dismissed",
+      "dismissed"
     ],
-    where: { userId: userId, dismissed: false },
-  }).then((res) => {
-    return res;
-  });
+    where: { userId: userId, dismissed: false }
+  })
+    .then(res => {
+      return res;
+    })
+    .catch(err => console.log(err));
   return notifications;
 };
 
-const checkForSales = async function () {
-  const salesCheck = new CronJob("*/2 * * * *", async function () {
-    createNotifications();
-    console.log("Cron Job is running");
+const getProductsForNotifications = async function(userId) {
+  // userIdNotifications.dataValues = values of all notifications
+  // dataValues: productId, userId, previousPrice, currentPrice, dismissed
+  let userIdNotifications = await getNotifications(userId);
+  var i;
+  var notificationsList = [];
+  for (i = 0; i < userIdNotifications.length; i++) {
+    /* saleProduct.dataValues = {
+        productId, 
+        productName, 
+        productURL, 
+        productImageURL, 
+        productCurrency, 
+        productPrice, 
+        productSalePrice }*/
+    let saleProduct = await getProductIfExists(
+      userIdNotifications[i].dataValues.productId
+    ); // #TODO // if saleProduct == null, remove notification?
+    if (saleProduct != null) {
+      //append saleProduct to notificationsList
+      let displayProduct = {
+        name: saleProduct.productName,
+        image: saleProduct.productImageURL,
+        url: saleProduct.productURL,
+        salePrice: saleProduct.productSalePrice,
+        currency: saleProduct.productCurrency,
+        price: saleProduct.productPrice,
+        dismissed: userIdNotifications[i].dataValues.dismissed
+      };
+      notificationsList.push(displayProduct);
+    }
+  }
+  return notificationsList;
+};
+
+const checkForSales = async function(socket, socketClients) {
+  const salesCheck = new CronJob("30 * * * *", function() {
+    createNotifications(socket, socketClients);
+    /*setTimeout(() => {
+      let payloadProduct = {
+        id: "B07KG318MQ",
+        image:
+          "https://images-na.ssl-images-amazon.com/images/I/71xkwNx-nfL._AC_SX679_.jpg",
+        name: "TCL 50S425-CA 4K Ultra HD Smart LED Television (2019), 50",
+        url:
+          "https://www.amazon.ca/TCL-50S425-CA-Ultra-Smart-Television/dp/B07KG318MQ/ref=pd_ybh_a_5?_encoding=UTF8&psc=1&refRID=WZ9HZD9Z0X8T0GRHPP6D",
+        currency: "CDN$",
+        price: "379.99",
+        salePrice: "359.99"
+      };
+      socket.to(socketClients[1]).emit("getNotifications", payloadProduct);
+    }, 10000);*/
+    let date_ob = new Date();
+    console.log(`Last Checked: ${date_ob}`);
   });
   salesCheck.start();
 };
 
-module.exports = { getNotifications, checkForSales };
+module.exports = {
+  getNotifications,
+  checkForSales,
+  getProductsForNotifications
+};

@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
+require("dotenv").config();
 
 function LoginDialog(props) {
   const [email, setEmail] = React.useState("");

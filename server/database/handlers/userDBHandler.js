@@ -1,6 +1,23 @@
 const models = require("../models");
 const User = models.Users;
 
+function formatUserReturnWithoutUserId(userList, userId) {
+  var formattedList = [];
+  for (i = 0; i < userList.length; i++) {
+    if (userList[i].userId != userId) {
+      var tempUserItem = {
+        userId: userList[i].userId,
+        userName: userList[i].userName,
+        userEmail: userList[i].userEmail,
+        userImageURL: userList[i].userImageURL,
+        following: false
+      };
+      formattedList.push(tempUserItem);
+    }
+  }
+  return formattedList;
+}
+
 /*
     createUser
     arguments: newUser - object ({userName, userPassword, userEmail})
@@ -86,8 +103,19 @@ async function updateUser(updateUserEmail, updateVariableType, updateVariable) {
   });
 }
 
+async function getAllUsers(userId) {
+  let allUsers = await User.findAll({
+    attributes: ["userId", "userName", "userEmail", "userImageURL"],
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  return formatUserReturnWithoutUserId(allUsers, userId);
+}
+
 module.exports = {
   createUser,
+  getAllUsers,
   getUser,
   updateUser,
 };

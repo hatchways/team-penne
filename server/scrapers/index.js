@@ -1,20 +1,29 @@
 const puppeteer = require("puppeteer");
 const avoidDetection = require("./util");
 
-const __launchPuppeteer = async (url) => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+var browser;
+const __launchPuppeteer = async url => {
+  browser = await puppeteer
+    .launch({ headless: true })
+    .catch(err => console.log(err));
+  const page = await browser.newPage().catch(err => {
+    console.log(err);
+  });
 
-  await avoidDetection(page);
+  await avoidDetection(page).catch(err => console.log(err));
+  await page.goto(url).catch(err => console.log(err));
 
-  await page.goto(url);
   return page;
 };
 
-const scrapeAmazon = async (url) => {
-  const page = await __launchPuppeteer(url).catch((err) => {
+const scrapeAmazon = async url => {
+  const page = await __launchPuppeteer("https://www.amazon.com/").catch(err => {
     console.log(err);
+    return -1;
   });
+
+  await page.goto(url);
+
   const splitUrl = url.split("/");
   var productId = "";
   for (i = 0; i < splitUrl.length; i++) {
@@ -36,23 +45,65 @@ const scrapeAmazon = async (url) => {
         title = title.join("");
       }
 
-      const priceHTML = document.getElementById("priceblock_ourprice")
-        .innerHTML;
-      const priceHTMLSplit = priceHTML.split("&nbsp;");
-      const currency = priceHTMLSplit[0];
-      var priceString = priceHTMLSplit[1];
-      var priceSplit = priceString.split("."); // split string by decimal point
-      const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
-      const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
-      var price = priceFH + priceSH;
-      const salePriceHTML = document.getElementsByClassName(
+      var priceHTML;
+      // try block if product doesn't exist/unavailable
+      try {
+        // try block to catch price ids of different names
+        try {
+          priceHTML = document.getElementById("priceblock_ourprice").innerHTML;
+        } catch {
+          priceHTML = document.getElementById("priceblock_dealprice").innerHTML;
+        }
+        // sometimes prices have two "prices"
+        // e.g. $25-$35.
+        // This if statement catches that, and parses it correctly
+        if (priceHTML.split(" - ")[1] != null) {
+          let priceHTMLSplit = priceHTML.split(" - ")[1].split("&nbsp;");
+          let currency = priceHTMLSplit[0];
+          let priceString = priceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
+          let priceSplit = priceString.split("."); // split string by decimal point
+          let priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+          let priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+          var priceUpper = priceFH + priceSH;
+          priceHTML = priceHTML.split(" - ")[0];
+        }
+        const priceHTMLSplit = priceHTML.split("&nbsp;");
+        var currency = priceHTMLSplit[0];
+        var priceString = priceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
+        var priceSplit = priceString.split("."); // split string by decimal point
+        const priceFH = parseInt(priceSplit[0], 10); // FH = first half (i.e Integer part)
+        const priceSH = parseInt(priceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
+        var price = priceFH + priceSH;
+      } catch {
+        var price = 0;
+        var currency = "";
+      }
+
+      if (priceUpper != null) {
+        let tempPrice = priceUpper;
+        priceUpper = price;
+        price = tempPrice;
+      }
+
+      // At this point, price is the value that will always be output to the user
+      // in the case where priceUpper exists, (i.e. priceHTMLString is $25-$35 and priceUpper is 35)
+      // swap price (= 25) with priceUpper, so the higher price is the one output to the user.
+      // TODO also send and update lower price in database
+
+      // If product is on sale, original price is of class "priceBlockStrikePriceString"
+      // So, get that price, then swap it with price and "salePrice"
+      var salePriceHTML = document.getElementsByClassName(
         "priceBlockStrikePriceString"
       )[0];
-
+      if (salePriceHTML == null) {
+        salePriceHTML = document.getElementsByClassName(
+          "priceBlockStrikePriceString a-text-strike"
+        )[0];
+      }
       if (salePriceHTML) {
         var salePriceHTMLSplit = salePriceHTML.innerHTML.split("&nbsp;");
         var salePriceCurrency = salePriceHTMLSplit[0];
-        var salePriceString = salePriceHTMLSplit[1];
+        var salePriceString = salePriceHTMLSplit[1].replace(",", ""); //if price = $1,349, get rid of comma
         var salePriceSplit = salePriceString.split("."); // split string by decimal point
         var salePriceFH = parseInt(salePriceSplit[0], 10); // FH = first half (i.e Integer part)
         var salePriceSH = parseInt(salePriceSplit[1], 10) / 100; // SH = second half (i.e. Decimal part)
@@ -72,21 +123,20 @@ const scrapeAmazon = async (url) => {
             price,
             imageURL,
             salePrice,
-            sale: true,
+            sale: true
           }
         : { title, currency, price, imageURL, sale: false };
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 
   item["productId"] = productId;
-  //console.log("Generated item: ");
-  //console.log(item);
+  browser.close();
   return item;
 };
 
-const scrapeEbay = async (url) => {
+const scrapeEbay = async url => {
   const page = await __launchPuppeteer(url);
 
   let item;
@@ -136,6 +186,7 @@ const scrapeEbay = async (url) => {
   } catch (err) {
     return { error: "Scraping website failed" };
   }
+  browser.close();
   return item;
 };
 
@@ -151,5 +202,5 @@ const testScraper = async () => {
 module.exports = {
   scrapeAmazon,
   scrapeEbay,
-  testScraper,
+  testScraper
 };

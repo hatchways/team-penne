@@ -10,8 +10,12 @@ require("dotenv").config();
 var app = require("../app");
 var http = require("http");
 var debug = require("debug")("express-sequelize");
+var cookie = require("cookie");
+var socketio = require("socket.io");
+
 var models = require("../database/models");
-const notificationHandler = require("../database/handlers/notificationDBHandler");
+const { checkForSales } = require("../database/handlers/notificationDBHandler");
+const { authJWTCheck } = require("../routes/authCheck");
 
 /**
  * Get port from environment and store in Express.
@@ -33,15 +37,44 @@ var server = http.createServer(app);
 //server.listen(port);
 //server.on("error", onError);
 //server.on("listening", onListening);
-models.sequelize.sync().then(function () {
+models.sequelize.sync().then(function() {
   /**
    * Listen on provided port, on all network interfaces.
    */
-  server.listen(port, function () {
+  server.listen(port, function() {
     debug("Express server listening on port " + server.address().port);
   });
   server.on("error", onError);
   server.on("listening", onListening);
+});
+
+/**
+ * Socket setup
+ */
+const io = socketio(server);
+var socketClients = {};
+
+io.on("connection", socket => {
+  console.log("We have a new connection.");
+  let encodedCookie = socket.handshake.headers.cookie;
+  var parsedCookies = cookie.parse(encodedCookie);
+
+  // User data of current Socket User stored in userData
+  // User data includes: userName, userEmail and userId
+  var userData = authJWTCheck(parsedCookies);
+  // unable to get userData
+  if (userData.message != null) {
+    socket.disconnect(true);
+  } else {
+    // socket.id is a unique identifier created when socket is connected
+    // save socketId in list, and then connect with socket.to(socket.id).emit(...)
+    socketClients[userData.userId] = socket.id;
+  }
+});
+
+io.on("disconnect", () => {
+  var userData = authJWTCheck(parsedCookies);
+  delete socketClients[userData.userId];
 });
 
 /**
@@ -95,9 +128,10 @@ function onError(error) {
  */
 
 function onListening() {
+  checkForSales(io, socketClients);
+
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
 
   console.log("Listening on " + bind);
-  notificationHandler.checkForSales();
 }

@@ -14,9 +14,8 @@ import {
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
 
-function EditListDialog(props) {
-  const [listName, setListName] = React.useState(props.listName);
-  const [itemListLoaded, setItemListLoaded] = React.useState(false);
+function EditListDialog() {
+  const [listName, setListName] = React.useState("");
   const [productList, setProductList] = React.useState([]);
   const [productListRetrieved, setProductListRetrieved] = React.useState(false);
 
@@ -34,27 +33,38 @@ function EditListDialog(props) {
     );
   };
 
-  if (!productListRetrieved) {
-    fetch("/itemLists/getProductList/?listName=" + listName, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then((res) => {
-        setProductList(res.productList);
-      })
-      .catch((err) => {
-        console.log(err);
-        setItemListLoaded(false);
-      });
-    setProductListRetrieved(true);
-  }
+  const addDecimalPlacesPrice = price => {
+    var upperPriceString = price.toString();
+    if (upperPriceString.split(".")[1] == null) {
+      upperPriceString = upperPriceString + ".00";
+    }
+    if (upperPriceString.split(".")[1].length < 2) {
+      upperPriceString = upperPriceString + "0";
+    }
+    return upperPriceString;
+  };
+
+  const handleRemove = listItem => {
+    console.log(listItem);
+    history.push(
+      window.location.pathname.replace("/edit-list", "/remove-product"),
+      {
+        productId: listItem.productId,
+        productName: listItem.productName,
+        productImageURL: listItem.productImageURL,
+        productURL: listItem.productURL,
+        productCurrency: listItem.productCurrency,
+        productPrice: listItem.productPrice,
+        productSalePrice: listItem.productSalePrice,
+        listName: listName,
+      }
+    );
+  };
+
+  useEffect(() => {
+    setListName(history.location.state.listName);
+    setProductList(history.location.state.productList);
+  });
 
   return (
     <Dialog
@@ -86,35 +96,65 @@ function EditListDialog(props) {
                   <img
                     src={listItem.productImageURL}
                     className={classes.cardImg}
+                    onClick={() => window.open(listItem.productURL, "_blank")}
                   />
                 </div>
                 <div className={classes.cardTextBox}>
-                  <Typography
-                    className={classes.cardTitle}
-                    color="textSecondary"
-                    gutterBottom
+                  <div
+                    onClick={() => window.open(listItem.productURL, "_blank")}
+                    style={{ cursor: "pointer" }}
                   >
-                    <Truncate width={100 * 6}>{listItem.productName}</Truncate>
-                  </Typography>
-                  <Typography className={classes.cardURL} gutterBottom>
-                    <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
-                  </Typography>
-                  <h5>
-                    {listItem.productCurrency}
-                    {listItem.productPrice}
-                  </h5>
-                  <h5>
-                    {listItem.productSalePrice != null &&
-                      listItem.productCurrency}
-                    {listItem.productSalePrice != null &&
-                      listItem.productSalePrice}
-                  </h5>
+                    <Typography
+                      className={classes.cardTitle}
+                      color="textSecondary"
+                      gutterBottom
+                    >
+                      <Truncate width={100 * 6}>
+                        {listItem.productName}
+                      </Truncate>
+                    </Typography>
+                    <Typography className={classes.cardURL} gutterBottom>
+                      <Truncate width={100 * 3}>{listItem.productURL}</Truncate>
+                    </Typography>
+                  </div>
+                  {listItem.productPrice == 0 && ( // if product is unavailable
+                    <div
+                      style={{ marginTop: 20, fontSize: "12px", color: "red" }}
+                    >
+                      Sorry, your product is currently unavailable.
+                    </div>
+                  )}
+                  {listItem.productPrice != 0 && ( // if product is available
+                    <div style={{ marginTop: 30 }}>
+                      {listItem.productSalePrice != null && (
+                        <div className={classes.strikeThroughText}>
+                          {listItem.productCurrency}
+                          {addDecimalPlacesPrice(listItem.productPrice)}
+                        </div>
+                      )}
+                      {listItem.productSalePrice != null && (
+                        <div style={{ fontWeight: "bold" }}>
+                          {listItem.productCurrency}
+                          {addDecimalPlacesPrice(listItem.productSalePrice)}
+                        </div>
+                      )}
+                      {listItem.productSalePrice == null && (
+                        <div>
+                          {listItem.productCurrency}
+                          {addDecimalPlacesPrice(listItem.productPrice)}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <Button
                 classes={{ outlined: classes.removeButton }}
                 size="large"
                 variant="outlined"
+                onClick={() => {
+                  handleRemove(listItem);
+                }}
               >
                 Remove
               </Button>

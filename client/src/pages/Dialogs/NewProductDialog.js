@@ -14,7 +14,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  Select,
+  Select
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import dialogStyles from "./Styles/dialogStyles";
@@ -25,6 +25,7 @@ function NewProductDialog(props) {
 
   const [productUrl, setProductUrl] = React.useState("");
   const [productUrlError, setProductUrlError] = React.useState(false);
+  const [listError, setListError] = React.useState(false);
   const [list, setList] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -33,24 +34,23 @@ function NewProductDialog(props) {
   );
   const [loadErr, setLoadErr] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [listError, setListError] = React.useState(false);
-  const listNames = props.itemLists.map((list) => list.name);
+  const listNames = props.itemLists.map(list => list.name);
   const timer = React.useRef();
 
   const handleClose = () => {
     history.push(window.location.pathname.replace("/add-new-product", ""));
   };
   const buttonClassname = clsx({
-    [classes.buttonSuccess]: success,
+    [classes.buttonSuccess]: success
   });
   const handleButtonClick = () => {
     getProductFromUrl();
   };
 
-  const handleList = (event) => {
+  const handleList = event => {
     setList(event.target.value);
   };
-  const handleProductUrl = (event) => {
+  const handleProductUrl = event => {
     setProductUrl(event.target.value);
   };
 
@@ -85,21 +85,28 @@ function NewProductDialog(props) {
     if (verificationCheck()) {
       setSuccess(false);
       setLoading(true);
+      timer.current = setTimeout(() => {
+        setLoadErr(true);
+        setErrorMessage(
+          "Your product is taking longer to load than usual. Please keep waiting, or refresh the page."
+        );
+      }, 5000);
       localStorage.setItem("productUrl", productUrl);
       fetch("/api/scrape/?url=" + productUrl, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       })
-        .then((res) => {
-          if (res.status === 200) {
+        .then(res => {
+          if (res.status == 200) {
             return res.json();
           }
         })
-        .then((res) => {
+        .then(res => {
           setLoading(false);
           setSuccess(true);
+          clearInterval(timer.current);
           setLoadingButtonLabel("PRODUCT RETRIEVED");
           timer.current = setTimeout(() => {
             history.push(
@@ -108,20 +115,20 @@ function NewProductDialog(props) {
                 "/confirm-product"
               ),
               {
-                title: res.title,
-                currency: res.currency,
-                price: res.price,
-                imageURL: res.imageURL,
-                sale: res.sale,
-                salePrice: res.salePrice,
+                productTitle: res.title,
+                productCurrency: res.currency,
+                productPrice: res.price,
+                productImageURL: res.imageURL,
+                productSale: res.sale,
+                productSalePrice: res.salePrice,
                 productURL: productUrl,
                 productId: res.productId,
-                listName: list,
+                listName: list
               }
             );
           }, 1000);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           setLoading(false);
           setSuccess(false);
@@ -137,13 +144,6 @@ function NewProductDialog(props) {
     }
   };
 
-  const enterSubmit = (event) => {
-    let keyCode = event.keyCode ? event.keyCode : event.which;
-    if (keyCode == 13) {
-      getProductFromUrl();
-    }
-  };
-
   return (
     <Dialog
       scroll="paper"
@@ -152,13 +152,10 @@ function NewProductDialog(props) {
       aria-labelledby="form-dialog-title"
       open={true}
     >
-      <DialogTitle
-        classes={{ root: classes.dialogTitle }}
-        id="form-dialog-title"
-      >
+      <DialogTitle className={classes.nPDialogTitle} id="form-dialog-title">
         Add new item:
       </DialogTitle>
-      <DialogContent classes={{ root: classes.dialogContent }}>
+      <DialogContent className={classes.dialogContent}>
         <InputLabel classes={{ root: classes.inputLabel }}>
           Paste link to item
         </InputLabel>
@@ -166,7 +163,7 @@ function NewProductDialog(props) {
           <OutlinedInput
             classes={{
               root: classes.outlinedInputRoot,
-              input: classes.outlinedInputInput,
+              input: classes.outlinedInputInput
             }}
             //onKeyPress={enterSubmit}
             onChange={handleProductUrl}
@@ -179,7 +176,7 @@ function NewProductDialog(props) {
         </Container>
         <Collapse in={productUrlError}>
           <Alert classes={{ root: classes.alert }} severity="error">
-            Error: List title format is invalid.
+            Error: Product URL format is invalid.
           </Alert>
         </Collapse>
         <InputLabel classes={{ root: classes.inputLabel }}>
@@ -199,7 +196,7 @@ function NewProductDialog(props) {
               <option value="" disabled selected hidden>
                 Select
               </option>
-              {listNames.map((name) => (
+              {listNames.map(name => (
                 <option value={name}>{name}</option>
               ))}
             </Select>

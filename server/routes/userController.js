@@ -5,30 +5,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { authCheck } = require("./authCheck");
-const { createUser, getUser } = require("../database/handlers/userDBHandler");
 const {
-  addList,
-  getAllListsWithValues,
-  getListIdByListName,
-} = require("../database/handlers/listDBHandler");
-const {
-  getAllProductsbyListId,
-  addProductToList,
-} = require("../database/handlers/productDBHandler");
+  createUser,
+  getAllUsers,
+  getUser
+} = require("../database/handlers/userDBHandler");
 
 const {
   getNotifications,
+  getProductsForNotifications
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
 router.use(cookieParser());
-
-router.get("/getNotifications", authCheck, async (req, res) => {
-  const userId = req.userData.userId;
-  const notifications = await getNotifications(userId);
-  console.log(notifications);
-  res.status(200).send({ notifications: notifications });
-});
 
 router.post("/login", async (req, res) => {
   const secret = process.env.JWT_SECRET;
@@ -42,31 +31,32 @@ router.post("/login", async (req, res) => {
 
   let user = await getUser("userEmail", userEmail);
   if (!user || user.userEmail != userEmail) {
-    return res.status(401).send({ message: "User created." });
+    return res.status(401).send({ message: "Invalid User." });
   }
   try {
-    bcrypt.compare(password, user.userPassword, function (err, result) {
+    bcrypt.compare(password, user.userPassword, function(err, result) {
       if (err || !result) {
         res.status(401);
         return res.send({
-          error: "Invalid username or password",
+          error: "Invalid username or password"
         });
       } else {
         const token = jwt.sign(
           {
             data: {
+              userName: user.userName,
               userEmail: userEmail,
-              userId: user.userId,
-            },
+              userId: user.userId
+            }
           },
           secret,
           {
-            expiresIn: 60 * 60, // would expire after 1 hour
+            expiresIn: 60 * 60 // would expire after 1 hour
           }
         );
         let options = {
           maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-          httpOnly: true, // The cookie only accessible by the web server
+          httpOnly: true // The cookie only accessible by the web server
         };
         res.clearCookie("jwt-auth-cookie");
         res.cookie("jwt-auth-cookie", token, options);
@@ -90,7 +80,7 @@ router.post("/signup", async (req, res) => {
   if (userName.length < 6 || userPassword.length < 6) {
     res.status(401);
     return res.send({
-      error: "Username and Password have to be at least 6 characters long.",
+      error: "Username and Password have to be at least 6 characters long."
     });
   }
 
@@ -106,7 +96,7 @@ router.post("/signup", async (req, res) => {
     // nothing after the . (e.g. no "com" or "ca")
     res.status(401);
     return res.send({
-      error: "Invalid Email.",
+      error: "Invalid Email."
     });
   }
 
@@ -120,25 +110,26 @@ router.post("/signup", async (req, res) => {
     const addUser = {
       userName: userName,
       userEmail: userEmail,
-      userPassword: hashedPassword,
+      userPassword: hashedPassword
     };
     const addedUser = await createUser(addUser);
     //console.log(addedUser);
     if (addedUser != null) {
-      console.log("Correct Sign Up. Creating Cookie.");
+      //console.log("Correct Sign Up. Creating Cookie.");
       const token = jwt.sign(
         {
           data: {
+            userName: userName,
             userEmail: userEmail,
-            userId: addedUser.userId,
-          },
+            userId: addedUser.userId
+          }
         },
         secret,
         { expiresIn: 60 * 60 } // would expire after 1 hour
       );
       let options = {
         maxAge: 1000 * 60 * 60 * 1, // would expire after 1 hour
-        httpOnly: true, // The cookie only accessible by the web server
+        httpOnly: true // The cookie only accessible by the web server
       };
       res.clearCookie("jwt-auth-cookie");
       res.cookie("jwt-auth-cookie", token, options);
@@ -156,69 +147,25 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  console.log("Logout successful");
+  //console.log("Logout successful");
   res.clearCookie("jwt-auth-cookie");
   res.status(200).send({ message: "Logout successful" });
 });
 
-// POST edit template to edit Username/Password/Email once authorized.
-router.post("/edit", authCheck, function (req, res) {
-  return res.send("Editing File");
+router.get("/userprofile", authCheck, async function(req, res) {
+  let user = await getUser("userEmail", req.userData.userEmail);
+  res.status(200).send({
+    userName: req.userData.userName,
+    userEmail: req.userData.userEmail,
+    userImageUrl: user.userImageURL
+  });
 });
 
-// create a new list, and assign it to user userId, with name and picture in req.body
-router.post("/itemLists/addLists", authCheck, async (req, res) => {
-  const currentUserId = req.userData.userId;
-  addList(currentUserId, req.body.listName, req.body.listPicture)
-    .then(function (ret) {
-      res.status(200).send({ message: "Added List." });
-    })
-    .catch(function (err) {
-      console.log(err);
-      res.status(400).send({ err });
-    });
-});
-
-// GET - retrieve all Lists for current user
-router.get("/itemLists/getLists", authCheck, async (req, res) => {
-  const currentUserId = req.userData.userId;
-  let allLists = await getAllListsWithValues(currentUserId)
-    .then(function (allLists) {
-      return allLists;
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
-  //console.log(allLists[0].products);
-  return res.status(200).send({ itemLists: allLists });
-});
-
-// GET - retrieve all Lists for current user
-router.get("/itemLists/getProductList", authCheck, async (req, res) => {
-  const currentUserId = req.userData.userId;
-  const listName = req.query.listName;
-
-  const currentList = await getListIdByListName(currentUserId, listName);
-  const currentListProducts = await getAllProductsbyListId(currentList.listId);
-  return res.status(200).send({ productList: currentListProducts });
-});
-
-//add a product defined in req.body to list: listName (req.body.listName)
-router.post("/itemLists/addItems", authCheck, async (req, res) => {
-  const currentUserId = req.userData.userId;
-  var itemAddedBool = await addProductToList(
-    req.body.productId,
-    req.body.productName,
-    req.body.productURL,
-    req.body.productImageURL,
-    req.body.productCurrency,
-    req.body.productPrice,
-    req.body.productSalePrice,
-    currentUserId,
-    req.body.listName
-  );
-  return res.status(200).send({ message: "Item Added." });
+router.get("/get-notifications", authCheck, async (req, res) => {
+  const userId = req.userData.userId;
+  const notifications = await getProductsForNotifications(userId);
+  console.log("Checking Notifications!");
+  res.status(200).send({ notifications: notifications });
 });
 
 module.exports = router;

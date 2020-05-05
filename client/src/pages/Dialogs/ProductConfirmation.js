@@ -41,22 +41,21 @@ function ProductConfirmationDialog() {
       setSuccess(false);
       setLoadingConfirm(true);
     }
-    // INSERT POST REQUEST TO UPDATE DATABASE HERE
 
-    fetch("/itemLists/addItems", {
+    fetch("/item-lists/add-items", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         productId: history.location.state.productId,
-        productName: history.location.state.title,
+        productName: history.location.state.productTitle,
         productURL: history.location.state.productURL,
-        productImageURL: history.location.state.imageURL,
-        productCurrency: history.location.state.currency,
-        productPrice: history.location.state.price,
-        productSale: history.location.state.sale,
-        productSalePrice: history.location.state.salePrice,
+        productImageURL: history.location.state.productImageURL,
+        productCurrency: history.location.state.productCurrency,
+        productPrice: history.location.state.productPrice,
+        productSale: history.location.state.productSale,
+        productSalePrice: history.location.state.productSalePrice,
         listName: history.location.state.listName,
       }),
     })
@@ -70,10 +69,6 @@ function ProductConfirmationDialog() {
       .catch((err) => {
         console.log(err);
       });
-    /*
-    timer.current = setTimeout(() => {
-      history.push(window.location.pathname.replace("/confirm-product", ""));
-    }, 1000);*/
   };
   const handleDenyButtonClick = () => {
     if (!loadingDeny) {
@@ -87,6 +82,17 @@ function ProductConfirmationDialog() {
     }, 1000);
   };
 
+  const addDecimalPlacesPrice = price => {
+    var upperPriceString = price.toString();
+    if (upperPriceString.split(".")[1] == null) {
+      upperPriceString = upperPriceString + ".00";
+    }
+    if (upperPriceString.split(".")[1].length < 2) {
+      upperPriceString = upperPriceString + "0";
+    }
+    return upperPriceString;
+  };
+
   return (
     <Dialog
       scroll="paper"
@@ -95,41 +101,84 @@ function ProductConfirmationDialog() {
       aria-labelledby="form-dialog-title"
       open={true}
     >
-      <DialogTitle
-        classes={{ root: classes.dialogTitle }}
-        id="form-dialog-title"
-      >
-        Please confirm your product
-      </DialogTitle>
+      <div style={{ textAlign: "center", marginTop: 10 }} color="textSecondary">
+        <Typography
+          className={classes.cardTitle}
+          color="textSecondary"
+          gutterBottom
+        >
+          Are you sure you wish to add this product to your list:{" "}
+        </Typography>
+      </div>
+      <div className={classes.pCDialogTitle} id="form-dialog-title">
+        {history.location.state.listName}
+      </div>
       <DialogContent classes={{ root: classes.dialogContent }}>
-        <Card className={classes.singleCardManager} raised={true}>
-          <div className={classes.cardImageBox}>
-            <img
-              src={history.location.state.imageURL}
-              className={classes.cardImg}
-            />
-          </div>
-          <div className={classes.cardTextBox}>
-            <Typography
-              className={classes.cardTitle}
-              color="textSecondary"
-              gutterBottom
-            >
-              <Truncate width={100 * 6}>
-                {history.location.state.title}
-              </Truncate>
-            </Typography>
-            <Typography className={classes.cardURL} gutterBottom>
-              <Truncate width={100 * 3}>
-                {history.location.state.productURL}
-              </Truncate>
-            </Typography>
-            <h5>
-              {history.location.state.currency}
-              {history.location.state.price}
-              {history.location.state.sale && history.location.state.currency}
-              {history.location.state.sale && history.location.state.salePrice}
-            </h5>
+        <Card
+          className={classes.cardManager}
+          raised={true}
+          value={history.location.state.productTitle}
+        >
+          <div className={classes.cardDivider}>
+            <div className={classes.cardImageBox}>
+              <div>
+                <img
+                  src={history.location.state.productImageURL}
+                  className={classes.cardImg}
+                />
+              </div>
+            </div>
+            <div className={classes.cardTextBox}>
+              <div>
+                <Typography
+                  className={classes.cardTitle}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  <Truncate width={100 * 6}>
+                    {history.location.state.productTitle}
+                  </Truncate>
+                </Typography>
+                <Typography className={classes.cardURL} gutterBottom>
+                  <Truncate width={100 * 3}>
+                    {history.location.state.productURL}
+                  </Truncate>
+                </Typography>
+              </div>
+              {history.location.state.productPrice == 0 && (
+                <div style={{ marginTop: 10, fontSize: "12px", color: "red" }}>
+                  Sorry, your product is currently unavailable.
+                </div>
+              )}
+              {history.location.state.productPrice != 0 && ( // if product is unavailable
+                <div style={{ marginTop: 10 }}>
+                  {history.location.state.productSalePrice != null && (
+                    <div className={classes.strikeThroughText}>
+                      {history.location.state.productCurrency}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productPrice
+                      )}
+                    </div>
+                  )}
+                  {history.location.state.productSalePrice != null && (
+                    <div style={{ fontWeight: "bold" }}>
+                      {history.location.state.productCurrency}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productSalePrice
+                      )}
+                    </div>
+                  )}
+                  {history.location.state.productSalePrice == null && (
+                    <div>
+                      {history.location.state.productCurrency}
+                      {addDecimalPlacesPrice(
+                        history.location.state.productPrice
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </Card>
         <div>

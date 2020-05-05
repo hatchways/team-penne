@@ -34,6 +34,7 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "row",
     "& p": {
+      marginTop: "20px",
       marginRight: "20px",
       flexDirection: "row",
       cursor: "pointer",
@@ -52,6 +53,25 @@ const useStyles = makeStyles({
     marginRight: "15px",
     marginLeft: "30px",
     cursor: "pointer",
+    "& img": {
+      maxWidth: "100%",
+      width: "auto",
+      height: "auto",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+  },
+  circularBigger: {
+    width: "120px",
+    height: "120px",
+    borderRadius: "50%",
+    position: "relative",
+    overflow: "hidden",
+    marginRight: "15px",
+    marginLeft: "30px",
+    marginBottom: "20px",
     "& img": {
       maxWidth: "100%",
       width: "auto",
