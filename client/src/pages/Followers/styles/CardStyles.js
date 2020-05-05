@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
-import { green, red } from "@material-ui/core/colors";
+import { red } from "@material-ui/core/colors";
 
 const cardStyles = makeStyles({
   buttonBox: {
