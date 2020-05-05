@@ -27,7 +27,9 @@ Once added, the user will get notifications to any price changes to the products
 
 ### List Functionality
 
-#TODO
+#### Creating a new List
+
+<div align="center"> <img src="./readme_assets/create_new_list.gif"/> </div>
 [Back to top](#the-deal-tracker)
 
 ### Product Functionality
