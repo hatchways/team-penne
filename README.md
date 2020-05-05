@@ -29,6 +29,10 @@ Once added, the user will get notifications to any price changes to the products
 
 #### Creating a new List
 
+Click on the "Add new list" card, at the end of the list of all your cards, and fill out the dialog that opens up.
+
+**NOTE**: On clicking on the "Add a cover" box in the dialog, the gif below doesn't show the file explorer that opens up, where the image is retrieved from.
+
 <div align="center"> <img src="./readme_assets/create_new_list.gif"/> </div>
 [Back to top](#the-deal-tracker)
 
