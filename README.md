@@ -48,7 +48,7 @@ Click on "Remove" over a certain product in a list to permanently remove that pr
 
 Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.
 
-<div align="center"> <img style={{height: "100px"}}src="./readme_assets/notifications.gif"/></div>
+<div align="center"> <img style={{height: "100px"}} src="./readme_assets/notifications.gif"/></div>
 
 ## Additional Features
 
