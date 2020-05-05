@@ -30,21 +30,25 @@ Type `cd server` followed by `npm run dev` to only start the server in dev mode.
 
 ### Adding to Lists
 
-Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"\
+Click on "Add item" straight from the dashboard after inputting a valid URL where it says "place your link here"
+
 <div align="center"> <img src="./readme_assets/add_item_from_dash.gif"/></div>
 
-**OR** Click on "Add new item" after clicking on a list, and do the same.\
-![adding-product-example2](./readme_assets/add_item_from_list.gif)
+**OR** Click on "Add new item" after clicking on a list, and do the same.
+
+<div align="center"> <img src="./readme_assets/add_item_from_list.gif"/></div>
 
 ### Removing from Lists
 
-Click on "Remove" over a certain product in a list to permanently remove that product from that list.\
-![remove-product-example](./readme_assets/delete_product_example.gif)
+Click on "Remove" over a certain product in a list to permanently remove that product from that list.
+
+<div align="center"> <img src="./readme_assets/delete_product_example.gif"/></div>
 
 ### Recieving Notifications
 
 Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.\
-![notification-bar-example](./readme_assets/notifications.gif)
+
+<div align="center"> <img src="./readme_assets/notifications.gif"/></div>
 
 ## Additional Features
 
