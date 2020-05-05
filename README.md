@@ -12,7 +12,7 @@
 - [Core Functionality](#core-functionality)
   - [List Functionality](#list-functionality)
   - [Product Functionality](#product-functionality)
-  - [Recieving Notifications](#recieving-notifications)
+  - [Receiving Notifications](#receiving-notifications)
 - [Additional Features](#additional-features)
 - [How to Run](#how-to-run)
 - [Authors](#authors)
@@ -46,7 +46,7 @@ Click on "Remove" over a certain product in a list to permanently remove that pr
 
 <div align="center"> <img src="./readme_assets/delete_product_example.gif"/></div>
 
-### Recieving Notifications
+### Receiving Notifications
 
 Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.
 
