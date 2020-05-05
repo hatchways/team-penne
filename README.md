@@ -46,9 +46,9 @@ Click on "Remove" over a certain product in a list to permanently remove that pr
 
 ### Recieving Notifications
 
-Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.\
+Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.
 
-<div align="center"> <img src="./readme_assets/notifications.gif"/></div>
+<div align="center"> <img style={{height: "20px"}}src="./readme_assets/notifications.gif"/></div>
 
 ## Additional Features
 
