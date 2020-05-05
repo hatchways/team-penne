@@ -37,7 +37,7 @@ Click on the "Add new list" card, at the end of the list of all your cards, and 
 
 [Back to top](#the-deal-tracker)
 
-### Delete a list
+#### Deleting a list
 
 #TODO\
 [Back to top](#the-deal-tracker)
@@ -66,7 +66,7 @@ Click on "Remove" over a certain product in a list to permanently remove that pr
 
 ### Receiving Notifications
 
-Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information.
+Whenever one of the products on any of the lists goes on sale, the user gets a notification relaying that information. The product is then also updated in the list that it's in.
 
 <div align="center"> <img src="./readme_assets/notifications.gif"/></div>
 
