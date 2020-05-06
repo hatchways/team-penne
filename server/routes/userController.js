@@ -164,8 +164,7 @@ router.get("/userprofile", authCheck, async function(req, res) {
 router.get("/get-notifications", authCheck, async (req, res) => {
   const userId = req.userData.userId;
   const notifications = await getProductsForNotifications(userId);
-  console.log("Checking Notifications!");
-  res.status(200).send({ notifications: notifications });
+  res.status(200).send({ notifications });
 });
 
 module.exports = router;

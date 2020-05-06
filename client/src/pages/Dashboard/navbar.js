@@ -166,11 +166,15 @@ function Navbar(props) {
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
-      fetch("/get-notifications").then(res => {
-        if (res.status === 200) {
-          console.log(res.notifications);
-        }
-      });
+      fetch("/get-notifications")
+        .then(res => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then(res => {
+          setNotificationsList(res.notifications);
+        });
     }
   });
 
