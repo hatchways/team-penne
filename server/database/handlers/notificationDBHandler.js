@@ -70,6 +70,7 @@ const createNotifications = async function(socket, socketClients) {
         if (website === "amazon") {
           await scrapeAmazon(url)
             .then(async res => {
+              // Check if salePrice has changed, and if it has, update the product
               if (res.salePrice) {
                 if (res.salePrice !== products[i].productSalePrice) {
                   products[i].productSalePrice = res.salePrice;
@@ -105,6 +106,7 @@ const createNotifications = async function(socket, socketClients) {
                   }
                 }
               }
+              // #TODO update product if price has changed too
             })
             .catch(err => console.log(err));
         } else if (website === "ebay") {
@@ -188,20 +190,6 @@ const getProductsForNotifications = async function(userId) {
 const checkForSales = async function(socket, socketClients) {
   const salesCheck = new CronJob("30 * * * *", function() {
     createNotifications(socket, socketClients);
-    /*setTimeout(() => {
-      let payloadProduct = {
-        id: "B07KG318MQ",
-        image:
-          "https://images-na.ssl-images-amazon.com/images/I/71xkwNx-nfL._AC_SX679_.jpg",
-        name: "TCL 50S425-CA 4K Ultra HD Smart LED Television (2019), 50",
-        url:
-          "https://www.amazon.ca/TCL-50S425-CA-Ultra-Smart-Television/dp/B07KG318MQ/ref=pd_ybh_a_5?_encoding=UTF8&psc=1&refRID=WZ9HZD9Z0X8T0GRHPP6D",
-        currency: "CDN$",
-        price: "379.99",
-        salePrice: "359.99"
-      };
-      socket.to(socketClients[1]).emit("getNotifications", payloadProduct);
-    }, 10000);*/
     let date_ob = new Date();
     console.log(`Last Checked: ${date_ob}`);
   });

@@ -23,6 +23,7 @@ let interval;
 const emptyList = [];
 
 function Navbar(props) {
+  const [firstLoad, setFirstLoad] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileMenuBool, setProfileMenu] = useState(false);
   const [notificationMenuBool, setNotificationMenu] = useState(false);
@@ -125,12 +126,17 @@ function Navbar(props) {
     setOnDeleteIndex(index);
   };
 
+  // on Delete from notification
   useEffect(() => {
     if (onDeleteIndex != -1) {
       notificationsList.splice(onDeleteIndex, 1);
       setDeleteItem(onDeleteIndex);
       setOnDeleteIndex(-1);
     }
+  });
+
+  // get the userprofile
+  useEffect(() => {
     if (userProfile == "") {
       fetch("/userprofile")
         .then(res => {
@@ -153,6 +159,18 @@ function Navbar(props) {
             });
           }
         });
+    }
+  });
+
+  // get everything to do on the first load
+  useEffect(() => {
+    if (firstLoad) {
+      setFirstLoad(false);
+      fetch("/get-notifications").then(res => {
+        if (res.status === 200) {
+          console.log(res.notifications);
+        }
+      });
     }
   });
 
