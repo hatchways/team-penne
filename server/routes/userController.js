@@ -12,8 +12,8 @@ const {
 } = require("../database/handlers/userDBHandler");
 
 const {
-  getNotifications,
-  getProductsForNotifications
+  getProductsForNotifications,
+  updateNotification
 } = require("../database/handlers/notificationDBHandler");
 
 const saltRounds = 10;
@@ -164,6 +164,18 @@ router.get("/userprofile", authCheck, async function(req, res) {
 router.get("/get-notifications", authCheck, async (req, res) => {
   const userId = req.userData.userId;
   const notifications = await getProductsForNotifications(userId);
+  res.status(200).send({ notifications });
+});
+
+router.post("/update-notification", authCheck, async (req, res) => {
+  const userId = req.userData.userId;
+  const dismiss = !req.body.dismissed;
+
+  const notifications = await updateNotification(
+    userId,
+    req.body.productId,
+    dismiss
+  );
   res.status(200).send({ notifications });
 });
 

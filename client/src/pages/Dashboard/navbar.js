@@ -122,8 +122,29 @@ function Navbar(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleRemoveItem = index => {
+  const handleDismiss = index => {
     setOnDeleteIndex(index);
+    fetch("/update-notification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId: notificationsList[index].id,
+        dismissed: notificationsList[index].dismissed
+      })
+    });
+  };
+
+  const addDecimalPlacesPrice = price => {
+    var upperPriceString = price.toString();
+    if (upperPriceString.split(".")[1] == null) {
+      upperPriceString = upperPriceString + ".00";
+    }
+    if (upperPriceString.split(".")[1].length < 2) {
+      upperPriceString = upperPriceString + "0";
+    }
+    return upperPriceString;
   };
 
   // on Delete from notification
@@ -253,7 +274,7 @@ function Navbar(props) {
                   elevation={3}
                   value={listItem.name}
                   variant="outlined"
-                  disabled={notificationsList.indexOf(listItem) == deleteItem}
+                  disabled={notificationsList.indexOf(listItem) === deleteItem}
                 >
                   <div className={classes.cardImageBox}>
                     <img
@@ -280,19 +301,25 @@ function Navbar(props) {
                         {listItem.salePrice != null && (
                           <div className={classes.strikeThroughText}>
                             {listItem.currency}
-                            {listItem.price}
+                            {addDecimalPlacesPrice(listItem.price)}
                           </div>
                         )}
                         {listItem.salePrice != null && (
                           <div style={{ fontWeight: "bold" }}>
                             {listItem.currency}
-                            {listItem.salePrice}
+                            {addDecimalPlacesPrice(listItem.salePrice)}
                           </div>
                         )}
-                        {listItem.salePrice == null && (
+                        {listItem.salePrice == null &&
+                          listItem.price == "0" && (
+                            <div style={{ color: "red" }}>
+                              Product Unavailable.
+                            </div>
+                          )}
+                        {listItem.salePrice == null && listItem.price != "0" && (
                           <div>
                             {listItem.currency}
-                            {listItem.price}
+                            {addDecimalPlacesPrice(listItem.price)}
                           </div>
                         )}
                       </div>
@@ -306,12 +333,10 @@ function Navbar(props) {
                         <Button
                           size="small"
                           onClick={() => {
-                            handleRemoveItem(
-                              notificationsList.indexOf(listItem)
-                            );
+                            handleDismiss(notificationsList.indexOf(listItem));
                           }}
                         >
-                          Remove from list
+                          Dismiss
                         </Button>
                       </div>
                     </div>
