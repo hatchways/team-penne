@@ -50,6 +50,14 @@ router.post("/add-lists", authCheck, async (req, res) => {
     });
 });
 
+// POST - remove a certain list for a userId
+router.post("/remove-list", authCheck, async (req, res) => {
+  const currentUserId = req.userData.userId;
+  const listName = req.body.listName;
+  console.log(`Removing list ${listName} for userid ${currentUserId}`);
+  res.status(200);
+});
+
 // GET - retrieve all Lists for current user
 router.get("/get-lists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
