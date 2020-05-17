@@ -91,7 +91,6 @@ function Followers(props) {
   };
 
   const handleAllFollowChanges = (userId, following) => {
-    //console.log(userId, following);
     fetch("/followers/set-follow-user", {
       method: "POST",
       headers: {
