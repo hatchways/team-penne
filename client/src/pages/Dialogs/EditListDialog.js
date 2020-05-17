@@ -33,6 +33,12 @@ function EditListDialog() {
     );
   };
 
+  const handleDeleteList = () => {
+    history.push("/dashboard/shoppingLists/delete-list", {
+      listName: listName
+    });
+  }
+
   const addDecimalPlacesPrice = price => {
     var upperPriceString = price.toString();
     if (upperPriceString.split(".")[1] == null) {

@@ -27,8 +27,6 @@ function ListCard({ image, name, amount, addCard, addItemList, itemLists }) {
   };
 
   const openEditList = (name) => {
-    console.log("Jump to EditList with ", name);
-
     setListName(name);
     setChangedListName(true);
     setGetProductListBool(true);

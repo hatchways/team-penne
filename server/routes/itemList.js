@@ -17,13 +17,14 @@ const {
 } = require("../database/handlers/productDBHandler");
 
 cloudinary.config({
-  cloud_name: "dtfapvikl",
-  api_key: "143847534742289",
-  api_secret: "DD8YwfqGHJ5BJ6x7VhW5NUb2uvU"
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
 });
 
 router.use(formData.parse());
 
+// upload image when the user adds an image to the list
 router.post("/image-upload", async (req, res) => {
   const values = Object.values(req.files);
   const promises = values.map(image => cloudinary.uploader.upload(image.path));
@@ -33,7 +34,10 @@ router.post("/image-upload", async (req, res) => {
   });
 });
 
-// create a new list, and assign it to user userId, with name and picture in req.body
+/*
+ ************** LIST REQUESTS ***************
+ */
+// POST - create a new list, and assign it to user userId, with name and picture in req.body
 router.post("/add-lists", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   addList(currentUserId, req.body.listName, req.body.listPicture)
@@ -71,6 +75,10 @@ router.get("/get-product-list", authCheck, async (req, res) => {
   return res.status(200).send({ productList: currentListProducts });
 });
 
+/*
+ ************ PRODUCT REQUESTS *************
+ */
+// POST - add items to a list
 router.post("/add-items", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   var itemAddedBool = await addProductToList(
@@ -87,7 +95,7 @@ router.post("/add-items", authCheck, async (req, res) => {
   return res.status(200).send({ message: "Item Added." });
 });
 
-//add a product defined in req.body to list: listName (req.body.listName)
+//POST - add a product defined in req.body to list: listName (req.body.listName)
 router.post("/remove-item", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
 

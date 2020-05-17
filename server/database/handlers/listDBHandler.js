@@ -158,6 +158,10 @@ async function addList(userId, listName, listImage) {
   return addListBool != null;
 }
 
+async function deleteList(userId, listName) {
+  console.log("Deleting list.")
+}
+
 module.exports = {
   checkListExists,
   getAllLists,
