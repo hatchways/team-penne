@@ -36,7 +36,6 @@ function Navbar(props) {
   const [notificationsList, setNotificationsList] = useState(emptyList);
   const [deleteItem, setDeleteItem] = useState(-1);
   const [onDeleteIndex, setOnDeleteIndex] = useState(-1);
-  const [userProfile, setUserProfile] = useState("");
 
   const navbarClasses = navbarStyles();
   const classes = notifStyles();
@@ -110,6 +109,15 @@ function Navbar(props) {
     history.push("/dashboard/followers");
   };
 
+  const handleEditProfileClick = event => {
+    setShoppingListsMenu(false);
+    setFollowersMenu(false);
+    setNotificationMenu(false);
+    setProfileMenu(false);
+
+    history.push("/dashboard/edit-page");
+  };
+
   const handleNotificationClick = event => {
     setNotificationMenu(true);
     setProfileMenu(false);
@@ -158,7 +166,7 @@ function Navbar(props) {
 
   // get the userprofile
   useEffect(() => {
-    if (userProfile == "") {
+    if (props.getProfileInfo() == "") {
       fetch("/userprofile")
         .then(res => {
           if (res.status === 200) {
@@ -167,13 +175,13 @@ function Navbar(props) {
         })
         .then(res => {
           if (res.userImageURL == null) {
-            setUserProfile({
+            props.setUserProfile({
               userName: res.userName,
               userEmail: res.userEmail,
               profilePicImage: noUserProfilePic
             });
           } else {
-            setUserProfile({
+            props.setUserProfile({
               userName: res.userName,
               userEmail: res.userEmail,
               profilePicImage: res.userImageURL
@@ -361,7 +369,10 @@ function Navbar(props) {
             className={classes.removeTextTransform}
           >
             <div className={navbarClasses.circular}>
-              <img src={userProfile.profilePicImage} alt="profile-pic" />
+              <img
+                src={props.getProfileInfo().profilePicImage}
+                alt="profile-pic"
+              />
             </div>
             {!profileMenuBool && (
               <div style={{ fontWeight: "normal", color: "black" }}>
@@ -383,17 +394,22 @@ function Navbar(props) {
           >
             <CardContent>
               <div className={navbarClasses.circularBigger}>
-                <img src={userProfile.profilePicImage} alt="profile-pic" />
+                <img
+                  src={props.getProfileInfo().profilePicImage}
+                  alt="profile-pic"
+                />
               </div>
               <Typography variant="h5" component="h2">
-                {userProfile.userName}
+                {props.getProfileInfo().userName}
               </Typography>
               <Typography className={classes.pos} color="texteSecondary">
-                {userProfile.userEmail}
+                {props.getProfileInfo().userEmail}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Edit Profile</Button>
+              <Button onClick={handleEditProfileClick} size="small">
+                Edit Profile
+              </Button>
             </CardActions>
           </StyledMenu>
         </div>
