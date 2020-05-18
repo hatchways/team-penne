@@ -97,7 +97,7 @@ function RemoveListConfirmation() {
       </div>
       <DialogContent classes={{ root: classes.dialogContent }}>
         <img
-          style={{ maxWidth: "50%" }}
+          style={{ maxWidth: "50%", maxHeight: "200px" }}
           src={history.location.state.listImage}
         />
         {history.location.state.numberOfItems == 1 && (

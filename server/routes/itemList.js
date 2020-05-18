@@ -55,7 +55,7 @@ router.post("/add-lists", authCheck, async (req, res) => {
 router.post("/remove-list", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   const listName = req.body.listName;
-  console.log(`Removing list ${listName} for userid ${currentUserId}`);
+  deleteList(currentUserId, listName);
   res.status(200).send({ message: "List removed!" });
 });
 
@@ -108,12 +108,6 @@ router.post("/remove-item", authCheck, async (req, res) => {
 
   let productRemovedBool = await removeProductFromList(
     req.body.productId,
-    req.body.productName,
-    req.body.productURL,
-    req.body.productImageURL,
-    req.body.productCurrency,
-    req.body.productPrice,
-    req.body.productSalePrice,
     currentUserId,
     req.body.listName
   );

@@ -2,6 +2,7 @@ const models = require("../models");
 const { getUser } = require("./userDBHandler");
 const { getAllProductsbyListId } = require("./productDBHandler");
 const List = models.Lists;
+const ListProducts = models.ListProducts;
 
 function reformatListStyle(list) {
   var formattedList = [];
@@ -158,8 +159,35 @@ async function addList(userId, listName, listImage) {
   return addListBool != null;
 }
 
+/*
+    deleteList: deletes a list(with listName) for user(with userId)
+    arguments: userId of current user, listName of list to delete
+    return: Null
+*/
 async function deleteList(userId, listName) {
-  console.log("Deleting list.");
+  // listToDelete = List Object: {listId, listName, listImageUrl, userId}
+  let listToDelete = await getListIdByListName(userId, listName);
+  console.log(
+    `Removing list ${listName} w/ listId ${listToDelete.listId} for userid ${userId}`
+  );
+
+  // Step 1: Delete all entries in listProducts entry where the listID = listToDelete.listId
+  await ListProducts.findAll({
+    attributes: ["listId", "productId"],
+    where: { listId: listToDelete.listId }
+  })
+    .then(async listProducts => {
+      for (i = 0; i < listProducts.length; i++) {
+        // delete all the entries in the list
+        listProducts[i].destroy();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+  // Step 2: Delete the list entry in Lists
+  await listToDelete.destroy();
 }
 
 module.exports = {
