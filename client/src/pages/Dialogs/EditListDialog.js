@@ -14,7 +14,7 @@ import {
   Typography
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
-import DeleteIcon from "@material-ui/icons/Delete";
+import deleteIcon from "../../assets/delete.png";
 import editListIcon from "../../assets/edit_list.png";
 
 function EditListDialog() {
@@ -95,7 +95,7 @@ function EditListDialog() {
         }}
       >
         <DialogTitle
-          style={{ flexGrow: 4 }}
+          style={{ flexGrow: 4, marginLeft: "150px" }}
           classes={{ root: classes.dialogTitle }}
           id="form-dialog-title"
         >
@@ -105,12 +105,19 @@ function EditListDialog() {
           </Typography>
         </DialogTitle>
         <IconButton
-          style={{ width: "75px" }}
+          style={{ width: "75px", height: "75px" }}
           aria-label="edit-list"
           title="Edit List"
+        >
+          <img style={{ width: "75%", height: "75%" }} src={editListIcon} />
+        </IconButton>
+        <IconButton
+          style={{ width: "75px", height: "75px" }}
+          aria-label="edit-list"
+          title="Delete List"
           onClick={handleDeleteList}
         >
-          <img style={{ width: "100%", height: "100%" }} src={editListIcon} />
+          <img style={{ width: "70%", height: "70%" }} src={deleteIcon} />
         </IconButton>
       </div>
       <DialogContent classes={{ root: classes.dialogContent }}>
