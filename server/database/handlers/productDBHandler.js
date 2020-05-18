@@ -191,17 +191,7 @@ async function addProductToList(
   return true;
 }
 
-async function removeProductFromList(
-  productId,
-  productName,
-  productURL,
-  productImageURL,
-  productCurrency,
-  productPrice,
-  productSalePrice,
-  userId,
-  listName
-) {
+async function removeProductFromList(productId, userId, listName) {
   // Step 1
   // Get the listId from userId and listName
   var listId = await getListIdFromUser(listName, userId);

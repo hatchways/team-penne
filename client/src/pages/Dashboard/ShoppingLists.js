@@ -18,6 +18,7 @@ import ListCard from "./ListCard.js";
 import useStyles from "./styles/shoppingListsStyles";
 import ProductConfirmation from "../Dialogs/ProductConfirmation";
 import RemoveProductConfirmationDialog from "../Dialogs/RemoveProductConfirmation";
+import RemoveListConfirmationDialog from "../Dialogs/RemoveListConfirmation";
 import EditListDialog from "../Dialogs/EditListDialog";
 import NewProductDialog from "../Dialogs/NewProductDialog";
 
@@ -220,10 +221,12 @@ export default function ShoppingLists(props) {
         component={RemoveProductConfirmationDialog}
       />
       <Route
+        path="/dashboard/shoppingLists/confirm-remove-list"
+        component={RemoveListConfirmationDialog}
+      />
+      <Route
         path="/dashboard/shoppingLists/edit-list"
-        render={() => {
-          return <EditListDialog />;
-        }}
+        component={EditListDialog}
       />
       <Route
         path="/dashboard/shoppingLists/add-new-product"

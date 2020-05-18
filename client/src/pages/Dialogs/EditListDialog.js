@@ -10,12 +10,16 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   Typography
 } from "@material-ui/core";
 import dialogStyles from "./Styles/dialogStyles";
+import deleteIcon from "../../assets/delete.png";
+import editListIcon from "../../assets/edit_list.png";
 
 function EditListDialog() {
   const [listName, setListName] = React.useState("");
+  const [listImage, setListImage] = React.useState("");
   const [productList, setProductList] = React.useState([]);
 
   const classes = dialogStyles();
@@ -30,6 +34,14 @@ function EditListDialog() {
     history.push(
       window.location.pathname.replace("/edit-list", "/add-new-product")
     );
+  };
+
+  const handleDeleteList = () => {
+    history.push("/dashboard/shoppingLists/confirm-remove-list", {
+      listName: listName,
+      listImage: listImage,
+      numberOfItems: productList.length
+    });
   };
 
   const addDecimalPlacesPrice = price => {
@@ -62,6 +74,7 @@ function EditListDialog() {
 
   useEffect(() => {
     setListName(history.location.state.listName);
+    setListImage(history.location.state.listImage);
     setProductList(history.location.state.productList);
   });
 
@@ -73,15 +86,40 @@ function EditListDialog() {
       aria-labelledby="form-dialog-title"
       open={true}
     >
-      <DialogTitle
-        classes={{ root: classes.dialogTitle }}
-        id="form-dialog-title"
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
       >
-        {listName}
-        <Typography variant="body2" component="h1" color="textSecondary">
-          {productList.length} items
-        </Typography>
-      </DialogTitle>
+        <DialogTitle
+          style={{ flexGrow: 4, marginLeft: "150px" }}
+          classes={{ root: classes.dialogTitle }}
+          id="form-dialog-title"
+        >
+          {listName}
+          <Typography variant="body2" component="h1" color="textSecondary">
+            {productList.length} items
+          </Typography>
+        </DialogTitle>
+        <IconButton
+          style={{ width: "75px", height: "75px" }}
+          aria-label="edit-list"
+          title="Edit List"
+        >
+          <img style={{ width: "75%", height: "75%" }} src={editListIcon} />
+        </IconButton>
+        <IconButton
+          style={{ width: "75px", height: "75px" }}
+          aria-label="edit-list"
+          title="Delete List"
+          onClick={handleDeleteList}
+        >
+          <img style={{ width: "70%", height: "70%" }} src={deleteIcon} />
+        </IconButton>
+      </div>
       <DialogContent classes={{ root: classes.dialogContent }}>
         {productList.map(listItem => (
           <Card
