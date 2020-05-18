@@ -101,10 +101,30 @@ function RemoveListConfirmation() {
           src={history.location.state.listImage}
         />
         {history.location.state.numberOfItems == 1 && (
-          <div>With {history.location.state.numberOfItems} item </div>
+          <div>
+            <Typography
+              style={{ color: "red" }}
+              className={classes.cardTitle}
+              color="textSecondary"
+              gutterBottom
+            >
+              WARNING! This will also remove the{" "}
+              {history.location.state.numberOfItems} item in the list!
+            </Typography>
+          </div>
         )}
         {history.location.state.numberOfItems != 1 && (
-          <div>With {history.location.state.numberOfItems} items </div>
+          <div>
+            <Typography
+              style={{ color: "red" }}
+              className={classes.cardTitle}
+              color="textSecondary"
+              gutterBottom
+            >
+              WARNING! This will also remove all{" "}
+              {history.location.state.numberOfItems} items in the list!
+            </Typography>
+          </div>
         )}
         <div>
           <Button
