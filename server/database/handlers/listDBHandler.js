@@ -159,13 +159,14 @@ async function addList(userId, listName, listImage) {
 }
 
 async function deleteList(userId, listName) {
-  console.log("Deleting list.")
+  console.log("Deleting list.");
 }
 
 module.exports = {
+  addList,
+  deleteList,
   checkListExists,
   getAllLists,
-  addList,
   getAllListsWithValues,
   getListIdByListName
 };

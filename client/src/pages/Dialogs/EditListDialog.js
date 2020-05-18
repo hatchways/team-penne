@@ -108,6 +108,7 @@ function EditListDialog() {
           style={{ width: "75px" }}
           aria-label="edit-list"
           title="Edit List"
+          onClick={handleDeleteList}
         >
           <img style={{ width: "100%", height: "100%" }} src={editListIcon} />
         </IconButton>

@@ -226,9 +226,7 @@ export default function ShoppingLists(props) {
       />
       <Route
         path="/dashboard/shoppingLists/edit-list"
-        render={() => {
-          return <EditListDialog />;
-        }}
+        component={EditListDialog}
       />
       <Route
         path="/dashboard/shoppingLists/add-new-product"

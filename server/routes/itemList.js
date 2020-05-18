@@ -7,6 +7,7 @@ const formData = require("express-form-data");
 const { authCheck } = require("./authCheck");
 const {
   addList,
+  deleteList,
   getAllListsWithValues,
   getListIdByListName
 } = require("../database/handlers/listDBHandler");
@@ -55,7 +56,7 @@ router.post("/remove-list", authCheck, async (req, res) => {
   const currentUserId = req.userData.userId;
   const listName = req.body.listName;
   console.log(`Removing list ${listName} for userid ${currentUserId}`);
-  res.status(200);
+  res.status(200).send({ message: "List removed!" });
 });
 
 // GET - retrieve all Lists for current user
@@ -68,8 +69,6 @@ router.get("/get-lists", authCheck, async (req, res) => {
     .catch(function(err) {
       console.log(err);
     });
-  // Output "Test" for testing value of allLists coming out of "getAllListsWithValues"
-  //console.log(allLists[0].products);
   return res.status(200).send({ itemLists: allLists });
 });
 

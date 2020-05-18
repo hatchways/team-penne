@@ -62,6 +62,7 @@ function RemoveListConfirmation() {
         console.log(err);
       });
   };
+
   const handleDenyButtonClick = () => {
     if (!loadingDeny) {
       setSuccess(false);
@@ -69,20 +70,9 @@ function RemoveListConfirmation() {
     }
     timer.current = setTimeout(() => {
       history.push(
-        window.location.pathname.replace("/confirm-remove-list", "/edit-list")
+        window.location.pathname.replace("/confirm-remove-list", "")
       );
     }, 1000);
-  };
-
-  const addDecimalPlacesPrice = price => {
-    var upperPriceString = price.toString();
-    if (upperPriceString.split(".")[1] == null) {
-      upperPriceString = upperPriceString + ".00";
-    }
-    if (upperPriceString.split(".")[1].length < 2) {
-      upperPriceString = upperPriceString + "0";
-    }
-    return upperPriceString;
   };
 
   return (
@@ -106,6 +96,16 @@ function RemoveListConfirmation() {
         {history.location.state.listName}
       </div>
       <DialogContent classes={{ root: classes.dialogContent }}>
+        <img
+          style={{ maxWidth: "50%" }}
+          src={history.location.state.listImage}
+        />
+        {history.location.state.numberOfItems == 1 && (
+          <div>With {history.location.state.numberOfItems} item </div>
+        )}
+        {history.location.state.numberOfItems != 1 && (
+          <div>With {history.location.state.numberOfItems} items </div>
+        )}
         <div>
           <Button
             classes={{ contained: classes.button }}
