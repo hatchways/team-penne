@@ -35,7 +35,9 @@ function EditListDialog() {
       window.location.pathname.replace("/edit-list", "/add-new-product")
     );
   };
-
+  const handleEditList = () => {
+    history.push("/dashboard/edit-profile");
+  };
   const handleDeleteList = () => {
     history.push("/dashboard/shoppingLists/confirm-remove-list", {
       listName: listName,
@@ -108,6 +110,7 @@ function EditListDialog() {
           style={{ width: "75px", height: "75px" }}
           aria-label="edit-list"
           title="Edit List"
+          onClick={handleEditList}
         >
           <img style={{ width: "75%", height: "75%" }} src={editListIcon} />
         </IconButton>

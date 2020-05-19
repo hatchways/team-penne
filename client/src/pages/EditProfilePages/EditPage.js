@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
+  Card,
   Container,
+  OutlinedInput,
+  Paper,
   Tab,
   Tabs,
   Typography
@@ -22,8 +25,7 @@ function EditPage(props) {
   const classes = editPageStyles();
   const [firstLoad, setFirstLoad] = useState(true);
   const [value, setValue] = useState(0);
-  const [userProfile, setUserProfile] = useState("");
-  const [newUserProfile, setNewUserProfile] = useState("");
+  const [newUserProfile, setNewUserProfile] = useState(props.getProfileInfo());
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -41,34 +43,61 @@ function EditPage(props) {
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
-      setUserProfile(props.getProfileInfo());
+      setNewUserProfile(props.getProfileInfo());
     }
   });
 
   return (
     <div className={classes.root}>
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs"
-        className={classes.tabs}
+      <div
+        style={{
+          backgroundColor: "white",
+          display: "flex",
+          flexDirection: "column",
+          marginTop: "2vh",
+          marginBottom: "2vh",
+          paddingLeft: "10px"
+        }}
       >
-        <Tab
-          style={{ marginTop: "80px", height: "10vh" }}
-          label="Edit Profile"
-          {...a11yProps(0)}
-        />
-        <Tab style={{ height: "10vh" }} label="Edit Lists" {...a11yProps(1)} />
-      </Tabs>
+        <div style={{ marginTop: "80px", height: "10vh" }}>
+          <Typography variant="h5">Edit Settings</Typography>
+        </div>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs"
+          className={classes.tabs}
+        >
+          <Tab style={{ height: "10vh" }} label="Profile" {...a11yProps(0)} />
+          <Tab style={{ height: "10vh" }} label="Lists" {...a11yProps(1)} />
+        </Tabs>
+      </div>
       <TabPanel value={value} index={0}>
-        <Container>
-          Item One <Button onClick={changeUserProfile}>Apply Changes</Button>
-        </Container>
+        <div className={classes.tabContainer}>
+          <Typography variant="h5" component="h2">
+            General Account Settings
+          </Typography>
+          Profile Picture: <br />
+          {
+            <img
+              className={classes.profilePicture}
+              src={props.getProfileInfo().profilePicImage}
+            />
+          }{" "}
+          <br />
+          Username: {props.getProfileInfo().userName} <br />
+          Email: {props.getProfileInfo().userEmail} <br />
+          <Button onClick={changeUserProfile}>Apply Changes</Button>
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <div className={classes.tabContainer}>
+          <Typography variant="h5" component="h2">
+            Account List Settings
+          </Typography>
+        </div>
       </TabPanel>
     </div>
   );

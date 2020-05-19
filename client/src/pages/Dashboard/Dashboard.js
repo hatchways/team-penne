@@ -70,7 +70,7 @@ function Dashboard(props) {
         history={props.history}
       />
       <Route
-        path="/dashboard/edit-page"
+        path="/dashboard/edit-profile"
         component={() => (
           <EditProfilePage
             history={props.history}

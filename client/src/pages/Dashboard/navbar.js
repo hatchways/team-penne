@@ -115,7 +115,7 @@ function Navbar(props) {
     setNotificationMenu(false);
     setProfileMenu(false);
 
-    history.push("/dashboard/edit-page");
+    history.push("/dashboard/edit-profile");
   };
 
   const handleNotificationClick = event => {
